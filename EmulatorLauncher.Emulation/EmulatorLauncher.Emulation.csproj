@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      libretroコアのホスティング(EmulationHost)、libretro API定義(LibretroCore/LibretroTypes)、
+      コア別設定(AppSettings)、および映像描画(OpenGL.cs=Interop.Gl)・ネイティブウィンドウ操作
+      (Win32.cs=Interop.Win32)を担当。WinUIには依存しない。
+      OpenGL.cs/Win32.csはnamespaceをEmulatorLauncher.Interopのまま維持している
+      (①Coreの Crc32/ImageHeaderReader と同じ方針。物理的な移動のみ行い、利用側の
+      using文を変更せずに済ませるため)。
+      Win32クラスはGamePlayPage.xaml.cs/NativeWindowSizeWatcher.cs(共にWinUI3側)からも
+      使われるため、internalからpublicへ変更した(Gl=OpenGLラッパーはEmulationHost.csからしか
+      使われないためinternalのまま)。
+      EmulationHost.csがフレームバッファ処理でunsafeポインタ演算を使用するため
+      AllowUnsafeBlocksが必要(元々EmulatorLauncher.csproj側にあった設定をこちらへ移した)。
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>EmulatorLauncher</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmulatorLauncher.Core\EmulatorLauncher.Core.csproj" />
+    <ProjectReference Include="..\EmulatorLauncher.Input\EmulatorLauncher.Input.csproj" />
+  </ItemGroup>
+
+</Project>

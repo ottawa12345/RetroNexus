@@ -1,0 +1,40 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.TouchNavButtons"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        マウス/タッチ用の画面上のボタン(前の画面 / コンソールに戻る / 並び替え)。
+        ゲームパッド/キーボードで操作している間は出さず、マウスやタッチを使ったときだけ表示する
+        (InputDeviceTrackerの最後の入力機器で切り替え)。見た目は、検索ボックスと同じ角丸・枠・背景に揃えている。
+        使う側は、ヘッダーの検索ボックスの横などに置き、BackRequested / ConsoleRequested / SortRequestedを受け取る。
+    -->
+    <StackPanel x:Name="RootPanel" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Visibility="Collapsed">
+        <Border x:Name="BackButton" Height="48" Padding="16,0" CornerRadius="{StaticResource ButtonCornerRadius}"
+                BorderThickness="2" BorderBrush="LightGray" Background="{StaticResource PanelBackgroundBrush}"
+                Tapped="BackButton_Tapped">
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <FontIcon Glyph="&#xE72B;" FontSize="18" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                <TextBlock Text="前の画面" FontSize="20" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="ConsoleButton" Height="48" Padding="16,0" CornerRadius="{StaticResource ButtonCornerRadius}"
+                BorderThickness="2" BorderBrush="LightGray" Background="{StaticResource PanelBackgroundBrush}"
+                Tapped="ConsoleButton_Tapped" Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <FontIcon Glyph="&#xE80F;" FontSize="18" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                <TextBlock Text="コンソールに戻る" FontSize="20" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="SortButton" Height="48" Padding="16,0" CornerRadius="{StaticResource ButtonCornerRadius}"
+                BorderThickness="2" BorderBrush="LightGray" Background="{StaticResource PanelBackgroundBrush}"
+                Tapped="SortButton_Tapped">
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <FontIcon Glyph="&#xE8CB;" FontSize="18" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                <TextBlock Text="並び替え" FontSize="20" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

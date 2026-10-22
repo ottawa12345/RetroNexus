@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      ゲームパッド入力(SDL3経由)の共通処理と、コントローラーのボタン割り当て設定を担当。
+      WinUIには依存しない(SdlGamepadServiceは元々Microsoft.UI.Dispatching.DispatcherQueueを
+      直接受け取っていたが、IUiPollingTimerインターフェース越しに抽象化した。実装はWinUI3側の
+      プロジェクトがDispatcherQueueTimerを使って提供する)。
+      他のどのEmulatorLauncherプロジェクトにも依存しない
+      (Emulation・WinUI3側の両方から参照される横断的な下位ライブラリ)。
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>EmulatorLauncher</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,6 @@
+﻿{
+  // 常駐型の例: コマンドを1回だけ起動し、1行ごとのJSONで時刻を受け取ります(パネルを閉じると終了します)。
+  "schema": 1, "id": "sample-clock", "name": "サンプル: 時計", "display": "stat", "width": 1, "order": 100, "icon": "E121",
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Mode","clock-stream"], "timeoutSec": 5, "stream": true },
+  "format": "{value}"
+}

@@ -1,0 +1,9 @@
+﻿// サンプル: CPU 温度の表示。OS 標準の「Thermal Zone Information」(ACPI のサーマルゾーン)の温度を読みます。
+// 機種によっては、取得できない、または CPU のコア温度とは別の値になります(PLUGINS.md を参照)。
+// 取得できない機器では、「--」と表示します。本当の CPU 温度が必要なときは、お使いのツールのコマンドに置き換えてください。
+//   status : 常駐型(stream)。1回だけ起動され、標準出力に {"success":true,"value":45,"detail":"補足"} のような JSON を1行ずつ返し続ける。
+{
+  "schema": 1, "id": "sample-cpu-temp", "name": "サンプル: CPU温度", "display": "stat", "width": 1, "order": 108, "icon": "E9CA",
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Mode","cputemp-stream"], "timeoutSec": 10, "stream": true },
+  "format": "{value}℃", "bar": { "min": 0, "max": 100 }
+}

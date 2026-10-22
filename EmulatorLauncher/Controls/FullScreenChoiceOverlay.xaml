@@ -1,0 +1,87 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.FullScreenChoiceOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fs="using:EmulatorLauncher.Controls"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        画面全体を覆う、複数の選択肢から1つを選ぶ画面(Switchの設定画面で「地域」等を選ぶ画面と同じ見た目)。
+        今後、設定画面で選択肢が複数ある項目(地域、言語など)を選ばせるときの共通部品として使う。
+
+        見た目: 上に項目名(タイトル)と区切り線、中央に選択肢の一覧、下に操作ガイド(B もどる / A 決定)。
+        十字キーで動かしている行は白背景+水色の枠+青文字、現在の設定値の行は右端に青いチェックが付く。
+        (GamepadListPickerOverlayは中央に出る小さなカード型で、こちらは全画面型。)
+
+        使い方(呼び出し側、例: SettingsPage):
+            <controls:FullScreenChoiceOverlay x:Name="ChoiceOverlay" Visibility="Collapsed" />
+        コードビハインドから
+            GamepadPickerItem? picked = await ChoiceOverlay.ShowAsync("地域",
+                regions.Select(r => new GamepadPickerItem { Label = ..., Tag = r, IsChecked = r == current }));
+        表示中のゲームパッド入力は、呼び出し側のOnGamepadButtonの先頭で
+            if (ChoiceOverlay.IsOpen) { ChoiceOverlay.HandleGamepadInput(button); return; }
+        のように渡す。十字キー上下で移動、Aで決定(戻り値はその項目)、Bでキャンセル(戻り値null)。
+        最初は現在値(IsChecked)の行にフォーカスが乗る。マウスなら行をクリックしてもその場で決定する。
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+        <conv:BoolToSwitchBlueTextConverter x:Key="SwitchBlueText" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource AppBackgroundBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- 項目名+下の区切り線 -->
+                <Grid Grid.Row="0" Margin="160,0,160,0">
+                    <TextBlock x:Name="TitleText" Text="選択してください" FontSize="40" FontWeight="SemiBold"
+                               Foreground="{StaticResource AppTextPrimaryBrush}"
+                               VerticalAlignment="Bottom" Margin="0,0,0,20" />
+                    <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                </Grid>
+
+                <!-- 選択肢の一覧 -->
+                <ScrollViewer x:Name="ListScrollViewer" Grid.Row="1" Margin="160,24,160,8"
+                              VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="ItemsHost" ItemsSource="{x:Bind Items}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="controls:GamepadPickerItem">
+                                <Grid MinHeight="92" Tapped="ItemRow_Tapped">
+                                    <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                            Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                            BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                    <TextBlock Text="{x:Bind Label}" FontSize="30" VerticalAlignment="Center"
+                                               Margin="28,0,100,1" TextWrapping="Wrap"
+                                               Foreground="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource SwitchBlueText}}" />
+                                    <!-- 現在の設定値の行: 右端の青いチェック -->
+                                    <Grid Width="48" Height="48" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          Margin="0,0,28,1"
+                                          Visibility="{x:Bind IsChecked, Converter={StaticResource BoolToVisibility}}">
+                                        <Ellipse Fill="{StaticResource SwitchSelectedBlueBrush}" />
+                                        <FontIcon Glyph="&#xE73E;" FontSize="26" Foreground="White"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFC8C8C8" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="A" Label="決定" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

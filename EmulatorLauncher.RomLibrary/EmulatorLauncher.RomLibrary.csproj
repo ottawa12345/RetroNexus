@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      ROMフォルダのスキャン・RDB照合・ディスクシリアル読み取り・ボックスアート取得を担当。
+      WinUIには依存しない。Storage(DB永続化)・Net(HTTPダウンロード)・Core(モデル)に依存する。
+      NativeFileId.cs(旧Interop)はこのライブラリの唯一の利用者だったため、
+      internalな可視性を保ったままここへ一緒に移した。
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>EmulatorLauncher</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!--
+    以前はEmulatorLauncher.csproj側にあったPackageReference。
+    CHDSharpはDiscSerialReader、System.Drawing.CommonはBoxArtPlaceholderGenerator、
+    MessagePackはRetroArchRdbReader(libretro-database RDBファイルの読み込み)がそれぞれ使用する。
+    いずれもこのライブラリ内でしか使われていないため、参照ごとこちらへ移動した。
+  -->
+  <ItemGroup>
+    <PackageReference Include="CHDSharp" Version="1.4.3" />
+    <PackageReference Include="MessagePack" Version="3.1.10" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.*" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmulatorLauncher.Core\EmulatorLauncher.Core.csproj" />
+    <ProjectReference Include="..\EmulatorLauncher.Storage\EmulatorLauncher.Storage.csproj" />
+    <ProjectReference Include="..\EmulatorLauncher.Net\EmulatorLauncher.Net.csproj" />
+  </ItemGroup>
+
+</Project>

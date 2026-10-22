@@ -1,0 +1,124 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.ReorderOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fs="using:EmulatorLauncher.Controls"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        画面全体を覆う、並び順の入れ替え画面(設定の「コンソール並び替え」「コレクション並び替え」用)。
+        見た目はFullScreenChoiceOverlayと同じ(上にタイトルと区切り線、中央に一覧、下に操作ガイド)。
+
+        操作:
+          - 十字キー上下: 行を選ぶ。
+          - A: 選んだ行を「つかむ」。つかんでいる間は十字キー上下で、その行ごと動かせる。もう一度Aで置く。
+          - 十字キー右: 「保存する」ボタンへ(左/上で一覧へ戻る)。Aで保存して戻る。変更が無い間はグレーで押せない。
+          - B: つかんでいる間は、つかむ前の位置へ戻して置く。つかんでいなければ、保存せずに戻る。
+        マウスなら、行をクリックして「つかむ/置く」を切り替えられる(動かすのは十字キー)。
+
+        使い方(呼び出し側):
+            IReadOnlyList<string>? order = await ReorderOverlay.ShowAsync("コンソール並び替え", items);
+        「保存する」で確定したときだけ新しいId順が返る(変更なし・Bで戻った場合はnull)。
+        表示中のゲームパッド入力は、呼び出し側のOnGamepadButtonの先頭で HandleGamepadInput へ渡す。
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+        <conv:BoolToSwitchBlueTextConverter x:Key="SwitchBlueText" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource AppBackgroundBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="160,0,160,0">
+                    <TextBlock x:Name="TitleText" FontSize="40" FontWeight="SemiBold"
+                               Foreground="{StaticResource AppTextPrimaryBrush}"
+                               VerticalAlignment="Bottom" Margin="0,0,0,20" />
+                    <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="160,24,160,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="520" />
+                    </Grid.ColumnDefinitions>
+
+                <ScrollViewer x:Name="ListScrollViewer" Grid.Column="0"
+                              VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="ItemsHost" ItemsSource="{x:Bind Items}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="controls:ReorderItem">
+                                <Grid Height="84" Tapped="ItemRow_Tapped">
+                                    <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                            Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                            BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                    <!-- つかんでいる行の目印(薄い青の塗り) -->
+                                    <Rectangle Margin="4,4,4,5" Fill="{StaticResource SwitchSelectedBlueBrush}" Opacity="0.18"
+                                               Visibility="{x:Bind IsGrabbed, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                                    <TextBlock Text="{x:Bind Label}" FontSize="30" VerticalAlignment="Center"
+                                               Margin="28,0,100,1" TextTrimming="CharacterEllipsis"
+                                               Foreground="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource SwitchBlueText}}" />
+                                    <FontIcon Glyph="&#xE700;" FontSize="28" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              Margin="0,0,34,1" Opacity="0.55"
+                                              Foreground="{StaticResource AppTextSecondaryBrush}"
+                                              Visibility="{x:Bind IsGrabbed, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                                    <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFC8C8C8" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                    <!-- 右: 説明 + 保存ボタン(変更が無い間はグレー)。右キーでボタンへ、左キーで一覧へ戻る。 -->
+                    <Grid Grid.Column="1" Margin="48,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" FontSize="24" TextWrapping="Wrap" Margin="4,16,4,0"
+                                   Foreground="{StaticResource AppTextSecondaryBrush}"
+                                   Text="Aで行をつかみ、十字キー上下で動かして、もう一度Aで置きます。変更は「保存する」を選ぶまで反映されません。(十字キー右で「保存する」へ)" />
+
+                        <Border Grid.Row="1" Height="96" CornerRadius="0" BorderThickness="4" Tapped="SaveButton_Tapped"
+                                Background="{x:Bind SaveState.Background, Mode=OneWay}"
+                                BorderBrush="{x:Bind SaveState.IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}">
+                            <TextBlock Text="保存する" FontSize="30" FontWeight="SemiBold"
+                                       Foreground="{x:Bind SaveState.Foreground, Mode=OneWay}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <controls:HintBar x:Name="NormalHints" Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="A" Label="つかむ" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+                <controls:HintBar x:Name="GrabHints" Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True"
+                                  Visibility="Collapsed">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="キャンセル" />
+                        <controls:HintDefinition Key="DPad" Label="移動" />
+                        <controls:HintDefinition Key="A" Label="置く" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+                <controls:HintBar x:Name="SaveHints" Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True"
+                                  Visibility="Collapsed">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="A" Label="保存" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

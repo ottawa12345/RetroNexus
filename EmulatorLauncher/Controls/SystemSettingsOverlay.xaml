@@ -1,0 +1,236 @@
+﻿<UserControl
+    x:Class="EmulatorLauncher.Controls.SystemSettingsOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        「システム設定」パネル(右からスライドして出る)。本体の音量・画面の明るさなど、
+        ゲームコントローラーだけで調整したい項目を並べる。基本画面とゲーム中の中断メニューの両方から開く。
+
+        使い方(呼び出し側):
+            <controls:SystemSettingsOverlay x:Name="SystemSettings" Visibility="Collapsed" />   (Viewboxの外、ページ全体を覆う位置に置く)
+            SystemSettings.Show();
+            表示中のゲームパッド入力は、呼び出し側の入力処理の先頭で
+            if (SystemSettings.IsOpen) { SystemSettings.HandleGamepadInput(button); return; }
+        上下で項目を選び、左右で値を変える。Bで閉じる。
+
+        見た目はSortOverlay(ソート画面)と同じ作り(暗幕+右のパネル+右下の操作ガイド)。
+        項目は設定の並び順で横6マスに詰めて並べる(入りきらなければスクロール)。プラグイン(Pluginsフォルダのjson)も同じ部品で出す。
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource OverlayScrimBrush}" Tapped="ScrimRoot_Tapped">
+        <Viewbox Stretch="Uniform">
+            <Grid x:Name="CanvasRoot" Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="32">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="700" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border x:Name="SystemPanel" Grid.Column="1" Background="{StaticResource AppSurfaceBrush}" CornerRadius="4">
+                        <Grid Margin="32">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- ヘッダー: タイトル / バッテリーと時刻 -->
+                            <Grid Grid.Row="0" Margin="0,0,0,28">
+                                <TextBlock Text="システム設定" FontSize="34" FontWeight="SemiBold"
+                                           Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+                                <TextBlock x:Name="StatusText" FontSize="28" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           Foreground="{StaticResource AppTextSecondaryBrush}" />
+                            </Grid>
+
+                            <ScrollViewer Grid.Row="2" x:Name="RowsScroll" Margin="-16,-10" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Enabled">
+                            <ItemsControl x:Name="RowsControl" Margin="16,10" ItemsSource="{x:Bind Rows}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="controls:SystemSettingRow">
+                                        <Grid Margin="0,0,0,14">
+                                            <!-- スライダーの行(音量・明るさ) -->
+                                            <Border Visibility="{x:Bind SliderVisibility}" Opacity="{x:Bind RowOpacity, Mode=OneWay}" BorderThickness="4" Padding="24,20" Tag="1.03" Loaded="Focusable_Loaded" Unloaded="Focusable_Unloaded" Tapped="SliderRow_Tapped"
+                                                    Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                    BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}">
+                                                <StackPanel Spacing="16">
+                                                    <Grid ColumnSpacing="18">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <FontIcon Glyph="{x:Bind Glyph}" FontSize="36"
+                                                                  Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="1" Text="{x:Bind Label}" FontSize="32" VerticalAlignment="Center"
+                                                                   Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                                        <TextBlock Grid.Column="2" Text="{x:Bind ValueText, Mode=OneWay}" FontSize="32" FontWeight="SemiBold"
+                                                                   VerticalAlignment="Center" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                                    </Grid>
+                                                    <!-- バー: 左の塗り(値の割合)+右の余白。背景のトラックは全幅に敷く。 -->
+                                                    <!-- マウス/タッチで押したり、押したまま動かしたりして値を決められるよう、
+                                                         当たり判定を上下に広げた透明な外枠(高さ38、上下のマージン-10で、見た目の高さ・配置は従来と同じ)で囲む。 -->
+                                                    <Grid Height="38" Margin="0,-10" Background="Transparent"
+                                                          PointerPressed="SliderBar_PointerPressed" PointerMoved="SliderBar_PointerMoved"
+                                                          PointerReleased="SliderBar_PointerReleased" PointerCanceled="SliderBar_PointerReleased"
+                                                          PointerCaptureLost="SliderBar_PointerReleased">
+                                                    <Grid Height="18" IsHitTestVisible="False">
+                                                        <Border CornerRadius="9" Background="{StaticResource AppTextSecondaryBrush}" Opacity="0.3" />
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="{x:Bind FillStar, Mode=OneWay}" />
+                                                                <ColumnDefinition Width="{x:Bind RestStar, Mode=OneWay}" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Border CornerRadius="9" Background="{StaticResource AppTextPrimaryBrush}" />
+                                                        </Grid>
+                                                    </Grid>
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- タイルの行(Wi-Fi/Bluetooth、電源モード、スリープ等) -->
+                                            <ItemsControl Visibility="{x:Bind TilesVisibility}" ItemsSource="{x:Bind Tiles}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" Spacing="14" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="controls:SystemTile">
+                                                        <Border Width="{x:Bind TileWidth}" BorderThickness="4" CornerRadius="14" Padding="6,12" MinHeight="{x:Bind TileMinHeight}" Tapped="Tile_Tapped" Tag="{x:Bind FocusScale}" Loaded="Focusable_Loaded" Unloaded="Focusable_Unloaded"
+                                                                Background="{x:Bind Background, Mode=OneWay}"
+                                                                BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}">
+                                                            <Grid>
+                                                                <!-- 通常のタイル(アイコン+名前+補足) -->
+                                                                <StackPanel Visibility="{x:Bind NormalVisibility}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="4">
+                                                                    <FontIcon Glyph="{x:Bind Glyph}" FontSize="36" Foreground="{x:Bind Foreground, Mode=OneWay}"
+                                                                              HorizontalAlignment="Center" Visibility="{x:Bind GlyphVisibility}" />
+                                                                    <TextBlock Text="{x:Bind Label}" FontSize="24" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap"
+                                                                               Foreground="{x:Bind Foreground, Mode=OneWay}" />
+                                                                    <TextBlock Text="{x:Bind SubText, Mode=OneWay}" Visibility="{x:Bind SubTextVisibility, Mode=OneWay}" FontFamily="Segoe UI Variable Text, Segoe UI, Yu Gothic UI, Meiryo UI" FontSize="22" TextAlignment="Center" Opacity="0.85"
+                                                                               Foreground="{x:Bind Foreground, Mode=OneWay}" TextWrapping="Wrap" />
+                                                                </StackPanel>
+                                                                <!-- 表示だけの項目(CPU/メモリ、プラグインのstat): 名前+大きな数値+詳細+バー -->
+                                                                <StackPanel Visibility="{x:Bind StatVisibility}" VerticalAlignment="Center" Margin="12,0" Spacing="8">
+                                                                    <!-- 名前の左に、同じ大きさ(22)のミニアイコン(アイコン無しなら名前だけ) -->
+                                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                        <!-- CPU/RAMは、フォントに無いことがあるため図形で描く(24x24の座標、線だけ) -->
+                                                                        <Path Width="22" Height="22" Stretch="Uniform" Opacity="0.7" VerticalAlignment="Center"
+                                                                              Stroke="{x:Bind Foreground, Mode=OneWay}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                                              Data="M7,7 H17 V17 H7 Z M10.5,10.5 H13.5 V13.5 H10.5 Z M10,3 V7 M14,3 V7 M10,17 V21 M14,17 V21 M3,10 H7 M3,14 H7 M17,10 H21 M17,14 H21"
+                                                                              Visibility="{x:Bind CpuIconVisibility}" />
+                                                                        <Path Width="22" Height="22" Stretch="Uniform" Opacity="0.7" VerticalAlignment="Center"
+                                                                              Stroke="{x:Bind Foreground, Mode=OneWay}" StrokeThickness="1.6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                                              Data="M3,6 H21 V15 H3 Z M7,9.5 H9 M11,9.5 H13 M15,9.5 H17 M5.5,15 V19 M9,15 V19 M12,15 V19 M15,15 V19 M18.5,15 V19"
+                                                                              Visibility="{x:Bind RamIconVisibility}" />
+                                                                        <FontIcon Glyph="{x:Bind Glyph}" FontSize="22" Opacity="0.7" VerticalAlignment="Center"
+                                                                                  Foreground="{x:Bind Foreground, Mode=OneWay}" Visibility="{x:Bind GlyphVisibility}" />
+                                                                        <TextBlock Text="{x:Bind Label}" FontFamily="Segoe UI Variable Text, Segoe UI, Yu Gothic UI, Meiryo UI" FontSize="22" Opacity="0.7"
+                                                                                   Foreground="{x:Bind Foreground, Mode=OneWay}" TextTrimming="CharacterEllipsis" MaxLines="1" VerticalAlignment="Center" />
+                                                                    </StackPanel>
+                                                                    <TextBlock Text="{x:Bind StatText, Mode=OneWay}" FontSize="{x:Bind StatFontSize}" FontWeight="SemiBold" TextAlignment="Center"
+                                                                               Foreground="{x:Bind Foreground, Mode=OneWay}" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                                                                    <TextBlock Text="{x:Bind Detail, Mode=OneWay}" FontFamily="Segoe UI Variable Text, Segoe UI, Yu Gothic UI, Meiryo UI" FontSize="18" Opacity="0.7"
+                                                                               Foreground="{x:Bind Foreground, Mode=OneWay}" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                                                                    <ProgressBar Minimum="0" Maximum="100" Height="8" Value="{x:Bind Progress, Mode=OneWay}" Visibility="{x:Bind BarVisibility}" />
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            </ScrollViewer>
+
+                            <!-- コントローラー 1P / 2P の状態(表示のみ) -->
+                            <Grid x:Name="PadsGrid" Grid.Row="3" Margin="0,14,0,0" ColumnSpacing="14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="Pad1Card" Grid.Column="0" CornerRadius="14" Padding="22,14">
+                                    <Grid ColumnSpacing="14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="Pad1Light" Width="16" Height="16" Background="#FF2ECC40" Opacity="0.18" VerticalAlignment="Center" />
+                                        <FontIcon x:Name="Pad1Icon" Grid.Column="1" Glyph="&#xE7FC;" FontSize="36" VerticalAlignment="Center" />
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBlock x:Name="Pad1Label" Text="1P" FontSize="26" FontWeight="SemiBold" />
+                                            <TextBlock x:Name="Pad1State" FontFamily="Segoe UI Variable Text, Segoe UI, Yu Gothic UI, Meiryo UI" Text="未接続" FontSize="18" Opacity="0.7" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                                <Border x:Name="Pad2Card" Grid.Column="1" CornerRadius="14" Padding="22,14">
+                                    <Grid ColumnSpacing="14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="Pad2Light" Width="16" Height="16" Background="#FF2ECC40" Opacity="0.18" VerticalAlignment="Center" />
+                                        <FontIcon x:Name="Pad2Icon" Grid.Column="1" Glyph="&#xE7FC;" FontSize="36" VerticalAlignment="Center" />
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBlock x:Name="Pad2Label" Text="2P" FontSize="26" FontWeight="SemiBold" />
+                                            <TextBlock x:Name="Pad2State" FontFamily="Segoe UI Variable Text, Segoe UI, Yu Gothic UI, Meiryo UI" Text="未接続" FontSize="18" Opacity="0.7" TextTrimming="CharacterEllipsis" MaxLines="1" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+
+                            <!-- 選択肢の画面(電源モード、プラグインのchoice): パネルの上に重ねて出すカード(A/タップで決定、Bで閉じる) -->
+                            <Grid x:Name="PickerOverlay" Grid.RowSpan="4" Margin="-32" Padding="32" Visibility="Collapsed"
+                                  Background="{StaticResource AppSurfaceBrush}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="PickerTitle" Text="電源モード" FontSize="34" FontWeight="SemiBold"
+                                           Foreground="{StaticResource AppTextPrimaryBrush}" Margin="0,0,0,28" />
+                                <ScrollViewer Grid.Row="1" Margin="-20,-12" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Enabled" x:Name="PickerScroll">
+                                    <ItemsControl x:Name="PickerItems" Margin="20,12" ItemsSource="{x:Bind PickerChoices}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="controls:SystemTile">
+                                                <Border Margin="0,0,0,16" MinHeight="150" BorderThickness="4" CornerRadius="14" Padding="28,20" Tapped="PickerChoice_Tapped" Tag="1.04" Loaded="Focusable_Loaded" Unloaded="Focusable_Unloaded"
+                                                        Background="{x:Bind Background, Mode=OneWay}"
+                                                        BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}">
+                                                    <StackPanel VerticalAlignment="Center" Spacing="8">
+                                                        <TextBlock Text="{x:Bind Label}" FontSize="36" FontWeight="SemiBold"
+                                                                   Foreground="{x:Bind Foreground, Mode=OneWay}" />
+                                                        <TextBlock Text="{x:Bind SubText, Mode=OneWay}" FontSize="24" TextWrapping="Wrap" Opacity="0.85"
+                                                                   Foreground="{x:Bind Foreground, Mode=OneWay}" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <controls:HintBar IsOverlay="True" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="DPad" Label="選択/調整" />
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+            </Grid>
+        </Viewbox>
+
+        <!-- 確認ダイアログ(スリープ/再起動/シャットダウンの確認。他の画面と同じ部品) -->
+        <controls:ConfirmDialogOverlay x:Name="ConfirmDialog" Visibility="Collapsed" />
+    </Grid>
+</UserControl>

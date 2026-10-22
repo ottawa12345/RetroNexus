@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.ControllerStatusIndicator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        接続中のコントローラーを、1P/2Pの順に「緑の四角 + コントローラーのアイコン + 番号」で並べる表示
+        (コンソール選択画面の左下、操作ガイド(HintBar)と同じ段に置く)。
+        コントローラーが1台なら1つ、2台なら2つ並ぶ。0台なら何も出さない。
+        緑の四角は、そのコントローラーに入力(ボタン/スティック/トリガー)があるとゆっくり点灯し、
+        離すとゆっくり消える。どちらが1Pでどちらが2Pかを、実際に触って見分けるためのもの。
+        割り当ての管理はGamepadSlots(Inputプロジェクト)が行い、この表示は状態を読むだけ。
+
+            <controls:ControllerStatusIndicator HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+    -->
+    <StackPanel Orientation="Horizontal" Spacing="36" Height="44" VerticalAlignment="Center">
+        <StackPanel x:Name="Pad1Panel" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Visibility="Collapsed">
+            <Border x:Name="Pad1Light" Width="16" Height="16" Background="#FF2ECC40" Opacity="0.18" VerticalAlignment="Center" />
+            <FontIcon Glyph="&#xE7FC;" FontSize="40" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+            <TextBlock Text="1P" FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel x:Name="Pad2Panel" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Visibility="Collapsed">
+            <Border x:Name="Pad2Light" Width="16" Height="16" Background="#FF2ECC40" Opacity="0.18" VerticalAlignment="Center" />
+            <FontIcon Glyph="&#xE7FC;" FontSize="40" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+            <TextBlock Text="2P" FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

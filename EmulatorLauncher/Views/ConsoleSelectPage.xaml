@@ -1,0 +1,377 @@
+<Page
+    x:Class="EmulatorLauncher.Views.ConsoleSelectPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls"
+    xmlns:models="using:EmulatorLauncher.Models"
+    Background="Transparent">
+
+    <Page.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToThicknessConverter x:Key="BoolToThickness" />
+        <conv:BoolToScaleConverter x:Key="BoolToScale" />
+        <conv:HexToBrushConverter x:Key="HexToBrush" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <conv:StringToVisibilityConverter x:Key="StringToVisibility" />
+        <conv:IconPathToImageSourceConverter x:Key="IconPathToImageSource" />
+    </Page.Resources>
+
+    <!-- このページは1920x1080の固定キャンバスを前提にデザインされているため、
+         実際のウィンドウサイズへはこのページ内のViewboxで一様スケーリングする。
+         (GamePlayPageはSDL描画用ネイティブウィンドウの座標計算を単純・確実にするため、
+          あえてViewboxでは包まず実座標のまま使っている。) -->
+    <!-- ルートGrid: Viewbox(ページ本体)の上に、コレクション編集オーバーレイをページ全体を覆う形で重ねる
+         (暗幕をウィンドウの余白部分まで広げるため、Viewboxの外に置いている。GameSelectPageと同じ構成)。 -->
+    <Grid>
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <!-- 行0: ヘッダーエリア -->
+                    <RowDefinition Height="Auto" />
+                    <!-- 行1: メインコンテンツ (コンソール一覧) -->
+                    <RowDefinition Height="*" />
+                    <!-- 行2: システムアイコンエリア (Switch風丸ボタン) -->
+                    <RowDefinition Height="Auto" />
+                    <!-- 行3: フッター (操作ガイド) -->
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- 上部バー: 左側に選択中ロゴ / 右側に時計 -->
+                <Grid x:Name="ConsoleHeaderGrid" Grid.Row="0" Margin="24,50,24,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 左上：選択中コンソールのロゴ -->
+                    <Image x:Name="SelectedLogoImage"
+                       Grid.Column="0"
+                       Height="190"
+                       MaxWidth="450"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="100,20,0,0"
+                       Opacity="0"
+                      />
+
+                    <!-- 右上：画面切替タブ。選択中のタブは大きく・色付きになり、下線がタブの間をすべる(大きさ・下線はコードで毎フレーム動かす)。 -->
+                    <StackPanel x:Name="ConsoleTabBar" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" RenderTransformOrigin="1,0.5">
+                        <StackPanel.RenderTransform><CompositeTransform x:Name="ConsoleTabBarScale" /></StackPanel.RenderTransform>
+                        <Grid x:Name="TabRowHost" HorizontalAlignment="Right">
+                            <StackPanel x:Name="TabRow" Orientation="Horizontal" Spacing="28" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <Grid x:Name="ConsoleTab" VerticalAlignment="Bottom" Background="Transparent" Tapped="ConsoleTab_Tapped">
+                                <Viewbox Stretch="Uniform">
+                                    <StackPanel Orientation="Horizontal" Spacing="10" Padding="8,0">
+                                        <Grid Width="38" Height="38" VerticalAlignment="Center">
+                                            <Viewbox x:Name="ConsoleTabIconGray" Opacity="0.5">
+                                                <PathIcon Foreground="{StaticResource HintBadgeBorderBrush}"
+                                                      Data="M 12,2 C 10.34,2 9,3.34 9,5 C 9,6.35 9.89,7.49 11,7.87 L 11,11.23 L 6.8,8.81 C 6.3,8.52 5.7,8.52 5.2,8.81 L 2.4,10.42 C 1.9,10.71 1.6,11.23 1.6,11.8 C 1.6,12.37 1.9,12.89 2.4,13.18 L 11.2,18.26 C 11.7,18.55 12.3,18.55 12.8,18.26 L 21.6,13.18 C 22.1,12.89 22.4,12.37 22.4,11.8 C 22.4,11.23 22.1,10.71 21.6,10.42 L 18.8,8.81 C 18.3,8.52 17.7,8.52 17.2,8.81 L 13,11.23 L 13,7.87 C 14.11,7.49 15,6.35 15,5 C 15,3.34 13.66,2 12,2 Z M 12,4 C 12.55,4 13,4.45 13,5 C 13,5.55 12.55,6 12,6 C 11.45,6 11,5.55 11,5 C 11,4.45 11.45,4 12,4 Z M 12,13.5 L 16.5,10.9 L 18,11.8 L 12,15.26 L 6,11.8 L 7.5,10.9 L 12,13.5 Z" />
+                                            </Viewbox>
+                                            <Viewbox>
+                                                <PathIcon x:Name="ConsoleTabIconAccent" Foreground="{StaticResource HintBadgeBorderBrush}"
+                                                      Data="M 12,2 C 10.34,2 9,3.34 9,5 C 9,6.35 9.89,7.49 11,7.87 L 11,11.23 L 6.8,8.81 C 6.3,8.52 5.7,8.52 5.2,8.81 L 2.4,10.42 C 1.9,10.71 1.6,11.23 1.6,11.8 C 1.6,12.37 1.9,12.89 2.4,13.18 L 11.2,18.26 C 11.7,18.55 12.3,18.55 12.8,18.26 L 21.6,13.18 C 22.1,12.89 22.4,12.37 22.4,11.8 C 22.4,11.23 22.1,10.71 21.6,10.42 L 18.8,8.81 C 18.3,8.52 17.7,8.52 17.2,8.81 L 13,11.23 L 13,7.87 C 14.11,7.49 15,6.35 15,5 C 15,3.34 13.66,2 12,2 Z M 12,4 C 12.55,4 13,4.45 13,5 C 13,5.55 12.55,6 12,6 C 11.45,6 11,5.55 11,5 C 11,4.45 11.45,4 12,4 Z M 12,13.5 L 16.5,10.9 L 18,11.8 L 12,15.26 L 6,11.8 L 7.5,10.9 L 12,13.5 Z" />
+                                            </Viewbox>
+                                        </Grid>
+                                        <TextBlock x:Name="ConsoleTabText" Text="コンソール" Foreground="{StaticResource AppTextPrimaryBrush}" FontSize="32" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Viewbox>
+                            </Grid>
+                            <Grid x:Name="CollectionTab" VerticalAlignment="Bottom" Background="Transparent" Tapped="CollectionTab_Tapped">
+                                <Viewbox Stretch="Uniform">
+                                    <StackPanel Orientation="Horizontal" Spacing="10" Padding="8,0">
+                                        <Grid Width="38" Height="38" VerticalAlignment="Center">
+                                            <Viewbox x:Name="CollectionTabIconGray" Opacity="0.5">
+                                                <PathIcon Foreground="{StaticResource HintBadgeBorderBrush}"
+                                                      Data="M3,3 L10,3 C11.1,3 12,3.9 12,5 L12,12 C12,13.1 11.1,14 10,14 L3,14 C1.9,14 1,13.1 1,12 L1,5 C1,3.9 1.9,3 3,3 Z M17,3 L24,3 C25.1,3 26,3.9 26,5 L26,12 C26,13.1 25.1,14 24,14 L17,14 C15.9,14 15,13.1 15,12 L15,5 C15,3.9 15.9,3 17,3 Z M3,17 L10,17 C11.1,17 12,17.9 12,19 L12,26 C12,27.1 11.1,28 10,28 L3,28 C1.9,28 1,27.1 1,26 L1,19 C1,17.9 1.9,17 3,17 Z M17,17 L24,17 C25.1,17 26,17.9 26,19 L26,26 C26,27.1 25.1,28 24,28 L17,28 C15.9,28 15,27.1 15,26 L15,19 C15,17.9 15.9,17 17,17 Z" />
+                                            </Viewbox>
+                                            <Viewbox>
+                                                <PathIcon x:Name="CollectionTabIconAccent" Foreground="{StaticResource HintBadgeBorderBrush}"
+                                                      Data="M3,3 L10,3 C11.1,3 12,3.9 12,5 L12,12 C12,13.1 11.1,14 10,14 L3,14 C1.9,14 1,13.1 1,12 L1,5 C1,3.9 1.9,3 3,3 Z M17,3 L24,3 C25.1,3 26,3.9 26,5 L26,12 C26,13.1 25.1,14 24,14 L17,14 C15.9,14 15,13.1 15,12 L15,5 C15,3.9 15.9,3 17,3 Z M3,17 L10,17 C11.1,17 12,17.9 12,19 L12,26 C12,27.1 11.1,28 10,28 L3,28 C1.9,28 1,27.1 1,26 L1,19 C1,17.9 1.9,17 3,17 Z M17,17 L24,17 C25.1,17 26,17.9 26,19 L26,26 C26,27.1 25.1,28 24,28 L17,28 C15.9,28 15,27.1 15,26 L15,19 C15,17.9 15.9,17 17,17 Z" />
+                                            </Viewbox>
+                                        </Grid>
+                                        <TextBlock x:Name="CollectionTabText" Text="コレクション" Foreground="{StaticResource AppTextPrimaryBrush}" FontSize="32" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Viewbox>
+                            </Grid>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Height="7" Margin="0,4,0,0" HorizontalAlignment="Right" x:Name="TabUnderlineHost">
+                            <Rectangle x:Name="TabUnderline" Height="7" RadiusX="3.5" RadiusY="3.5" HorizontalAlignment="Left"
+                                       Fill="{StaticResource HintBadgeBorderBrush}" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <!-- ゲームが1本も登録されていないときの案内(コンソール一覧が空のときだけ表示) -->
+                <TextBlock x:Name="EmptyGuideText"
+                           Grid.Row="1"
+                           Visibility="Collapsed"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           MaxWidth="1200"
+                           FontSize="36"
+                           Opacity="0.7"
+                           Text="ゲームがまだ登録されていません。&#x0A;下の歯車(設定)の「ゲームフォルダ管理」から、ROMのフォルダを登録してください。" />
+
+                <!-- コンソール(機種)一覧: 横スクロールのカルーセル -->
+                <ScrollViewer x:Name="ConsoleScrollViewer"
+                          Grid.Row="1"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          VerticalAlignment="Center"
+                          Padding="24">
+
+                    <ItemsControl x:Name="ConsoleItemsControl" ItemsSource="{x:Bind Consoles}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="8" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:ConsoleInfo">
+                                <Border Width="380" Height="380" CornerRadius="30" Margin="32"
+                                    Loaded="CardBorder_Loaded" Tapped="Card_Tapped">
+
+                                    <Grid>
+                                        <!-- 画像が無いときも枠が見えるよう、地色を敷く(画像があれば上に重なる)。 -->
+                                        <Border CornerRadius="8" Background="{x:Bind AccentColorHex, Converter={StaticResource HexToBrush}}" />
+                                        <Viewbox Width="130" Height="130" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.30">
+                                            <PathIcon Foreground="White" Data="F0 M21.58,16.09l-1.09,-7.66C20.21,6.46 18.52,5 16.53,5H7.47C5.48,5 3.79,6.46 3.51,8.43l-1.09,7.66C2.2,17.63 3.39,19 4.94,19h0c0.68,0 1.32,-0.27 1.8,-0.75L9,16h6l2.25,2.25c0.48,0.48 1.13,0.75 1.8,0.75h0C20.61,19 21.8,17.63 21.58,16.09zM11,11H9v2H8v-2H6v-1h2V8h1v2h2V11zM15,10c-0.55,0 -1,-0.45 -1,-1c0,-0.55 0.45,-1 1,-1s1,0.45 1,1C16,9.55 15.55,10 15,10zM17,13c-0.55,0 -1,-0.45 -1,-1c0,-0.55 0.45,-1 1,-1s1,0.45 1,1C18,12.55 17.55,13 17,13z" />
+                                        </Viewbox>
+
+                                        <Image Source="{x:Bind IconPath, Converter={StaticResource IconPathToImageSource}, Mode=OneWay}"
+                                           Visibility="{x:Bind IconPath, Converter={StaticResource StringToVisibility}, Mode=OneWay}"
+                                           Stretch="UniformToFill"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           ImageFailed="CollectionIcon_ImageFailed" />
+
+                                        <Border CornerRadius="8" Background="{StaticResource CardCaptionScrimBrush}" />
+
+                                        <StackPanel VerticalAlignment="Bottom" Padding="24" Spacing="4">
+                                            <TextBlock Text="{x:Bind Maker}" Foreground="{StaticResource CardCaptionTextBrush}" FontSize="20" />
+                                            <TextBlock Text="{x:Bind Name}" Foreground="White" FontSize="30" FontWeight="SemiBold" TextWrapping="Wrap" />
+
+                                            <TextBlock Foreground="{StaticResource CardCaptionTextBrush}" FontSize="25">
+                                            <Run Text="{x:Bind GameCount}" /><Run Text=" タイトル" />
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <!-- 選択枠は内容の外側に重ねる(枠の太さで内側の幅が変わり、文字の折り返しが選択時だけずれるのを防ぐ)。 -->
+                                        <Border CornerRadius="30" IsHitTestVisible="False"
+                                                BorderBrush="{x:Bind IsSelected, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                                                BorderThickness="{x:Bind IsSelected, Converter={StaticResource BoolToThickness}, Mode=OneWay}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- コンソール(機種)一覧: 小サイズ。2段×5個のページ表示(△で大サイズと切り替え。L/Rでページ送り)。
+                     表示するページ分(最大10個)だけをコードビハインドがItemsSourceに入れる。既定は非表示。 -->
+                <StackPanel x:Name="ConsoleCompactPanel" Grid.Row="1" Visibility="Collapsed" Background="Transparent"
+                            VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="4">
+                    <ItemsRepeater x:Name="ConsoleCompactRepeater" HorizontalAlignment="Center">
+                        <ItemsRepeater.Layout>
+                            <UniformGridLayout Orientation="Horizontal" MaximumRowsOrColumns="5"
+                                               MinItemWidth="320" MinItemHeight="320"
+                                               MinRowSpacing="0" MinColumnSpacing="0" ItemsStretch="None" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="models:ConsoleInfo">
+                                <Border Width="272" Height="272" CornerRadius="24" Margin="24" Tapped="Card_Tapped">
+                                    <Grid>
+                                        <!-- 画像が無いときも枠が見えるよう、地色を敷く(画像があれば上に重なる)。 -->
+                                        <Border CornerRadius="8" Background="{x:Bind AccentColorHex, Converter={StaticResource HexToBrush}}" />
+                                        <Viewbox Width="130" Height="130" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.30">
+                                            <PathIcon Foreground="White" Data="F0 M21.58,16.09l-1.09,-7.66C20.21,6.46 18.52,5 16.53,5H7.47C5.48,5 3.79,6.46 3.51,8.43l-1.09,7.66C2.2,17.63 3.39,19 4.94,19h0c0.68,0 1.32,-0.27 1.8,-0.75L9,16h6l2.25,2.25c0.48,0.48 1.13,0.75 1.8,0.75h0C20.61,19 21.8,17.63 21.58,16.09zM11,11H9v2H8v-2H6v-1h2V8h1v2h2V11zM15,10c-0.55,0 -1,-0.45 -1,-1c0,-0.55 0.45,-1 1,-1s1,0.45 1,1C16,9.55 15.55,10 15,10zM17,13c-0.55,0 -1,-0.45 -1,-1c0,-0.55 0.45,-1 1,-1s1,0.45 1,1C18,12.55 17.55,13 17,13z" />
+                                        </Viewbox>
+
+                                        <Image Source="{x:Bind IconPath, Converter={StaticResource IconPathToImageSource}, Mode=OneWay}"
+                                           Visibility="{x:Bind IconPath, Converter={StaticResource StringToVisibility}, Mode=OneWay}"
+                                           Stretch="UniformToFill"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           ImageFailed="CollectionIcon_ImageFailed" />
+
+                                        <Border CornerRadius="8" Background="{StaticResource CardCaptionScrimBrush}" />
+
+                                        <TextBlock Text="{x:Bind Name}" Foreground="White" FontSize="22" FontWeight="SemiBold"
+                                                   TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" Margin="14" />
+
+                                        <Border CornerRadius="20" IsHitTestVisible="False"
+                                                BorderBrush="{x:Bind IsSelected, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                                                BorderThickness="{x:Bind IsSelected, Converter={StaticResource BoolToThickness}, Mode=OneWay}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                    <!-- ページの位置を示す点。現在のページは細長いカプセルで、移動のときに伸び縮みして動く(コードビハインドが作る)。 -->
+                    <Canvas x:Name="ConsolePageDots" Height="44" HorizontalAlignment="Center" Margin="0,10,0,0" Background="Transparent" Tapped="ConsolePageDots_Tapped" />
+                </StackPanel>
+
+                <!-- コレクション一覧: 横スクロールのカルーセル(L2/R2でコンソール一覧と切り替え。既定は非表示) -->
+                <ScrollViewer x:Name="CollectionScrollViewer"
+                          Grid.Row="1"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          VerticalAlignment="Center"
+                          Padding="24"
+                          Visibility="Collapsed">
+
+                    <ItemsControl x:Name="CollectionItemsControl" ItemsSource="{x:Bind Collections}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="8" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:RomCollectionInfo">
+                                <Border Width="380" Height="380" CornerRadius="30" Margin="32"
+                                    Loaded="CardBorder_Loaded" Tapped="Card_Tapped">
+
+                                    <Grid>
+                                        <!-- 通常のコレクションカード -->
+                                        <Grid Visibility="{x:Bind IsAddNewCard, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert, Mode=OneWay}">
+                                            <!-- フォールバック表示: アクセントカラー背景 + フォルダ風グリフ。
+                                             IconPathが空、または読み込みに失敗した場合はこちらがそのまま見える。 -->
+                                            <Border CornerRadius="8" Background="{x:Bind AccentColorHex, Converter={StaticResource HexToBrush}}" />
+                                            <Viewbox Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.30">
+                                                <PathIcon Foreground="White"
+                                                      Data="M3,3 L10,3 C11.1,3 12,3.9 12,5 L12,12 C12,13.1 11.1,14 10,14 L3,14 C1.9,14 1,13.1 1,12 L1,5 C1,3.9 1.9,3 3,3 Z M17,3 L24,3 C25.1,3 26,3.9 26,5 L26,12 C26,13.1 25.1,14 24,14 L17,14 C15.9,14 15,13.1 15,12 L15,5 C15,3.9 15.9,3 17,3 Z M3,17 L10,17 C11.1,17 12,17.9 12,19 L12,26 C12,27.1 11.1,28 10,28 L3,28 C1.9,28 1,27.1 1,26 L1,19 C1,17.9 1.9,17 3,17 Z M17,17 L24,17 C25.1,17 26,17.9 26,19 L26,26 C26,27.1 25.1,28 24,28 L17,28 C15.9,28 15,27.1 15,26 L15,19 C15,17.9 15.9,17 17,17 Z" />
+                                            </Viewbox>
+
+                                            <!-- IconPathが指定されていれば上に重ねて表示する。ImageFailed発生時は
+                                             コードビハインド(CollectionIcon_ImageFailed)でこのImageだけCollapsedにし、
+                                             下のフォールバック表示(アクセントカラー+フォルダ風グリフ)を見せる。 -->
+                                            <Image Source="{x:Bind IconPath, Converter={StaticResource IconPathToImageSource}, Mode=OneWay}"
+                                               Visibility="{x:Bind IconPath, Converter={StaticResource StringToVisibility}, Mode=OneWay}"
+                                               Stretch="UniformToFill"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               ImageFailed="CollectionIcon_ImageFailed" />
+
+                                            <Border CornerRadius="8" Background="{StaticResource CardCaptionScrimBrush}" />
+
+                                            <StackPanel VerticalAlignment="Bottom" Padding="24" Spacing="4">
+                                                <TextBlock Text="コレクション" Foreground="{StaticResource CardCaptionTextBrush}" FontSize="20" />
+                                                <TextBlock Text="{x:Bind Name}" Foreground="White" FontSize="30" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                                <TextBlock Foreground="{StaticResource CardCaptionTextBrush}" FontSize="25">
+                                                <Run Text="{x:Bind GameIds.Count}" /><Run Text=" タイトル" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- 新規追加カード: 既存アイコンと同じサイズの点線枠+中央「+」 -->
+                                        <Grid Visibility="{x:Bind IsAddNewCard, Converter={StaticResource BoolToVisibility}, Mode=OneWay}">
+                                            <Rectangle RadiusX="24" RadiusY="24"
+                                                   Fill="Transparent"
+                                                   Stroke="{StaticResource HintBadgeBorderBrush}"
+                                                   StrokeThickness="4"
+                                                   StrokeDashArray="8,6"
+                                                   Margin="4" />
+                                            <Viewbox Width="120" Height="120" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path Stroke="{StaticResource HintBadgeBorderBrush}" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                      Data="M12,3 L12,21 M3,12 L21,12" />
+                                                </Canvas>
+                                            </Viewbox>
+                                            <TextBlock Text="新規追加"
+                                                   Foreground="{StaticResource HintBadgeBorderBrush}"
+                                                   FontSize="26" FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                                   Margin="0,0,0,32" />
+                                        </Grid>
+
+                                        <!-- 選択枠は内容の外側に重ねる(枠の太さで内側の幅が変わり、文字の折り返しが選択時だけずれるのを防ぐ)。
+                                             通常のコレクションカードにも、新規追加カードにも同じ枠(水色の脈動)を付ける。 -->
+                                        <Border CornerRadius="30" IsHitTestVisible="False"
+                                                BorderBrush="{x:Bind IsSelected, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                                                BorderThickness="{x:Bind IsSelected, Converter={StaticResource BoolToThickness}, Mode=OneWay}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- 行2: システムアイコンバー (Switch風丸形ボタン) -->
+                <!-- 行2: システムアイコンバー (サイズ100px・完全中央寄せ調整版) -->
+                <StackPanel x:Name="SystemIconPanel" Grid.Row="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="36"
+                Margin="0,8,0,24">
+
+                    <!-- 1. Sports Esports（ゲームコントローラー） -->
+                    <Button x:Name="ControllerIconBtn" Click="SystemIcon_Click" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="ms-appx:///Assets/system/gamecontrol.png" Width="90" Height="90" Stretch="Uniform" />
+                    </Button>
+
+                    <!-- 2. Settings（歯車） -->
+                    <Button x:Name="SettingsIconBtn" Click="SystemIcon_Click" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="ms-appx:///Assets/system/setting.png" Width="90" Height="90" Stretch="Uniform" />
+                    </Button>
+
+
+                    <!-- システム設定(音量・明るさ)。右からパネルが出る。 -->
+                    <Button x:Name="SystemSettingsIconBtn" Click="SystemIcon_Click" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="ms-appx:///Assets/system/quicksettings.png" Width="90" Height="90" Stretch="Uniform" />
+                    </Button>
+
+                    <Button x:Name="MaximizeIconBtn" Click="SystemIcon_Click" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="ms-appx:///Assets/system/fullscren.png" Width="90" Height="90" Stretch="Uniform" />
+                    </Button>
+
+                    <!-- 4. Exit To App（右向き矢印） -->
+                    <Button x:Name="PowerIconBtn" Click="SystemIcon_Click" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="ms-appx:///Assets/system/close.png" Width="90" Height="90" Stretch="Uniform" />
+                    </Button>
+
+                </StackPanel>
+
+
+                <!-- 行3: 下部ヒントバー。Switchのホーム画面の最下段と同じく、上端に区切り線・左端に
+                     コントローラーアイコン・右端に「濃色の丸+ラベル」のフラットな操作ガイド。
+                     「X」のラベルは表示中の一覧(コンソール/コレクション)に応じてコードビハインド
+                     (EditHint.Label)が書き換える。 -->
+                <controls:HintBar x:Name="ConsoleHintBar" Grid.Row="3" Margin="48,0,48,28" VerticalAlignment="Bottom"
+                                  HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition x:Name="TabSwitchHint" Key="L2/R2" Label="コレクション移動" />
+                        <controls:HintDefinition x:Name="EditHint" Key="X" Label="コンソール編集" />
+                        <controls:HintDefinition x:Name="PageHint" Key="L/R" Label="ページ移動" />
+                        <controls:HintDefinition x:Name="SizeHint" Key="Y" Label="表示切替" />
+                        <controls:HintDefinition Key="A" Label="決定" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+
+                <!-- 接続中のコントローラー(1P/2P)。HintBarと同じ段の左端。緑の四角は入力があるとゆっくり点灯する。 -->
+                <!-- 左下: 時計(ダークテーマと同じ) → コントローラー -->
+                <StackPanel Grid.Row="3" Margin="48,0,48,28" Orientation="Horizontal" Spacing="24"
+                            VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    <TextBlock x:Name="ClockText" FontSize="32" FontWeight="SemiBold" VerticalAlignment="Center"
+                               Foreground="{StaticResource AppTextPrimaryBrush}" />
+                    <controls:ControllerStatusIndicator VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </Viewbox>
+
+        <!-- コレクションの新規追加/編集(以前はCollectionEditPageへのページ遷移だった) -->
+        <controls:CollectionEditOverlay x:Name="EditOverlay" Visibility="Collapsed" />
+
+        <!-- システム設定パネル(音量・明るさ。右からスライド) -->
+        <controls:SystemSettingsOverlay x:Name="SystemSettings" Visibility="Collapsed" />
+
+        <!-- コンソールの編集(アイコン/デフォルトランチャー。コンソール表示中にXボタン) -->
+        <controls:ConsoleEditOverlay x:Name="ConsoleEditor" Visibility="Collapsed" />
+    </Grid>
+</Page>

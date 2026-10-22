@@ -1,0 +1,311 @@
+[
+  {
+    "id": "fc",
+    "name": "FCEUmm",
+    "corePath": "fceumm_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "fds",
+    "name": "FCEUmm",
+    "corePath": "fceumm_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "sfc",
+    "name": "Snes9x",
+    "corePath": "snes9x_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "n64",
+    "name": "Mupen64Plus-Next",
+    "corePath": "mupen64plus_next_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "gc",
+    "name": "Dolphin",
+    "corePath": "dolphin_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "wii",
+    "name": "Dolphin",
+    "corePath": "dolphin_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "pce",
+    "name": "Mednafen PCE",
+    "corePath": "mednafen_pce_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "pcecd",
+    "name": "Mednafen PCE",
+    "corePath": "mednafen_pce_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "sgx",
+    "name": "Beetle SuperGrafx",
+    "corePath": "mednafen_supergrafx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "pcfx",
+    "name": "Beetle PC-FX",
+    "corePath": "mednafen_pcfx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "gb",
+    "name": "Gambatte",
+    "corePath": "gambatte_libretro.dll",
+    "defaultAspectRatio": "10:9"
+  },
+  {
+    "id": "gbc",
+    "name": "Gambatte",
+    "corePath": "gambatte_libretro.dll",
+    "defaultAspectRatio": "10:9"
+  },
+  {
+    "id": "gba",
+    "name": "VBA-M",
+    "corePath": "vbam_libretro.dll",
+    "defaultAspectRatio": "3:2"
+  },
+  {
+    "id": "vb",
+    "name": "Beetle VB",
+    "corePath": "mednafen_vb_libretro.dll",
+    "defaultAspectRatio": "12:7"
+  },
+  {
+    "id": "pokemini",
+    "name": "PokeMini",
+    "corePath": "pokemini_libretro.dll",
+    "defaultAspectRatio": "3:2"
+  },
+  {
+    "id": "nds",
+    "name": "melonDS",
+    "corePath": "melonds_libretro.dll",
+    "defaultAspectRatio": "Auto"
+  },
+  {
+    "id": "3ds",
+    "name": "Citra",
+    "corePath": "citra_libretro.dll",
+    "defaultAspectRatio": "Auto"
+  },
+  {
+    "id": "sg1000",
+    "name": "Genesis Plus GX",
+    "corePath": "genesis_plus_gx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "mark3",
+    "name": "Genesis Plus GX",
+    "corePath": "genesis_plus_gx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "md",
+    "name": "Genesis Plus GX",
+    "corePath": "genesis_plus_gx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "gg",
+    "name": "Genesis Plus GX",
+    "corePath": "genesis_plus_gx_libretro.dll",
+    "defaultAspectRatio": "10:9"
+  },
+  {
+    "id": "megacd",
+    "name": "Genesis Plus GX",
+    "corePath": "genesis_plus_gx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "32x",
+    "name": "PicoDrive",
+    "corePath": "picodrive_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "stn",
+    "name": "Kronos",
+    "corePath": "kronos_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "stn",
+    "name": "Beetle Saturn",
+    "corePath": "mednafen_saturn_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "dc",
+    "name": "Flycast",
+    "corePath": "flycast_libretro.dll",
+    "defaultAspectRatio": "4:3",
+    "biosBoot": true
+  },
+  {
+    "id": "naomi",
+    "name": "Flycast (NAOMI)",
+    "corePath": "flycast_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "naomi2",
+    "name": "Flycast (NAOMI 2)",
+    "corePath": "flycast_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "atomiswave",
+    "name": "Flycast (Atomiswave)",
+    "corePath": "flycast_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "psp",
+    "name": "PPSSPP",
+    "corePath": "ppsspp_libretro.dll",
+    "defaultAspectRatio": "16:9"
+  },
+  {
+    "id": "neogeo",
+    "name": "FinalBurn Neo",
+    "corePath": "fbneo_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "ps1",
+    "name": "SwanStation",
+    "corePath": "swanstation_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "ps1",
+    "name": "Beetle PSX HW",
+    "corePath": "mednafen_psx_hw_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "ps2",
+    "name": "LRPS2",
+    "corePath": "pcsx2_libretro.dll",
+    "defaultAspectRatio": "4:3",
+    "biosBoot": true
+  },
+  {
+    "id": "ps3",
+    "name": "RPCS3",
+    "exePath": "C:\\Home\\Emulator\\rpcs3\\rpcs3.exe",
+    "args": "--no-gui --fullscreen \"{rom}\"",
+    "workingPath": "C:\\Home\\Emulator\\rpcs3",
+    "defaultAspectRatio": "16:9"
+  },
+  {
+    "id": "ngcd",
+    "name": "NeoCD",
+    "corePath": "neocd_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "ngp",
+    "name": "Beetle NeoPop",
+    "corePath": "mednafen_ngp_libretro.dll",
+    "defaultAspectRatio": "20:19"
+  },
+  {
+    "id": "ngpc",
+    "name": "Beetle NeoPop",
+    "corePath": "mednafen_ngp_libretro.dll",
+    "defaultAspectRatio": "20:19"
+  },
+  {
+    "id": "ws",
+    "name": "Beetle Cygne",
+    "corePath": "mednafen_wswan_libretro.dll",
+    "defaultAspectRatio": "Auto"
+  },
+  {
+    "id": "wsc",
+    "name": "Beetle Cygne",
+    "corePath": "mednafen_wswan_libretro.dll",
+    "defaultAspectRatio": "Auto"
+  },
+  {
+    "id": "xbox",
+    "name": "xemu",
+    "exePath": "C:\\Home\\Emulator\\xemu\\xemu.exe",
+    "args": "-full-screen -dvd_path \"{rom}\"",
+    "workingPath": "C:\\Home\\Emulator\\xemu",
+    "defaultAspectRatio": "16:9"
+  },
+  {
+    "id": "model3",
+    "name": "Supermodel",
+    "corePath": "supermodel_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "x68000",
+    "name": "PX68k",
+    "corePath": "px68k_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "fmtowns",
+    "name": "Geartowns",
+    "corePath": "geartowns_libretro.dll",
+    "defaultAspectRatio": "4:3",
+    "biosBoot": true
+  },
+  {
+    "id": "msx",
+    "name": "blueMSX",
+    "corePath": "bluemsx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "msx2",
+    "name": "blueMSX",
+    "corePath": "bluemsx_libretro.dll",
+    "defaultAspectRatio": "4:3"
+  },
+  {
+    "id": "wiiu",
+    "name": "Cemu",
+    "exePath": "C:\\Home\\Emulator\\Cemu\\Cemu.exe",
+    "args": "-f -g \"{rom}\"",
+    "workingPath": "C:\\Home\\Emulator\\Cemu",
+    "defaultAspectRatio": "16:9"
+  },
+  {
+    "id": "fbneo",
+    "name": "FinalBurn Neo",
+    "corePath": "fbneo_libretro.dll",
+    "defaultAspectRatio": "Auto"
+  },
+  {
+    "id": "mame2003",
+    "name": "MAME 2003 Plus",
+    "corePath": "mame2003_plus_libretro.dll",
+    "defaultAspectRatio": "Auto"
+  },
+  {
+    "id": "mame",
+    "name": "MAME",
+    "corePath": "mame_libretro.dll",
+    "defaultAspectRatio": "Auto"
+  }
+]

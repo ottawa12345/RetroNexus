@@ -1,0 +1,4 @@
+{
+  "schema": 1, "id": "sample-fail", "name": "サンプル: 失敗するボタン", "display": "tile", "width": 1, "order": 106, "icon": "E783",
+  "action": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Mode","fail"], "timeoutSec": 5 }
+}

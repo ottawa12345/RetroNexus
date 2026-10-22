@@ -1,0 +1,93 @@
+<!--
+    Colors.xaml: アプリ全体で使う色の「生値」だけを定義する。
+    ここには Color リソースだけを置き、SolidColorBrush/LinearGradientBrush は
+    Brushes.xaml 側で組み立てる(色そのものと、それをどう使うかを分離するため)。
+
+    既存の5色(AppBackground/AppSurface/AppAccent/AppTextPrimary/AppTextSecondary)は
+    元々App.xamlに直接書かれていた「Switch風配色」をそのまま移設したもの
+    (ConsoleSelectPage/GameSelectPageが既に参照しているため、値は変更していない)。
+    それ以外は、各画面がバラバラにハードコードしていた色を集約・命名したもの。
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============ 基本配色(Switch風) ============ -->
+    <Color x:Key="AppBackgroundColor">#E8E8E8</Color>
+    <!-- 設定系画面(Switch風): ページ全体は少し明るく、右の内容領域だけわずかに暗い -->
+    <Color x:Key="SettingsPageBackgroundColor">#EFEFEF</Color>
+    <Color x:Key="SettingsContentBackgroundColor">#EAEAEA</Color>
+    <Color x:Key="AppSurfaceColor">#FFFFFF</Color>
+    <Color x:Key="AppAccentColor">#00C3E3</Color>
+    <Color x:Key="AppTextPrimaryColor">#2D2D2D</Color>
+    <Color x:Key="AppTextSecondaryColor">#7A7A7A</Color>
+
+    <!-- Switchの設定画面の左メニューで、選択中のカテゴリに使う青(縦バー)。 -->
+    <Color x:Key="SwitchSelectedBlueColor">#3050EF</Color>
+
+    <!-- ============ パネル/カード ============ -->
+    <!-- 設定画面系(SettingsPage/ControllerSettingsPage)の左右パネルの下地色。
+         AppSurfaceColor(カード自体の白)より一段暗いグレーで、カードを浮かせて見せる。 -->
+    <Color x:Key="PanelBackgroundColor">#F5F6F8</Color>
+
+    <!-- ============ ヒントバー(画面下の操作ガイド) ============ -->
+    <!-- ConsoleSelectPage/GameSelectPage/GamePlayPageのヒントバーで使われていた配色を
+         そのまま移設・命名したもの。グラデーションの3色 + バッジの丸背景/縁取り + 
+         バッジの疑似ドロップシャドウ。 -->
+    <Color x:Key="HintBarGradientStartColor">#FFFFFFFF</Color>
+    <Color x:Key="HintBarGradientMidColor">#FFF0F1F5</Color>
+    <Color x:Key="HintBarGradientEndColor">#FFE0E2E8</Color>
+    <Color x:Key="HintBadgeBackgroundColor">#F8F9FA</Color>
+    <Color x:Key="HintBadgeBorderColor">#3B3C43</Color>
+    <Color x:Key="SoftShadowColor">#20000000</Color>
+
+    <!-- ============ オーバーレイ(モーダル的に画面を覆う背景) ============ -->
+    <Color x:Key="OverlayScrimColor">#B0000000</Color>
+    <Color x:Key="StrongOverlayScrimColor">#CC000000</Color>
+
+    <!-- ============ カード(コンソール/コレクション)のキャプション・タブ ============ -->
+    <!-- コンソール/コレクションカード下部のキャプション文字色(半透明の白)。 -->
+    <Color x:Key="CardCaptionTextColor">#DDFFFFFF</Color>
+    <!-- 選択中タブ(「コンソール」「コレクション」)の濃色カプセルのグラデーション終端。
+         開始色はHintBadgeBorderColor(#3B3C43)と同じ値を共有する。 -->
+    <Color x:Key="TabActiveGradientEndColor">#2A2B30</Color>
+    <!-- タブカプセルの疑似ドロップシャドウ(SoftShadowColorより薄い版)。 -->
+    <Color x:Key="TabShadowColor">#10000000</Color>
+
+    <!-- ============ その他、単発で使う背景色 ============ -->
+    <!-- ゲーム選択画面の詳細オーバーレイで、サムネイル画像の背景に敷く濃いグレー
+         (写真立てのような枠を表現する)。 -->
+    <Color x:Key="PhotoFrameBackgroundColor">#333333</Color>
+    <!-- ソートオーバーレイの左側(現在のグリッドが薄く見える想定の装飾)に使う、
+         半透明の白。 -->
+    <Color x:Key="TranslucentSurfaceColor">#20FFFFFF</Color>
+
+    <!-- ============ GamePlayPage(ゲーム中の一時停止メニュー等)専用の背景色 ============ -->
+    <!-- セーブスロット/巻き戻しのサムネイルが無い場合に敷く、ほぼ黒のプレースホルダー。 -->
+    <Color x:Key="MediaPlaceholderBackgroundColor">#111111</Color>
+    <!-- 巻き戻しのフィルムストリップのサムネイルが無い場合に敷く、濃いグレーの
+         プレースホルダー(MediaPlaceholderBackgroundColorよりわずかに明るい)。 -->
+    <Color x:Key="FilmstripThumbnailBackgroundColor">#222222</Color>
+    <!-- 巻き戻し画面(ZL+ZR長押し)のフルスクリーン暗転。ゲーム画面が完全に隠れるよう、
+         オーバーレイの中でも最も濃い(不透明度93%)。 -->
+    <Color x:Key="VeryStrongOverlayScrimColor">#EE000000</Color>
+    <!-- 一時停止メニュー自体の背景暗転(ゲーム画面を薄く透かして見せる、不透明度40%)。 -->
+    <Color x:Key="MenuScrimColor">#66000000</Color>
+    <!-- 一時停止メニューの「設定」パネルの半透明な下地(不透明度20%の黒)。 -->
+    <Color x:Key="TranslucentPanelBackgroundColor">#33000000</Color>
+    <!-- 「設定」パネルの縁取り(半透明の白)。 -->
+    <Color x:Key="PanelBorderTranslucentColor">#AAFFFFFF</Color>
+
+    <!-- ============ コントローラー図(ControllerSettingsPage専用の挿絵配色) ============ -->
+    <!-- ゲームパッドの模式図を描くための色。意味的な使い回しは想定しておらず、
+         あくまでマジックナンバーの16進数をやめて名前を付けるための集約。 -->
+    <Color x:Key="DiagramBodyColor">#E4E6EC</Color>
+    <Color x:Key="DiagramDPadColor">#4A4D57</Color>
+    <Color x:Key="DiagramStickColor">#33363F</Color>
+    <Color x:Key="DiagramShoulderColor">#6C7280</Color>
+    <Color x:Key="DiagramPillColor">#8A8E99</Color>
+    <Color x:Key="DiagramButtonYColor">#E0B23C</Color>
+    <Color x:Key="DiagramButtonXColor">#3E86C4</Color>
+    <Color x:Key="DiagramButtonBColor">#C4514B</Color>
+    <Color x:Key="DiagramButtonAColor">#5CA860</Color>
+</ResourceDictionary>

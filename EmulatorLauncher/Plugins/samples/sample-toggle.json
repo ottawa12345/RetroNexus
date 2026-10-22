@@ -1,0 +1,6 @@
+{
+  "schema": 1, "id": "sample-toggle", "name": "サンプル: オンオフ", "display": "tile", "width": 1, "order": 103, "icon": "E7E8",
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","toggle","-Mode","get","-Default","off"], "timeoutSec": 5 },
+  "action": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","toggle","-Mode","set","-Value","{value}"], "timeoutSec": 5 },
+  "options": { "type": "toggle" }
+}

@@ -1,0 +1,6 @@
+{
+  "schema": 1, "id": "sample-choice", "name": "サンプル: 選択肢", "display": "tile", "width": 1, "order": 104, "icon": "E713",
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","choice","-Mode","get","-Default","middle"], "timeoutSec": 5 },
+  "action": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","choice","-Mode","set","-Value","{value}"], "timeoutSec": 5 },
+  "options": { "type": "choice", "items": [ { "value": "low", "label": "低" }, { "value": "middle", "label": "中" }, { "value": "high", "label": "高" } ] }
+}

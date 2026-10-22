@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      SQLite(Dapper)によるDB/ファイル管理を担当。WinUIには依存しない。
+      RomFolder/RomFile/RomCollectionInfo等のモデルはEmulatorLauncher.Coreを参照する。
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>EmulatorLauncher</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!--
+    以前はEmulatorLauncher.csproj側にあったPackageReference。
+    DatabaseManager/各Repositoryがここへ移動したため、参照もこちらへ移した。
+  -->
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.89" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmulatorLauncher.Core\EmulatorLauncher.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,6 @@
+{
+  "schema": 1, "id": "sample-slider", "name": "サンプル: スライダー", "display": "slider", "order": 102, "icon": "E767",
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","slider","-Mode","get","-Default","50"], "timeoutSec": 5 },
+  "action": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","slider","-Mode","set","-Value","{value}"], "timeoutSec": 5 },
+  "options": { "type": "range", "min": 0, "max": 100, "step": 10, "unit": "%" }
+}

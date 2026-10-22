@@ -1,0 +1,333 @@
+﻿<UserControl
+    x:Class="EmulatorLauncher.Controls.GameDetailOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls"
+    xmlns:models="using:EmulatorLauncher.Models"
+    xmlns:views="using:EmulatorLauncher.Views">
+
+    <!--
+        ゲーム詳細オーバーレイ(3枚目画像相当)の共通UserControl。
+        元々GameSelectPage.xamlに直接書かれていたDetailOverlayを、見た目(配色・寸法)は
+        変えずにそのまま切り出したもの。GameSelectPage/CollectionGameSelectPageの両方で使う。
+
+        使う側は、ページの1920x1080キャンバスのGrid全体を覆うように置き、
+        コードビハインドから Show(RomFile) / HandleGamepadInput / Closedイベント を使う:
+
+            <controls:GameDetailOverlay x:Name="DetailOverlay" Grid.RowSpan="3" Visibility="Collapsed" />
+
+        表示/非表示(Visibility)はこのコントロール自身がShow/Closeで切り替える。
+    -->
+    <UserControl.Resources>
+      <ResourceDictionary>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <!-- テーマ別の配色(ダーク時だけ暗い配色にする。切り替えはShow時のApplyTheme)。
+             標準=従来どおり。ダーク=黒基調で、左(画像側)を右(文字側)より少し明るくする
+             (標準の白/薄グレーの関係と同じ)。透明やぼかしは使わない。 -->
+        <ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary x:Key="Default">
+                <SolidColorBrush x:Key="DetailText1Brush" Color="#2D2D2D" />
+                <SolidColorBrush x:Key="DetailText2Brush" Color="#7A7A7A" />
+                <SolidColorBrush x:Key="DetailPanelBrush" Color="#F5F6F8" />
+                <SolidColorBrush x:Key="DetailSurfaceBrush" Color="#FFFFFF" />
+                <SolidColorBrush x:Key="DetailScrimBrush" Color="#B0000000" />
+            </ResourceDictionary>
+            <ResourceDictionary x:Key="Light">
+                <SolidColorBrush x:Key="DetailText1Brush" Color="#2D2D2D" />
+                <SolidColorBrush x:Key="DetailText2Brush" Color="#7A7A7A" />
+                <SolidColorBrush x:Key="DetailPanelBrush" Color="#F5F6F8" />
+                <SolidColorBrush x:Key="DetailSurfaceBrush" Color="#FFFFFF" />
+                <SolidColorBrush x:Key="DetailScrimBrush" Color="#B0000000" />
+            </ResourceDictionary>
+            <ResourceDictionary x:Key="Dark">
+                <SolidColorBrush x:Key="DetailText1Brush" Color="#F2F4F8" />
+                <SolidColorBrush x:Key="DetailText2Brush" Color="#9AA3B2" />
+                <SolidColorBrush x:Key="DetailPanelBrush" Color="#17191F" />
+                <SolidColorBrush x:Key="DetailSurfaceBrush" Color="#262932" />
+                <SolidColorBrush x:Key="DetailScrimBrush" Color="#8C000000" />
+            </ResourceDictionary>
+        </ResourceDictionary.ThemeDictionaries>
+      </ResourceDictionary>
+    </UserControl.Resources>
+
+    <!-- 暗幕(OverlayScrimBrush)はこのUserControlのルートに敷き、ウィンドウ全体を覆う。
+         使う側のページではこのコントロールをViewboxの外(ページ全体を覆う位置)に置くこと。
+         そうしないと暗幕がViewboxと一緒に縮小され、ウィンドウの縦横比が16:9でない時の
+         左右(上下)の余白部分がマスクされずに残ってしまう。
+         パネルなどの中身は、ページ本体と同じく1920x1080の固定キャンバスを自前のViewboxで
+         一様スケーリングするので、レイアウトはページ本体と完全に重なる。 -->
+    <Grid x:Name="ScrimRoot" Background="{ThemeResource DetailScrimBrush}" Tapped="ScrimRoot_Tapped">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <!-- パネル全体(1560x860の固定サイズ)。左: 画像(白地)、右: 文字情報(一段暗いグレー地)。
+                     レイアウトはSwitchのゲーム詳細画面に合わせている。 -->
+                <!-- 上下の余白をそろえる: 操作ガイド(画面下端の帯。高さ約69)の上端までの領域の中央に置く(どの仮想解像度でも、カードの上と下が同じ隙間になる。1080のときは上36・下35)。 -->
+                <Grid x:Name="DetailPanelRoot" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,69" Width="1560" Height="860">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="360" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 左: 画像。上寄せで、縦横比は問わない(幅300・高さ560の枠に収まるように等倍で表示)。
+                         画像の左右には何も敷かない。画像が無い/読み込みに失敗したときだけ、
+                         アクセントカラーの単色の四角を出す。 -->
+                    <!-- 角丸(CornerRadius)をつけた左の列だけ、ウィンドウの大きさによって後ろの一覧が透けて見える不具合があった
+                         (角丸なしのBorder・Rectangleでは出ないことを確認済み)。そのため、左の列は角丸をつけない。 -->
+                    <Border x:Name="DetailLeftPanel" Grid.Column="0" Background="{ThemeResource DetailSurfaceBrush}" Padding="30">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Spacing="12">
+                                <Grid HorizontalAlignment="Center">
+                                    <Border x:Name="DetailThumbnailFallback" Width="300" Height="300" CornerRadius="4" Visibility="Collapsed" />
+                                    <Image x:Name="DetailThumbnailImage" Stretch="Uniform" MaxWidth="300" MaxHeight="520"
+                                           ImageFailed="DetailThumbnailImage_ImageFailed" />
+                                </Grid>
+
+                                <!-- このゲームだけのボタン割り当て(カスタム)があるときだけ出す小さな印。
+                                     変更は□(X)ボタン(下の操作ガイド参照)。 -->
+                                <Border x:Name="CustomControllerBadge" Visibility="Collapsed" HorizontalAlignment="Center"
+                                        BorderThickness="2" BorderBrush="{ThemeResource DetailText2Brush}"
+                                        CornerRadius="6" Padding="10,3">
+                                    <TextBlock Text="カスタムコントローラ設定" FontSize="18"
+                                               Foreground="{ThemeResource DetailText2Brush}" />
+                                </Border>
+
+                                <!-- このゲームだけのランチャー指定があるときだけ出す小さな印。
+                                     変更は△(Y)ボタン(複数のランチャーがあるときだけ操作ガイドに出る)。 -->
+                                <Border x:Name="CustomLauncherBadge" Visibility="Collapsed" HorizontalAlignment="Center"
+                                        BorderThickness="2" BorderBrush="{ThemeResource DetailText2Brush}"
+                                        CornerRadius="6" Padding="10,3">
+                                    <TextBlock Text="カスタムランチャー" FontSize="18"
+                                               Foreground="{ThemeResource DetailText2Brush}" />
+                                </Border>
+                            </StackPanel>
+
+                            <!-- ランチャー変更(このゲームだけ使うランチャーを選ぶ)。アイコンの下。
+                                 コンソールにランチャーが2つ以上あるときだけ表示する。
+                                 枠は常に同じ太さ(3)で、フォーカス中だけ色を付ける(レイアウトがずれないように)。
+                                 -->
+                            <StackPanel Grid.Row="1" Spacing="12">
+                            <!-- 再開ボタン。前回「タイトル選択にもどる」で終了した再開用の状態があるときだけ表示する。
+                                 「詳細画面から起動」の時は、開いた直後にここへフォーカスがある。 -->
+                            <Border x:Name="ResumeBox" Visibility="Collapsed"
+                                    BorderThickness="3" BorderBrush="Transparent" CornerRadius="12"
+                                    Background="{ThemeResource DetailPanelBrush}" Padding="12,10"
+                                    PointerPressed="ResumeBox_PointerPressed">
+                                <TextBlock Text="再開" FontSize="32" FontWeight="SemiBold" HorizontalAlignment="Center"
+                                           Foreground="{ThemeResource DetailText1Brush}" />
+                            </Border>
+
+                            <!-- 起動ボタン。「ゲーム起動方法」が「詳細画面から起動」の時だけ表示し、
+                                 開いた直後はここにフォーカスがある(アプリ設定で切り替え)。 -->
+                            <Border x:Name="LaunchBox" Visibility="Collapsed"
+                                    BorderThickness="3" BorderBrush="Transparent" CornerRadius="12"
+                                    Background="{ThemeResource DetailPanelBrush}" Padding="12,10"
+                                    PointerPressed="LaunchBox_PointerPressed">
+                                <TextBlock Text="起動" FontSize="32" FontWeight="SemiBold" HorizontalAlignment="Center"
+                                           Foreground="{ThemeResource DetailText1Brush}" />
+                            </Border>
+
+                            <!-- バージョン選択。アーケードのクローン(同じゲームの別バージョン)が複数あるときだけ、
+                                 「詳細画面から起動」の時に表示する。左右で切り替え、Aで一覧から選ぶ。 -->
+                            <Border x:Name="VariantBox" Visibility="Collapsed"
+                                    BorderThickness="3" BorderBrush="Transparent" CornerRadius="12"
+                                    Background="{ThemeResource DetailPanelBrush}" Padding="12,8"
+                                    PointerPressed="VariantBox_PointerPressed">
+                                <StackPanel Spacing="2">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+                                        <!-- 光ディスクのアイコン(複数枚組のときだけ出す。ディスクを替えると回る) -->
+                                        <!-- ROMカセットのアイコン(アーケードのクローン=バージョン選択のときだけ出す。切り替えると滑り込む) -->
+                                        <Grid x:Name="CartIcon" Width="20" Height="22" Visibility="Collapsed" VerticalAlignment="Center">
+                                            <Border CornerRadius="3,3,2,2">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                        <GradientStop Color="#FFA9B4BF" Offset="0" />
+                                                        <GradientStop Color="#FF5F6B78" Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                            </Border>
+                                            <Border Margin="3,3,3,10" CornerRadius="1" Background="#E6F4F7FA" />
+                                            <Border Height="4" VerticalAlignment="Bottom" Margin="4,0,4,1" Background="#FFC9A94B" />
+                                        </Grid>
+                                        <!-- フロッピーディスクのアイコン(MSX/MSX2の複数枚のとき。切り替えると滑り込む) -->
+                                        <Grid x:Name="FloppyIcon" Width="22" Height="22" Visibility="Collapsed" VerticalAlignment="Center">
+                                            <Border CornerRadius="2,6,2,2" Background="#FF3F5A8A" />
+                                            <Border Width="11" Height="8" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,3,0"
+                                                    CornerRadius="1" Background="#FFD5DCE4" />
+                                            <Border Width="3" Height="5" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,1.5,-2,0"
+                                                    Background="#FF3F5A8A" />
+                                            <Border Margin="3,12,3,2" CornerRadius="1" Background="#F2F4F7FA" />
+                                        </Grid>
+                                        <Grid x:Name="DiscIcon" Width="22" Height="22" Visibility="Collapsed" VerticalAlignment="Center">
+                                            <Ellipse>
+                                                <Ellipse.Fill>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="#FFF4F7FA" Offset="0" />
+                                                        <GradientStop Color="#FF8FA3B8" Offset="0.5" />
+                                                        <GradientStop Color="#FFE8EEF5" Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <Ellipse Width="13" Height="13" Stroke="#66FFFFFF" StrokeThickness="1" />
+                                            <Ellipse Width="7" Height="7" Fill="{ThemeResource DetailPanelBrush}" />
+                                        </Grid>
+                                        <TextBlock x:Name="VariantCaptionText" FontSize="16" HorizontalAlignment="Center"
+                                                   Foreground="{ThemeResource DetailText2Brush}" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="VariantNameText" FontSize="20" HorizontalAlignment="Center"
+                                               TextWrapping="Wrap" TextAlignment="Center" MaxLines="3" TextTrimming="CharacterEllipsis"
+                                               Foreground="{ThemeResource DetailText1Brush}" />
+                                </StackPanel>
+                            </Border>
+
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border x:Name="DetailRightPanel" Grid.Column="1" Background="{ThemeResource DetailPanelBrush}" CornerRadius="0,8,8,0" Padding="40,36,40,32">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Spacing="6">
+                                <TextBlock x:Name="DetailTitleText" FontSize="40" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                                           Foreground="{ThemeResource DetailText1Brush}" />
+                                <TextBlock x:Name="DetailMetaText" FontSize="26" Margin="0,8,0,0"
+                                           Foreground="{ThemeResource DetailText2Brush}" />
+                                <TextBlock x:Name="DetailPlayersText" FontSize="26"
+                                           Foreground="{ThemeResource DetailText2Brush}" />
+                            </StackPanel>
+
+                            <!-- 概要。上の見出しと下のコレクション/ステート欄にはさまれた余白(*の行)に収まる行数(最大6行)で省略する
+                                 (スクロールはしない。コレクションが増えたりステート画像が出たりして余白が減ると、行数も減る。
+                                 行数はDescriptionHost_SizeChanged/FitDescriptionLinesが決める)。 -->
+                            <Grid x:Name="DescriptionHost" Grid.Row="1" SizeChanged="DescriptionHost_SizeChanged">
+                                <TextBlock x:Name="DetailDescriptionText" FontSize="28" LineHeight="42" MaxLines="6"
+                                           TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Top"
+                                           Foreground="{ThemeResource DetailText1Brush}" Margin="0,28,0,0" />
+                            </Grid>
+
+                            <!-- お気に入り/コレクションへの追加・解除。各チップがそれぞれ独立した
+                                 ToggleButtonなので、複数のコレクションに同時に入れられる
+                                 (「お気に入り」もRomCollectionの1つとして同じ仕組みで扱う)。
+
+                                 チップは固定サイズ(幅372x高さ64)の3列。名前が長くても切れないよう幅を広げ、
+                                 それでも長い名前は末尾を「…」で省略する。
+                                 フォーカスの枠は常に同じ太さ(3)で、フォーカス中だけ色を付ける。
+                                 太さを切り替えると、チップの高さが変わって欄全体が上下にずれてしまうため。
+
+                                 マウス操作はClickで受ける(Checked/Uncheckedは使わない)。Checked/Uncheckedは
+                                 IsCheckedがバインディングで変わった時にも発火し、チップ一覧を作り直す際に
+                                 コンテナが再利用されると「IsCheckedは新しいチップの値、Tagはまだ古いチップ」
+                                 という状態で発火して、別のコレクションへ誤って登録/解除してしまうため。
+
+                                 AllowFocusOnInteraction="False": マウスでチップをクリックしてもXAMLフォーカスを
+                                 奪わないようにする。CollectionGameSelectPageは「選択中カード=XAMLフォーカスを
+                                 持つButton」という作りのため、チップがフォーカスを奪うと裏のカードのLostFocusが
+                                 走り、拡大表示が解除されてしまう。ゲームパッド操作ではそもそもXAMLフォーカスを
+                                 使っていない(IsFocusedで枠を描いているだけ)ので影響しない。 -->
+                            <StackPanel Grid.Row="2" Spacing="10" Margin="0,16,0,0">
+                                <TextBlock Text="コレクションに追加" FontSize="28" FontWeight="ExtraBold"
+                                           Foreground="{ThemeResource DetailText2Brush}" />
+                                <ItemsControl x:Name="DetailCollectionsList" ItemsSource="{x:Bind DetailCollections}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3" ItemWidth="372" ItemHeight="66" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:CollectionChipItem">
+                                            <ToggleButton IsChecked="{x:Bind IsMember, Mode=OneWay}"
+                                                          Tag="{x:Bind}" Click="CollectionChip_Click"
+                                                          AllowFocusOnInteraction="False"
+                                                          BorderBrush="{x:Bind IsFocused, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                                                          BorderThickness="3"
+                                                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                          HorizontalContentAlignment="Center"
+                                                          Padding="16,0" CornerRadius="18" Margin="0,0,12,10">
+                                                <TextBlock Text="{x:Bind Name}" FontSize="26" TextTrimming="CharacterEllipsis" />
+                                            </ToggleButton>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- ステートセーブの画像(最大4枚。中断が先頭、残りは新しい順。選ぶとそのステートから再開する)。
+                                     1枚も無いゲームでは、見出しごと出さない。 -->
+                                <StackPanel x:Name="StateImageStrip" Spacing="10" Margin="0,6,0,0" Visibility="Collapsed">
+                                    <TextBlock Text="ステートセーブ" FontSize="28" FontWeight="ExtraBold"
+                                               Foreground="{ThemeResource DetailText2Brush}" />
+                                    <ItemsControl ItemsSource="{x:Bind StateImages}" IsTabStop="False">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="8" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="models:StateImageItem">
+                                                    <!-- 選ぶとそのステートから再開する。枠は常に同じ太さ(3)で、フォーカス中だけ色を付ける。 -->
+                                                    <Border Tag="{x:Bind}" PointerPressed="StateTile_PointerPressed"
+                                                            SizeChanged="StateTile_SizeChanged"
+                                                            Loaded="StateTile_Loaded" Unloaded="StateTile_Unloaded"
+                                                            BorderThickness="3" CornerRadius="8"
+                                                            BorderBrush="{x:Bind IsFocused, Converter={StaticResource BoolToBrush}, Mode=OneWay}">
+                                                    <StackPanel Width="260" Spacing="4">
+                                                        <Grid Height="146" Background="Black">
+                                                            <Image Source="{x:Bind Image}" Width="{x:Bind ImageWidth}" Height="{x:Bind ImageHeight}" Stretch="Fill"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6"
+                                                                    Padding="10,2" CornerRadius="6" Background="#B0000000">
+                                                                <TextBlock Text="{x:Bind Label}" FontSize="20" Foreground="White" />
+                                                            </Border>
+                                                        </Grid>
+                                                        <TextBlock Text="{x:Bind DateText}" FontSize="22" Margin="0,0,0,2" HorizontalAlignment="Center"
+                                                                   Foreground="{ThemeResource DetailText2Brush}" />
+                                                    </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- 操作ガイド: Switchのゲーム詳細画面と同じく、画面(1920x1080キャンバス)の右下隅へ
+                     暗い半透明の帯としてぴったり寄せて表示する(以前は詳細パネルの右下に置いていた)。 -->
+                <controls:HintBar x:Name="DetailHintBar" IsOverlay="True" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="DPad" Label="選択" />
+                        <controls:HintDefinition Key="A" Label="追加/解除/切替" />
+                        <controls:HintDefinition Key="X" Label="ボタン割り当て変更" />
+                        <controls:HintDefinition Key="Menu" Label="ゲーム情報を編集" />
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+            </Grid>
+        </Viewbox>
+
+        <!-- 「ボタン割り当て」の選択画面(全画面)。 -->
+        <controls:FullScreenChoiceOverlay x:Name="ButtonChoiceOverlay" Visibility="Collapsed" />
+
+        <!-- 「ほかのコレクション」: コレクションを一覧から複数選んで追加/解除する画面(全画面)。 -->
+        <controls:MultiChoiceOverlay x:Name="CollectionPicker" Visibility="Collapsed" />
+
+        <!-- 「ボタン割り当て変更」: コントローラー設定画面をゲーム別モードで埋め込む。 -->
+        <views:ControllerSettingsPage x:Name="GameControllerPage" Visibility="Collapsed" />
+
+        <!-- 「ゲーム情報の編集」(STARTボタン): タイトル・発売元・概要・パッケージ画像などを書き換える全画面。 -->
+        <controls:GameEditOverlay x:Name="GameEditor" Visibility="Collapsed" Closed="GameEditor_Closed"
+                                  DiscSetRequested="GameEditor_DiscSetRequested" />
+
+        <!-- 「複数枚(ディスク)」のまとめ/解除の確認とお知らせ(選択はButtonChoiceOverlayを使う) -->
+        <controls:ConfirmDialogOverlay x:Name="DiscConfirm" Visibility="Collapsed" />
+    </Grid>
+</UserControl>

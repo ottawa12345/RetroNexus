@@ -1,0 +1,108 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.IconPickerOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        アイコンを選ぶダイアログ風の画面(コンソール編集/コレクション編集の共通部品)。
+        暗幕の上に中央のカードを出し、画像のタイルを並べる。先頭は「なし」、末尾は
+        「ファイルから追加」(OSのファイル選択ダイアログ。選んだ画像はdata/collection_iconsへコピーされる)。
+
+        使い方(呼び出し側):
+            <controls:IconPickerOverlay x:Name="IconPicker" Visibility="Collapsed" />
+            string? picked = await IconPicker.ShowAsync("アイコンを選択", folders, currentIconPath);
+            // null: キャンセル / "": 「なし」 / それ以外: 選んだ画像の絶対パス
+        表示中のゲームパッド入力は IconPicker.HandleGamepadInput へ渡す。
+        十字キーで移動、Aで選んで閉じる、Bでキャンセル。マウスならタイルをクリックで選ぶ。
+        最初のフォーカスは現在のアイコンのタイル。
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToThicknessConverter x:Key="BoolToThickness" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource OverlayScrimBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Border HorizontalAlignment="Center" VerticalAlignment="Center" Width="1400" Height="880"
+                        Background="{StaticResource AppSurfaceBrush}" CornerRadius="{StaticResource PanelCornerRadius}"
+                        Padding="48,36">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                            <TextBlock x:Name="TitleText" Text="アイコンを選択" FontSize="38" FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextPrimaryBrush}" Margin="0,0,0,18" />
+                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                        </Grid>
+
+                        <ScrollViewer Grid.Row="1" x:Name="IconScrollViewer"
+                                      HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="IconItemsControl" ItemsSource="{x:Bind Icons}" Padding="6">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <!-- 8列固定(コードビハインドのColumnsと合わせること)。 -->
+                                        <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="8" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="controls:CollectionIconItem">
+                                        <Button Tag="{x:Bind}" Click="IconTile_Click" AllowFocusOnInteraction="False"
+                                                UseSystemFocusVisuals="False"
+                                                Width="136" Height="136" Margin="6" Padding="0" CornerRadius="12"
+                                                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                                Background="{StaticResource PanelBackgroundBrush}"
+                                                BorderBrush="{x:Bind IsFocused, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                                                BorderThickness="{x:Bind IsFocused, Converter={StaticResource BoolToThickness}, Mode=OneWay}">
+                                            <Grid>
+                                                <Image Source="{x:Bind Thumbnail}" Stretch="Uniform" Margin="6"
+                                                       Visibility="{x:Bind ImageVisibility}" />
+
+                                                <TextBlock Text="なし" FontSize="26" Visibility="{x:Bind NoneVisibility}"
+                                                           Foreground="{StaticResource AppTextSecondaryBrush}"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                                                <StackPanel Visibility="{x:Bind PickFileVisibility}" Spacing="4"
+                                                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <TextBlock Text="+" FontSize="48" FontWeight="Light" HorizontalAlignment="Center"
+                                                               Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                                    <TextBlock Text="ファイルから" FontSize="18" HorizontalAlignment="Center"
+                                                               Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                                </StackPanel>
+
+                                                <!-- 現在のアイコン(右上のチェック) -->
+                                                <Grid Width="34" Height="34" Margin="0,6,6,0"
+                                                      HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                      Visibility="{x:Bind SelectedVisibility, Mode=OneWay}">
+                                                    <Ellipse Fill="{StaticResource SwitchSelectedBlueBrush}" Stroke="White" StrokeThickness="2" />
+                                                    <FontIcon Glyph="&#xE73E;" FontSize="18" Foreground="White" />
+                                                </Grid>
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <controls:HintBar Grid.Row="2" Margin="0,12,0,0" HorizontalAlignment="Right">
+                            <controls:HintBar.Hints>
+                                <controls:HintDefinition Key="B" Label="もどる" />
+                                <controls:HintDefinition Key="A" Label="決定" />
+                            </controls:HintBar.Hints>
+                        </controls:HintBar>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Viewbox>
+
+        <!-- 画像ファイルの選択(ゲームパッドで操作できるファイル選択) -->
+        <controls:FolderPickerOverlay x:Name="FileChooser" Visibility="Collapsed" />
+    </Grid>
+</UserControl>

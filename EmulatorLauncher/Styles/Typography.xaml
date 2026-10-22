@@ -1,0 +1,104 @@
+<!--
+    Typography.xaml: 見出し/本文/ヒントテキストなど、テキストの役割ごとのStyleを定義する。
+    サイズ・太さ・色を画面ごとに個別指定するのをやめ、役割名で揃える。
+
+    既存のHintTextStyle/BottomBarStyleは元々App.xamlに直接書かれていたもので、
+    ConsoleSelectPage/GameSelectPage/GamePlayPageが既に参照しているため、そのままの
+    定義(Foreground="Black"等)を維持している(見た目を変えないため)。
+    設定画面系(SettingsPage/ControllerSettingsPage)は、実際のヒントバー配色に
+    合わせたHintBarTextStyleを新設してそちらを使う。
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============ 見出し ============ -->
+    <!-- 画面タイトル(例: 「設定」「コントローラー設定」)。 -->
+    <Style x:Key="PageTitleTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="56" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+
+    <!-- パネルの見出し(例: 「コア管理」「ゲームフォルダ管理」)。 -->
+    <Style x:Key="SectionTitleTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="40" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+
+    <!-- パネル内の小見出し(例: 「ランチャー操作」「設定対象」カードのタイトル)。 -->
+    <Style x:Key="SubSectionTitleTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+
+    <!-- ============ 一覧の行(カード)内のテキスト ============ -->
+    <!-- 行の主テキスト(例: コア名、フォルダパス)。 -->
+    <Style x:Key="CardTitleTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="26" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- 行の副テキスト(例: コンソール名)。 -->
+    <Style x:Key="CardSubTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextSecondaryBrush}" />
+    </Style>
+
+    <!-- ============ 本文・補足 ============ -->
+    <!-- 説明文(折り返しあり)。 -->
+    <Style x:Key="BodyTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- 「(N件)」のような件数表示。 -->
+    <Style x:Key="CountTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextSecondaryBrush}" />
+    </Style>
+
+    <!-- 「〇〇がありません」のような空状態の案内文。 -->
+    <Style x:Key="EmptyStateTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="26" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextAlignment" Value="Center" />
+    </Style>
+
+    <!-- ============ ヒントバー(画面下の操作ガイド) ============ -->
+    <!-- 既存: ConsoleSelectPage/GameSelectPage/GamePlayPageが参照している定義そのまま。 -->
+    <Style x:Key="HintTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="35" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- 新規: 設定画面系のヒントバー配色(HintBadgeBorderBrush)に合わせたもの。 -->
+    <Style x:Key="HintBarTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="33" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource HintBadgeBorderBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ヒントバーの丸いキー表示(「A」「B」等)の文字。 -->
+    <Style x:Key="HintBadgeTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource HintBadgeBorderBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ============ 既存: 空のGridに高さ/背景だけ持たせるスタイル ============ -->
+    <Style x:Key="BottomBarStyle" TargetType="Grid">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="48" />
+    </Style>
+</ResourceDictionary>

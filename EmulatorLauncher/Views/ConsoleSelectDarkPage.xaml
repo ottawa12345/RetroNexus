@@ -1,0 +1,168 @@
+<Page
+    x:Class="EmulatorLauncher.Views.ConsoleSelectDarkPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls"
+    xmlns:models="using:EmulatorLauncher.Models"
+    xmlns:views="using:EmulatorLauncher.Views"
+    Background="#0D0E11">
+
+    <Page.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToThicknessConverter x:Key="BoolToThickness" />
+        <conv:HexToBrushConverter x:Key="HexToBrush" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <conv:StringToVisibilityConverter x:Key="StringToVisibility" />
+        <conv:IconPathToImageSourceConverter x:Key="IconPathToImageSource" />
+
+        <!-- コンソールのタイル(正方形)。上下の余白は、選択時の拡大が切れないための分。 -->
+        <DataTemplate x:Key="ConsoleTileTemplate" x:DataType="models:ConsoleInfo">
+            <Border Width="240" Height="240" CornerRadius="6" Margin="0,26" Tapped="Tile_Tapped">
+                <Grid>
+                    <Border Background="{x:Bind AccentColorHex, Converter={StaticResource HexToBrush}}" />
+                    <Image Source="{x:Bind DarkTileIconPath, Converter={StaticResource IconPathToImageSource}, Mode=OneWay}"
+                           Visibility="{x:Bind DarkTileIconPath, Converter={StaticResource StringToVisibility}, Mode=OneWay}"
+                           Stretch="UniformToFill" ImageFailed="Image_ImageFailed" />
+                    <Border IsHitTestVisible="False" CornerRadius="6"
+                            BorderBrush="{x:Bind IsSelected, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                            BorderThickness="{x:Bind IsSelected, Converter={StaticResource BoolToThickness}, Mode=OneWay}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- ゲームのタイル(最近遊んだゲーム/コレクションのゲーム)。 -->
+        <DataTemplate x:Key="GameTileTemplate" x:DataType="views:RecentGameItem">
+            <Border Width="{x:Bind TileWidth}" Height="230" CornerRadius="6" Margin="0,26" Tapped="Tile_Tapped">
+                <Grid>
+                    <Border Background="#1C2331" />
+                    <Image Source="{x:Bind IconPath, Converter={StaticResource IconPathToImageSource}, Mode=OneWay}"
+                           Visibility="{x:Bind IconPath, Converter={StaticResource StringToVisibility}, Mode=OneWay}"
+                           Stretch="Fill" ImageFailed="Image_ImageFailed" />
+                    <TextBlock Text="{x:Bind Title}" Foreground="#9AA4B8" FontSize="24" Margin="16" TextWrapping="Wrap" MaxLines="3"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
+                               Visibility="{x:Bind NoImage, Converter={StaticResource BoolToVisibility}}" />
+                    <Border HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="0,6,0,6" Padding="10,2"
+                            Background="{x:Bind BadgeColor, Converter={StaticResource HexToBrush}}">
+                        <TextBlock Text="{x:Bind Badge}" Foreground="White" FontSize="20" FontWeight="SemiBold" />
+                    </Border>
+                    <Border IsHitTestVisible="False" CornerRadius="6"
+                            BorderBrush="{x:Bind IsSelected, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                            BorderThickness="{x:Bind IsSelected, Converter={StaticResource BoolToThickness}, Mode=OneWay}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
+    <!-- ダークテーマのコンソール選択画面(コンソールとコレクションを統合した画面)。左=メニュー、右=ヒーロー+縦に並ぶ段
+         (コンソール / 最近遊んだゲーム / 各コレクションのゲーム。各段は横スクロール)。
+         1920x1080の固定キャンバスをViewboxで拡縮する(標準のConsoleSelectPageと同じ構成)。 -->
+    <Grid>
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}" Background="#101216">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="520" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ===== 左メニュー ===== -->
+                <Grid Grid.Column="0" Background="#0B0C0F">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" VerticalAlignment="Center" Margin="0,40,0,0" Spacing="6">
+                        <Grid x:Name="MenuRow0" Height="92" Tapped="MenuRow_Tapped" Background="Transparent">
+                            <Border x:Name="MenuBar0" Width="8" HorizontalAlignment="Left" Margin="0,12" CornerRadius="4" Background="#7B3FE4" Opacity="0" />
+                            <TextBlock x:Name="MenuText0" Text="コンソール" FontSize="52" Margin="64,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                        <Border Height="1" Background="#23262E" Margin="64,16,64,16" />
+                        <Grid x:Name="MenuRow1" Height="76" Tapped="MenuRow_Tapped" Background="Transparent">
+                            <Border x:Name="MenuBar1" Width="8" HorizontalAlignment="Left" Margin="0,10" CornerRadius="4" Background="#7B3FE4" Opacity="0" />
+                            <TextBlock x:Name="MenuText1" Text="システム" FontSize="38" Margin="64,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid x:Name="MenuRow2" Height="76" Tapped="MenuRow_Tapped" Background="Transparent">
+                            <Border x:Name="MenuBar2" Width="8" HorizontalAlignment="Left" Margin="0,10" CornerRadius="4" Background="#7B3FE4" Opacity="0" />
+                            <TextBlock x:Name="MenuText2" Text="設定" FontSize="38" Margin="64,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid x:Name="MenuRow3" Height="76" Tapped="MenuRow_Tapped" Background="Transparent">
+                            <Border x:Name="MenuBar3" Width="8" HorizontalAlignment="Left" Margin="0,10" CornerRadius="4" Background="#7B3FE4" Opacity="0" />
+                            <TextBlock x:Name="MenuText3" Text="ゲームコントローラ" FontSize="38" Margin="64,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                        <Border Height="1" Background="#23262E" Margin="64,16,64,16" />
+                        <Grid x:Name="MenuRow4" Height="76" Tapped="MenuRow_Tapped" Background="Transparent">
+                            <Border x:Name="MenuBar4" Width="8" HorizontalAlignment="Left" Margin="0,10" CornerRadius="4" Background="#7B3FE4" Opacity="0" />
+                            <TextBlock x:Name="MenuText4" Text="最大化" FontSize="38" Margin="64,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid x:Name="MenuRow5" Height="76" Tapped="MenuRow_Tapped" Background="Transparent">
+                            <Border x:Name="MenuBar5" Width="8" HorizontalAlignment="Left" Margin="0,10" CornerRadius="4" Background="#7B3FE4" Opacity="0" />
+                            <TextBlock x:Name="MenuText5" Text="終了" FontSize="38" Margin="64,0,0,0" VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- 下: 時計・コントローラー・操作ガイド -->
+                    <StackPanel Grid.Row="1" Margin="64,0,24,40" Orientation="Horizontal" Spacing="28" VerticalAlignment="Bottom">
+                        <TextBlock x:Name="ClockText" Foreground="#C8D0E0" FontSize="40" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <controls:ControllerStatusIndicator VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- ===== 右コンテンツ ===== -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="410" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- ヒーロー: 選択中の画像と、下に名前の帯 -->
+                    <Grid x:Name="HeroGrid" Grid.Row="0" Background="#0B0C0F" SizeChanged="HeroGrid_SizeChanged">
+                        <Image x:Name="HeroImageOld" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+                        <Image x:Name="HeroImage" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" ImageFailed="Image_ImageFailed" />
+                        <Border VerticalAlignment="Bottom" Height="130">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                    <GradientStop Color="#00101216" Offset="0" />
+                                    <GradientStop Color="#E6101216" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <StackPanel x:Name="HeroCaption" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="18" Margin="40,0,0,22">
+                            <Border x:Name="HeroBadge" CornerRadius="6" Padding="12,4" Background="#4B1FA8" VerticalAlignment="Center">
+                                <TextBlock x:Name="HeroBadgeText" Foreground="White" FontSize="26" FontWeight="SemiBold" />
+                            </Border>
+                            <TextBlock x:Name="HeroNameText" Foreground="White" FontSize="40" FontWeight="SemiBold" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" MaxWidth="1100" />
+                            <TextBlock x:Name="HeroSubText" Foreground="#9AA4B8" FontSize="28" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- 段(コンソール/最近遊んだゲーム/コレクション)。縦にスクロールし、各段は横にスクロールする。
+                         段の中身はコードビハインドが作る。 -->
+                    <ScrollViewer x:Name="SectionsScroll" Grid.Row="1"
+                                  VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel x:Name="SectionsPanel" Orientation="Vertical" Padding="0,0,0,150" />
+                    </ScrollViewer>
+
+                    <TextBlock x:Name="EmptyGuideText" Grid.Row="1" Visibility="Collapsed" Margin="40,40,40,0"
+                               VerticalAlignment="Top" Foreground="#9AA4B8" FontSize="30" TextWrapping="Wrap"
+                               Text="ゲームがまだ登録されていません。左の「設定」の「ゲームフォルダ管理」から、ROMのフォルダを登録してください。" />
+                </Grid>
+
+            <!-- 操作ガイド(詳細画面と同じ、暗い半透明の右下の帯) -->
+            <controls:HintBar x:Name="ConsoleHintBar" Grid.ColumnSpan="2" IsOverlay="True"
+                              VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <controls:HintBar.Hints>
+                    <controls:HintDefinition Key="DPad" Label="操作" />
+                    <controls:HintDefinition x:Name="EditHint" Key="X" Label="コンソール編集" />
+                    <controls:HintDefinition Key="B" Label="メニュー" />
+                    <controls:HintDefinition Key="A" Label="決定" />
+                </controls:HintBar.Hints>
+            </controls:HintBar>
+            </Grid>
+        </Viewbox>
+        <controls:ConsoleEditOverlay x:Name="ConsoleEditor" Visibility="Collapsed" />
+        <controls:SystemSettingsOverlay x:Name="SystemSettings" Visibility="Collapsed" />
+        <controls:GameDetailOverlay x:Name="DetailOverlay" Visibility="Collapsed" />
+    </Grid>
+</Page>

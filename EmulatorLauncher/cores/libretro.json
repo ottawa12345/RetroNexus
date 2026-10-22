@@ -1,0 +1,6377 @@
+[
+  {
+    "display_name": "Nintendo - Nintendo Entertainment System (FCEUmm)",
+    "consoleId": "fc",
+    "core_name": "fceumm_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "fceumm_nospritelimit",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "fceumm_sndquality",
+        "label": "音質",
+        "choices": [
+          {
+            "value": "Low",
+            "label": "標準"
+          },
+          {
+            "value": "High",
+            "label": "高"
+          },
+          {
+            "value": "Very High",
+            "label": "最高"
+          }
+        ],
+        "default": "High",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Super Nintendo Entertainment System (SNES9x)",
+    "consoleId": "sfc",
+    "core_name": "snes9x_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "snes9x_reduce_sprite_flicker",
+        "label": "スプライトのちらつき軽減",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "snes9x_overclock_superfx",
+        "label": "スーパーFXの速度(スターフォックス等)",
+        "choices": [
+          {
+            "value": "100%",
+            "label": "標準"
+          },
+          {
+            "value": "150%",
+            "label": "1.5倍"
+          },
+          {
+            "value": "200%",
+            "label": "2倍"
+          },
+          {
+            "value": "300%",
+            "label": "3倍"
+          }
+        ],
+        "default": "100%",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "snes9x_mode7_hires",
+        "label": "モード7の高解像度化",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "2x",
+            "label": "2倍"
+          },
+          {
+            "value": "4x",
+            "label": "4倍"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Game Boy Advance (VBA-M)",
+    "consoleId": "gba",
+    "core_name": "vbam_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "vbam_interframeblending",
+        "label": "画面のちらつき対策",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "smart",
+            "label": "スマート"
+          },
+          {
+            "value": "motion blur",
+            "label": "モーションブラー"
+          }
+        ],
+        "default": "smart",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "PCEngine (Mednafen)",
+    "consoleId": "pce",
+    "core_name": "mednafen_pce_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "pce_default_joypad_type_p1",
+        "label": "コントローラの種類(2/6ボタン)",
+        "choices": [
+          {
+            "value": "2 Buttons",
+            "label": "2ボタン"
+          },
+          {
+            "value": "6 Buttons",
+            "label": "6ボタン"
+          }
+        ],
+        "default": "2 Buttons",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Dreamcast (Flycast)",
+    "consoleId": "dc",
+    "core_name": "flycast_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "pad",
+            "label": "コントローラ"
+          },
+          {
+            "value": "lightgun",
+            "label": "ライトガン(スティックやマウス)"
+          }
+        ],
+        "default": "pad",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_lightgun1_crosshair",
+        "label": "照準の表示(1P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_lightgun2_crosshair",
+        "label": "照準の表示(2P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_internal_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "320x240",
+            "label": "0.5x (320x240)"
+          },
+          {
+            "value": "640x480",
+            "label": "1x ネイティブ (640x480)"
+          },
+          {
+            "value": "800x600",
+            "label": "800x600"
+          },
+          {
+            "value": "960x720",
+            "label": "1.5x (960x720)"
+          },
+          {
+            "value": "1024x768",
+            "label": "1024x768"
+          },
+          {
+            "value": "1280x960",
+            "label": "2x (1280x960)"
+          },
+          {
+            "value": "1440x1080",
+            "label": "1440x1080"
+          },
+          {
+            "value": "1600x1200",
+            "label": "1600x1200"
+          },
+          {
+            "value": "1920x1440",
+            "label": "3x (1920x1440)"
+          },
+          {
+            "value": "2560x1920",
+            "label": "4x (2560x1920)"
+          },
+          {
+            "value": "3200x2400",
+            "label": "3200x2400"
+          },
+          {
+            "value": "3840x2880",
+            "label": "6x (3840x2880)"
+          }
+        ],
+        "default": "640x480",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_cable_type",
+        "label": "ケーブルの種類",
+        "choices": [
+          {
+            "value": "TV (Composite)",
+            "label": "TV(コンポジット)"
+          },
+          {
+            "value": "VGA",
+            "label": "VGA(高画質)"
+          },
+          {
+            "value": "TV (RGB)",
+            "label": "TV(RGB)"
+          }
+        ],
+        "default": "TV (Composite)",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_broadcast",
+        "label": "放送方式",
+        "choices": [
+          {
+            "value": "NTSC",
+            "label": "NTSC"
+          },
+          {
+            "value": "PAL",
+            "label": "PAL"
+          },
+          {
+            "value": "PAL_N",
+            "label": "PAL-N"
+          },
+          {
+            "value": "PAL_M",
+            "label": "PAL-M"
+          },
+          {
+            "value": "Default",
+            "label": "自動"
+          }
+        ],
+        "default": "NTSC",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_region",
+        "label": "リージョン",
+        "choices": [
+          {
+            "value": "USA",
+            "label": "アメリカ"
+          },
+          {
+            "value": "Japan",
+            "label": "日本"
+          },
+          {
+            "value": "Europe",
+            "label": "ヨーロッパ"
+          },
+          {
+            "value": "Default",
+            "label": "自動"
+          }
+        ],
+        "default": "Default",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_language",
+        "label": "本体の言語",
+        "choices": [
+          {
+            "value": "English",
+            "label": "英語"
+          },
+          {
+            "value": "Japanese",
+            "label": "日本語"
+          },
+          {
+            "value": "German",
+            "label": "ドイツ語"
+          },
+          {
+            "value": "French",
+            "label": "フランス語"
+          },
+          {
+            "value": "Spanish",
+            "label": "スペイン語"
+          },
+          {
+            "value": "Italian",
+            "label": "イタリア語"
+          },
+          {
+            "value": "Default",
+            "label": "自動"
+          }
+        ],
+        "default": "English",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_hle_bios",
+        "label": "HLE BIOS(BIOSなしで起動)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_threaded_rendering",
+        "label": "スレッドレンダリング",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_delay_frame_swapping",
+        "label": "フレーム切り替えの遅延(ちらつき対策)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_alpha_sorting",
+        "label": "半透明の描画順",
+        "choices": [
+          {
+            "value": "per-triangle (normal)",
+            "label": "ポリゴンごと(標準)"
+          },
+          {
+            "value": "per-strip (fast, least accurate)",
+            "label": "ストリップごと(高速・精度低)"
+          },
+          {
+            "value": "per-pixel (accurate)",
+            "label": "ピクセルごと(高精度・重い)"
+          }
+        ],
+        "default": "per-triangle (normal)",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_mipmapping",
+        "label": "ミップマップ",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_fog",
+        "label": "フォグ",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_anisotropic_filtering",
+        "label": "異方性フィルタリング",
+        "choices": [
+          {
+            "value": "off",
+            "label": "オフ"
+          },
+          {
+            "value": "2",
+            "label": "2x"
+          },
+          {
+            "value": "4",
+            "label": "4x"
+          },
+          {
+            "value": "8",
+            "label": "8x"
+          },
+          {
+            "value": "16",
+            "label": "16x"
+          }
+        ],
+        "default": "4",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_texture_filtering",
+        "label": "テクスチャフィルタ",
+        "choices": [
+          {
+            "value": "0",
+            "label": "ゲーム任せ"
+          },
+          {
+            "value": "1",
+            "label": "常にニアレスト"
+          },
+          {
+            "value": "2",
+            "label": "常にリニア"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_pvr2_filtering",
+        "label": "PVR2 ポストフィルタ(ぼかし)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_texupscale",
+        "label": "テクスチャ拡大(xBRZ)",
+        "choices": [
+          {
+            "value": "1",
+            "label": "オフ"
+          },
+          {
+            "value": "2",
+            "label": "2x"
+          },
+          {
+            "value": "4",
+            "label": "4x"
+          },
+          {
+            "value": "6",
+            "label": "6x"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_texupscale_max_filtered_texture_size",
+        "label": "テクスチャ拡大の最大サイズ",
+        "choices": [
+          {
+            "value": "256",
+            "label": "256"
+          },
+          {
+            "value": "512",
+            "label": "512"
+          },
+          {
+            "value": "1024",
+            "label": "1024"
+          }
+        ],
+        "default": "256",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_widescreen_cheats",
+        "label": "ワイドスクリーン(チート)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_widescreen_hack",
+        "label": "ワイドスクリーン(ハック)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_auto_skip_frame",
+        "label": "自動フレームスキップ",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "some",
+            "label": "やや積極的"
+          },
+          {
+            "value": "more",
+            "label": "積極的"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_gdrom_fast_loading",
+        "label": "GD-ROM 高速ロード",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_enable_dsp",
+        "label": "DSP(音声処理)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_sh4clock",
+        "label": "CPUクロック(%)",
+        "choices": [
+          {
+            "value": "100",
+            "label": "100%"
+          },
+          {
+            "value": "150",
+            "label": "150%"
+          },
+          {
+            "value": "200",
+            "label": "200% (標準)"
+          },
+          {
+            "value": "250",
+            "label": "250%"
+          },
+          {
+            "value": "300",
+            "label": "300%"
+          },
+          {
+            "value": "400",
+            "label": "400%"
+          },
+          {
+            "value": "500",
+            "label": "500%"
+          }
+        ],
+        "default": "200",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_dc_32mb_mod",
+        "label": "メモリ32MB化(改造機相当)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_analog_stick_deadzone",
+        "label": "アナログスティックのデッドゾーン",
+        "choices": [
+          {
+            "value": "0%",
+            "label": "0%"
+          },
+          {
+            "value": "5%",
+            "label": "5%"
+          },
+          {
+            "value": "10%",
+            "label": "10%"
+          },
+          {
+            "value": "15%",
+            "label": "15%"
+          },
+          {
+            "value": "20%",
+            "label": "20%"
+          },
+          {
+            "value": "25%",
+            "label": "25%"
+          },
+          {
+            "value": "30%",
+            "label": "30%"
+          }
+        ],
+        "default": "15%",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_trigger_deadzone",
+        "label": "トリガーのデッドゾーン",
+        "choices": [
+          {
+            "value": "0%",
+            "label": "0%"
+          },
+          {
+            "value": "5%",
+            "label": "5%"
+          },
+          {
+            "value": "10%",
+            "label": "10%"
+          },
+          {
+            "value": "15%",
+            "label": "15%"
+          },
+          {
+            "value": "20%",
+            "label": "20%"
+          },
+          {
+            "value": "25%",
+            "label": "25%"
+          },
+          {
+            "value": "30%",
+            "label": "30%"
+          }
+        ],
+        "default": "0%",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_digital_triggers",
+        "label": "トリガーをデジタル入力にする",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_device_port1_slot1",
+        "label": "1P 拡張スロット1",
+        "choices": [
+          {
+            "value": "VMU",
+            "label": "VMU(ビジュアルメモリ)"
+          },
+          {
+            "value": "Purupuru",
+            "label": "ぷるぷるぱっく"
+          },
+          {
+            "value": "DreamPotato",
+            "label": "DreamPotato"
+          },
+          {
+            "value": "None",
+            "label": "なし"
+          }
+        ],
+        "default": "VMU",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_device_port1_slot2",
+        "label": "1P 拡張スロット2",
+        "choices": [
+          {
+            "value": "Purupuru",
+            "label": "ぷるぷるぱっく"
+          },
+          {
+            "value": "VMU",
+            "label": "VMU(ビジュアルメモリ)"
+          },
+          {
+            "value": "None",
+            "label": "なし"
+          }
+        ],
+        "default": "Purupuru",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_per_content_vmus",
+        "label": "ゲームごとのVMUセーブ",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "VMU A1",
+            "label": "VMU A1のみ"
+          },
+          {
+            "value": "All VMUs",
+            "label": "全VMU"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - NAOMI (Flycast)",
+    "consoleId": "naomi",
+    "core_name": "flycast_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "pad",
+            "label": "コントローラ"
+          },
+          {
+            "value": "lightgun",
+            "label": "ライトガン(スティックやマウス)"
+          }
+        ],
+        "default": "pad",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_lightgun1_crosshair",
+        "label": "照準の表示(1P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_lightgun2_crosshair",
+        "label": "照準の表示(2P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_region",
+        "label": "リージョン",
+        "choices": [
+          {
+            "value": "USA",
+            "label": "アメリカ"
+          },
+          {
+            "value": "Japan",
+            "label": "日本"
+          },
+          {
+            "value": "Europe",
+            "label": "ヨーロッパ"
+          },
+          {
+            "value": "Default",
+            "label": "自動"
+          }
+        ],
+        "default": "Default",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_force_freeplay",
+        "label": "フリープレイ(コイン不要)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_allow_service_buttons",
+        "label": "サービスボタンを有効にする",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_coin_limit",
+        "label": "コイン数の上限(0=無制限)",
+        "choices": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_internal_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "640x480",
+            "label": "1x ネイティブ (640x480)"
+          },
+          {
+            "value": "960x720",
+            "label": "1.5x (960x720)"
+          },
+          {
+            "value": "1280x960",
+            "label": "2x (1280x960)"
+          },
+          {
+            "value": "1920x1440",
+            "label": "3x (1920x1440)"
+          },
+          {
+            "value": "2560x1920",
+            "label": "4x (2560x1920)"
+          },
+          {
+            "value": "3840x2880",
+            "label": "6x (3840x2880)"
+          }
+        ],
+        "default": "640x480",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_widescreen_cheats",
+        "label": "ワイドスクリーン(チート)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_widescreen_hack",
+        "label": "ワイドスクリーン(ハック)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_alpha_sorting",
+        "label": "半透明の描画順",
+        "choices": [
+          {
+            "value": "per-triangle (normal)",
+            "label": "ポリゴンごと(標準)"
+          },
+          {
+            "value": "per-strip (fast, least accurate)",
+            "label": "ストリップごと(高速・精度低)"
+          },
+          {
+            "value": "per-pixel (accurate)",
+            "label": "ピクセルごと(高精度・重い)"
+          }
+        ],
+        "default": "per-triangle (normal)",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_threaded_rendering",
+        "label": "スレッドレンダリング",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_screen_rotation",
+        "label": "画面の向き",
+        "choices": [
+          {
+            "value": "horizontal",
+            "label": "横"
+          },
+          {
+            "value": "vertical",
+            "label": "縦"
+          }
+        ],
+        "default": "horizontal",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - NAOMI 2 (Flycast)",
+    "consoleId": "naomi2",
+    "core_name": "flycast_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "pad",
+            "label": "コントローラ"
+          },
+          {
+            "value": "lightgun",
+            "label": "ライトガン(スティックやマウス)"
+          }
+        ],
+        "default": "pad",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_lightgun1_crosshair",
+        "label": "照準の表示(1P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_lightgun2_crosshair",
+        "label": "照準の表示(2P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_region",
+        "label": "リージョン",
+        "choices": [
+          {
+            "value": "USA",
+            "label": "アメリカ"
+          },
+          {
+            "value": "Japan",
+            "label": "日本"
+          },
+          {
+            "value": "Europe",
+            "label": "ヨーロッパ"
+          },
+          {
+            "value": "Default",
+            "label": "自動"
+          }
+        ],
+        "default": "Default",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_force_freeplay",
+        "label": "フリープレイ(コイン不要)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_allow_service_buttons",
+        "label": "サービスボタンを有効にする",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_coin_limit",
+        "label": "コイン数の上限(0=無制限)",
+        "choices": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_internal_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "640x480",
+            "label": "1x ネイティブ (640x480)"
+          },
+          {
+            "value": "960x720",
+            "label": "1.5x (960x720)"
+          },
+          {
+            "value": "1280x960",
+            "label": "2x (1280x960)"
+          },
+          {
+            "value": "1920x1440",
+            "label": "3x (1920x1440)"
+          },
+          {
+            "value": "2560x1920",
+            "label": "4x (2560x1920)"
+          },
+          {
+            "value": "3840x2880",
+            "label": "6x (3840x2880)"
+          }
+        ],
+        "default": "640x480",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_widescreen_cheats",
+        "label": "ワイドスクリーン(チート)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_widescreen_hack",
+        "label": "ワイドスクリーン(ハック)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_alpha_sorting",
+        "label": "半透明の描画順",
+        "choices": [
+          {
+            "value": "per-triangle (normal)",
+            "label": "ポリゴンごと(標準)"
+          },
+          {
+            "value": "per-strip (fast, least accurate)",
+            "label": "ストリップごと(高速・精度低)"
+          },
+          {
+            "value": "per-pixel (accurate)",
+            "label": "ピクセルごと(高精度・重い)"
+          }
+        ],
+        "default": "per-triangle (normal)",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_threaded_rendering",
+        "label": "スレッドレンダリング",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_screen_rotation",
+        "label": "画面の向き",
+        "choices": [
+          {
+            "value": "horizontal",
+            "label": "横"
+          },
+          {
+            "value": "vertical",
+            "label": "縦"
+          }
+        ],
+        "default": "horizontal",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Atomiswave (Flycast)",
+    "consoleId": "atomiswave",
+    "core_name": "flycast_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "pad",
+            "label": "コントローラ"
+          },
+          {
+            "value": "lightgun",
+            "label": "ライトガン(スティックやマウス)"
+          }
+        ],
+        "default": "pad",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_lightgun1_crosshair",
+        "label": "照準の表示(1P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_lightgun2_crosshair",
+        "label": "照準の表示(2P)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "White",
+            "label": "白"
+          },
+          {
+            "value": "Red",
+            "label": "赤"
+          },
+          {
+            "value": "Green",
+            "label": "緑"
+          },
+          {
+            "value": "Blue",
+            "label": "青"
+          }
+        ],
+        "default": "White",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_region",
+        "label": "リージョン",
+        "choices": [
+          {
+            "value": "USA",
+            "label": "アメリカ"
+          },
+          {
+            "value": "Japan",
+            "label": "日本"
+          },
+          {
+            "value": "Europe",
+            "label": "ヨーロッパ"
+          },
+          {
+            "value": "Default",
+            "label": "自動"
+          }
+        ],
+        "default": "Default",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_force_freeplay",
+        "label": "フリープレイ(コイン不要)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_allow_service_buttons",
+        "label": "サービスボタンを有効にする",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_coin_limit",
+        "label": "コイン数の上限(0=無制限)",
+        "choices": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_internal_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "640x480",
+            "label": "1x ネイティブ (640x480)"
+          },
+          {
+            "value": "960x720",
+            "label": "1.5x (960x720)"
+          },
+          {
+            "value": "1280x960",
+            "label": "2x (1280x960)"
+          },
+          {
+            "value": "1920x1440",
+            "label": "3x (1920x1440)"
+          },
+          {
+            "value": "2560x1920",
+            "label": "4x (2560x1920)"
+          },
+          {
+            "value": "3840x2880",
+            "label": "6x (3840x2880)"
+          }
+        ],
+        "default": "640x480",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "reicast_widescreen_cheats",
+        "label": "ワイドスクリーン(チート)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_widescreen_hack",
+        "label": "ワイドスクリーン(ハック)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_alpha_sorting",
+        "label": "半透明の描画順",
+        "choices": [
+          {
+            "value": "per-triangle (normal)",
+            "label": "ポリゴンごと(標準)"
+          },
+          {
+            "value": "per-strip (fast, least accurate)",
+            "label": "ストリップごと(高速・精度低)"
+          },
+          {
+            "value": "per-pixel (accurate)",
+            "label": "ピクセルごと(高精度・重い)"
+          }
+        ],
+        "default": "per-triangle (normal)",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_threaded_rendering",
+        "label": "スレッドレンダリング",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "reicast_screen_rotation",
+        "label": "画面の向き",
+        "choices": [
+          {
+            "value": "horizontal",
+            "label": "横"
+          },
+          {
+            "value": "vertical",
+            "label": "縦"
+          }
+        ],
+        "default": "horizontal",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sony - PlayStation (SwanStation)",
+    "consoleId": "ps1",
+    "core_name": "swanstation_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "dualshock",
+            "label": "DualShock(アナログ)"
+          },
+          {
+            "value": "pad",
+            "label": "デジタルパッド"
+          }
+        ],
+        "default": "dualshock",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "swanstation_GPU_Renderer",
+        "label": "レンダラー",
+        "choices": [
+          {
+            "value": "OpenGL",
+            "label": "OpenGL"
+          },
+          {
+            "value": "Software",
+            "label": "ソフトウェア"
+          }
+        ],
+        "default": "OpenGL",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "swanstation_GPU_ResolutionScale",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1",
+            "label": "1x"
+          },
+          {
+            "value": "2",
+            "label": "2x"
+          },
+          {
+            "value": "4",
+            "label": "4x"
+          },
+          {
+            "value": "8",
+            "label": "8x"
+          },
+          {
+            "value": "16",
+            "label": "16x"
+          }
+        ],
+        "default": "8",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "swanstation_GPU_PGXPEnable",
+        "label": "ポリゴンのゆがみ補正(PGXP)",
+        "choices": [
+          {
+            "value": "false",
+            "label": "しない"
+          },
+          {
+            "value": "true",
+            "label": "する"
+          }
+        ],
+        "default": "false",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "swanstation_BIOS_PatchFastBoot",
+        "label": "BIOS起動画面をスキップ",
+        "choices": [
+          {
+            "value": "false",
+            "label": "しない"
+          },
+          {
+            "value": "true",
+            "label": "する"
+          }
+        ],
+        "default": "false",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sony - PlayStation (Beetle PSX HW)",
+    "consoleId": "ps1",
+    "core_name": "mednafen_psx_hw_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "dualshock",
+            "label": "DualShock(アナログ)"
+          },
+          {
+            "value": "pad",
+            "label": "デジタルパッド"
+          }
+        ],
+        "default": "dualshock",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "beetle_psx_hw_renderer",
+        "label": "レンダラー",
+        "choices": [
+          {
+            "value": "hardware_gl",
+            "label": "OpenGL"
+          },
+          {
+            "value": "software",
+            "label": "ソフトウェア"
+          }
+        ],
+        "default": "hardware_gl",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "beetle_psx_hw_override_bios",
+        "label": "BIOS設定",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "本体のBIOS(地域別 scph5500/5501/5502)"
+          },
+          {
+            "value": "openbios",
+            "label": "OpenBIOS(互換)"
+          }
+        ],
+        "default": "disabled",
+        "value": null
+      },
+      {
+        "key": "beetle_psx_hw_skip_bios",
+        "label": "BIOS起動画面をスキップ",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "beetle_psx_hw_internal_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1x(native)",
+            "label": "1x"
+          },
+          {
+            "value": "2x",
+            "label": "2x"
+          },
+          {
+            "value": "4x",
+            "label": "4x"
+          },
+          {
+            "value": "8x",
+            "label": "8x"
+          },
+          {
+            "value": "16x",
+            "label": "16x"
+          }
+        ],
+        "default": "8x",
+        "value": null
+      },
+      {
+        "key": "beetle_psx_hw_pgxp_mode",
+        "label": "ポリゴンのゆがみ補正(PGXP)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "memory only",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null
+      },
+      {
+        "key": "beetle_psx_hw_pgxp_texture",
+        "label": "PGXP: テクスチャの遠近補正",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sony - PlayStation Portable (PPSSPP)",
+    "consoleId": "psp",
+    "core_name": "ppsspp_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/PPSSPP.zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "ppsspp_backend",
+        "label": "描画API",
+        "choices": [
+          {
+            "value": "auto",
+            "label": "自動"
+          },
+          {
+            "value": "opengl",
+            "label": "OpenGL"
+          }
+        ],
+        "default": "opengl",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "ppsspp_internal_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "480x272",
+            "label": "1x ネイティブ (480x272)"
+          },
+          {
+            "value": "960x544",
+            "label": "2x (960x544)"
+          },
+          {
+            "value": "1440x816",
+            "label": "3x (1440x816)"
+          },
+          {
+            "value": "1920x1088",
+            "label": "4x (1920x1088)"
+          },
+          {
+            "value": "2400x1360",
+            "label": "5x (2400x1360)"
+          },
+          {
+            "value": "2880x1632",
+            "label": "6x (2880x1632)"
+          },
+          {
+            "value": "3360x1904",
+            "label": "7x (3360x1904)"
+          },
+          {
+            "value": "3840x2176",
+            "label": "8x (3840x2176)"
+          }
+        ],
+        "default": "480x272",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "ppsspp_button_preference",
+        "label": "決定ボタン",
+        "choices": [
+          {
+            "value": "Cross",
+            "label": "×ボタン"
+          },
+          {
+            "value": "Circle",
+            "label": "○ボタン"
+          }
+        ],
+        "default": "Cross",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "ppsspp_language",
+        "label": "ゲーム内の言語",
+        "choices": [
+          {
+            "value": "Automatic",
+            "label": "自動"
+          },
+          {
+            "value": "Japanese",
+            "label": "日本語"
+          },
+          {
+            "value": "English",
+            "label": "英語"
+          },
+          {
+            "value": "French",
+            "label": "フランス語"
+          },
+          {
+            "value": "Spanish",
+            "label": "スペイン語"
+          },
+          {
+            "value": "German",
+            "label": "ドイツ語"
+          },
+          {
+            "value": "Italian",
+            "label": "イタリア語"
+          },
+          {
+            "value": "Dutch",
+            "label": "オランダ語"
+          },
+          {
+            "value": "Portuguese",
+            "label": "ポルトガル語"
+          },
+          {
+            "value": "Russian",
+            "label": "ロシア語"
+          },
+          {
+            "value": "Korean",
+            "label": "韓国語"
+          },
+          {
+            "value": "Chinese Traditional",
+            "label": "中国語(繁体字)"
+          },
+          {
+            "value": "Chinese Simplified",
+            "label": "中国語(簡体字)"
+          }
+        ],
+        "default": "Automatic",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "ppsspp_texture_scaling_level",
+        "label": "テクスチャ拡大",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "2x",
+            "label": "2倍"
+          },
+          {
+            "value": "3x",
+            "label": "3倍"
+          },
+          {
+            "value": "4x",
+            "label": "4倍"
+          },
+          {
+            "value": "5x",
+            "label": "5倍"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "ppsspp_texture_anisotropic_filtering",
+        "label": "異方性フィルタリング",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "2x",
+            "label": "2倍"
+          },
+          {
+            "value": "4x",
+            "label": "4倍"
+          },
+          {
+            "value": "8x",
+            "label": "8倍"
+          },
+          {
+            "value": "16x",
+            "label": "16倍"
+          }
+        ],
+        "default": "16x",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "ppsspp_mulitsample_level",
+        "label": "アンチエイリアス",
+        "choices": [
+          {
+            "value": "Disabled",
+            "label": "なし"
+          },
+          {
+            "value": "x2",
+            "label": "2倍"
+          },
+          {
+            "value": "x4",
+            "label": "4倍"
+          },
+          {
+            "value": "x8",
+            "label": "8倍"
+          }
+        ],
+        "default": "Disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "ppsspp_cropto16x9",
+        "label": "16:9に切り取り",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "ppsspp_frameskip",
+        "label": "フレームスキップ",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "1",
+            "label": "1フレーム"
+          },
+          {
+            "value": "2",
+            "label": "2フレーム"
+          },
+          {
+            "value": "3",
+            "label": "3フレーム"
+          },
+          {
+            "value": "4",
+            "label": "4フレーム"
+          },
+          {
+            "value": "5",
+            "label": "5フレーム"
+          },
+          {
+            "value": "6",
+            "label": "6フレーム"
+          },
+          {
+            "value": "7",
+            "label": "7フレーム"
+          },
+          {
+            "value": "8",
+            "label": "8フレーム"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "SNK - Neo Geo (FinalBurn Neo)",
+    "consoleId": "neogeo",
+    "core_name": "fbneo_libretro.dll",
+    "installed": "no",
+    "options": []
+  },
+  {
+    "display_name": "Sega - Game Gear (Genesis Plus GX)",
+    "consoleId": "gg",
+    "core_name": "genesis_plus_gx_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "genesis_plus_gx_no_sprite_limit",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Game Boy Color (Gambatte)",
+    "consoleId": "gbc",
+    "core_name": "gambatte_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "gambatte_gb_colorization",
+        "label": "色づけ",
+        "choices": [
+          {
+            "value": "auto",
+            "label": "自動"
+          }
+        ],
+        "default": "auto",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "gambatte_gbc_color_correction",
+        "label": "GBCの色補正",
+        "choices": [
+          {
+            "value": "GBC only",
+            "label": "GBCソフトのみ"
+          },
+          {
+            "value": "always",
+            "label": "常に"
+          },
+          {
+            "value": "disabled",
+            "label": "しない"
+          }
+        ],
+        "default": "GBC only",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "gambatte_mix_frames",
+        "label": "画面のちらつき対策",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "mix",
+            "label": "フレーム合成"
+          },
+          {
+            "value": "lcd_ghosting",
+            "label": "LCD残像"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Mega Drive (Genesis Plus GX)",
+    "consoleId": "md",
+    "core_name": "genesis_plus_gx_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "pad3",
+            "label": "3ボタンパッド"
+          },
+          {
+            "value": "pad6",
+            "label": "6ボタンパッド"
+          }
+        ],
+        "default": "pad3",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "genesis_plus_gx_no_sprite_limit",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Nintendo 64 (Mupen64Plus-Next)",
+    "consoleId": "n64",
+    "core_name": "mupen64plus_next_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "mupen64plus-EnableNativeResFactor",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1",
+            "label": "1x"
+          },
+          {
+            "value": "2",
+            "label": "2x"
+          },
+          {
+            "value": "3",
+            "label": "3x"
+          },
+          {
+            "value": "4",
+            "label": "4x"
+          },
+          {
+            "value": "6",
+            "label": "6x"
+          },
+          {
+            "value": "8",
+            "label": "8x"
+          }
+        ],
+        "default": "2",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "mupen64plus-FXAA",
+        "label": "FXAA",
+        "choices": [
+          {
+            "value": "0",
+            "label": "オフ"
+          },
+          {
+            "value": "1",
+            "label": "オン"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "mupen64plus-BilinearMode",
+        "label": "テクスチャフィルタ",
+        "choices": [
+          {
+            "value": "standard",
+            "label": "標準"
+          },
+          {
+            "value": "3point",
+            "label": "3ポイント(実機風)"
+          }
+        ],
+        "default": "standard",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "mupen64plus-txEnhancementMode",
+        "label": "テクスチャ高画質化フィルター",
+        "choices": [
+          {
+            "value": "None",
+            "label": "オフ (オリジナル)"
+          },
+          {
+            "value": "As Is",
+            "label": "そのままキャッシュ"
+          },
+          {
+            "value": "HQ2X",
+            "label": "HQ2X"
+          },
+          {
+            "value": "HQ4X",
+            "label": "HQ4X"
+          },
+          {
+            "value": "2xBRZ",
+            "label": "2xBRZ"
+          },
+          {
+            "value": "4xBRZ",
+            "label": "4xBRZ"
+          },
+          {
+            "value": "6xBRZ",
+            "label": "6xBRZ"
+          }
+        ],
+        "default": "4xBRZ",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "mupen64plus-pak1",
+        "label": "コントローラパック(1P)",
+        "choices": [
+          {
+            "value": "memory",
+            "label": "メモリパック"
+          },
+          {
+            "value": "rumble",
+            "label": "振動パック"
+          },
+          {
+            "value": "none",
+            "label": "なし"
+          }
+        ],
+        "default": "memory",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "mupen64plus-43screensize",
+        "label": "内部スクリーンサイズ",
+        "choices": [
+          {
+            "value": "1920x1440",
+            "label": "FullHD"
+          },
+          {
+            "value": "640x480",
+            "label": "Normal"
+          }
+        ],
+        "default": "1920x1440",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "mupen64plus-rdp-plugin",
+        "label": "描画プラグイン",
+        "choices": [
+          {
+            "value": "gliden64",
+            "label": "GLideN64"
+          }
+        ],
+        "default": "gliden64",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "mupen64plus-rsp-plugin",
+        "label": "RSPプラグイン",
+        "choices": [
+          {
+            "value": "hle",
+            "label": "HLE"
+          }
+        ],
+        "default": "hle",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Arcade (FBNeo)",
+    "consoleId": "fbneo",
+    "core_name": "fbneo_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/FinalBurn%20Neo%20(hiscore).zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "classic",
+            "label": "クラシック"
+          },
+          {
+            "value": "modern",
+            "label": "モダン(格闘ゲーム向け)"
+          },
+          {
+            "value": "lightgun",
+            "label": "ライトガン(スティックやマウス)"
+          }
+        ],
+        "default": "classic",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "fbneo-lightgun-crosshair-emulation",
+        "label": "照準の表示",
+        "choices": [
+          {
+            "value": "hide with lightgun device",
+            "label": "ライトガン時は隠す"
+          },
+          {
+            "value": "always hide",
+            "label": "常に隠す"
+          },
+          {
+            "value": "always show",
+            "label": "常に表示"
+          }
+        ],
+        "default": "always show",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Arcade (MAME 2003 Plus)",
+    "consoleId": "mame2003",
+    "core_name": "mame2003_plus_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/MAME%202003-Plus.zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "pad",
+            "label": "標準(ボタン1〜8)"
+          },
+          {
+            "value": "six",
+            "label": "6ボタン(格闘ゲーム向け)"
+          }
+        ],
+        "default": "pad",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "mame2003-plus_skip_disclaimer",
+        "label": "免責画面をスキップ",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "mame2003-plus_skip_warnings",
+        "label": "警告画面をスキップ",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Arcade (MAME)",
+    "consoleId": "mame",
+    "core_name": "mame_libretro.dll",
+    "installed": "no",
+    "options": []
+  },
+  {
+    "display_name": "Nintendo - Game Boy (Gambatte)",
+    "consoleId": "gb",
+    "core_name": "gambatte_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "gambatte_gb_colorization",
+        "label": "色づけ",
+        "choices": [
+          {
+            "value": "auto",
+            "label": "自動(GBC対応ソフトはその色)"
+          },
+          {
+            "value": "disabled",
+            "label": "モノクロ"
+          },
+          {
+            "value": "GBC",
+            "label": "GBC風"
+          },
+          {
+            "value": "SGB",
+            "label": "SGB風"
+          },
+          {
+            "value": "internal",
+            "label": "内蔵パレット"
+          }
+        ],
+        "default": "auto",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "gambatte_gb_internal_palette",
+        "label": "内蔵パレット(色づけ「内蔵パレット」のとき)",
+        "choices": [
+          {
+            "value": "GB - DMG",
+            "label": "GB(初代)"
+          },
+          {
+            "value": "GB - Pocket",
+            "label": "GB(ポケット)"
+          },
+          {
+            "value": "GB - Light",
+            "label": "GB(ライト)"
+          },
+          {
+            "value": "GBC - Grayscale",
+            "label": "GBC(グレースケール)"
+          },
+          {
+            "value": "SGB - 1A",
+            "label": "SGB(標準)"
+          }
+        ],
+        "default": "GB - DMG",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "gambatte_gbc_color_correction",
+        "label": "GBCの色補正",
+        "choices": [
+          {
+            "value": "GBC only",
+            "label": "GBCソフトのみ"
+          },
+          {
+            "value": "always",
+            "label": "常に"
+          },
+          {
+            "value": "disabled",
+            "label": "しない"
+          }
+        ],
+        "default": "GBC only",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "gambatte_mix_frames",
+        "label": "画面のちらつき対策",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "mix",
+            "label": "フレーム合成"
+          },
+          {
+            "value": "lcd_ghosting",
+            "label": "LCD残像"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Family Computer Disk System (FCEUmm)",
+    "consoleId": "fds",
+    "core_name": "fceumm_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "fceumm_nospritelimit",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "fceumm_sndquality",
+        "label": "音質",
+        "choices": [
+          {
+            "value": "Low",
+            "label": "標準"
+          },
+          {
+            "value": "High",
+            "label": "高"
+          },
+          {
+            "value": "Very High",
+            "label": "最高"
+          }
+        ],
+        "default": "High",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Virtual Boy (Beetle VB)",
+    "consoleId": "vb",
+    "core_name": "mednafen_vb_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "vb_anaglyph_preset",
+        "label": "3Dメガネ(アナグリフ)",
+        "choices": [
+          {
+            "value": "red & cyan",
+            "label": "赤&シアン"
+          },
+          {
+            "value": "red & blue",
+            "label": "赤&青"
+          },
+          {
+            "value": "red & electric cyan",
+            "label": "赤&エレクトリックシアン"
+          },
+          {
+            "value": "green & magenta",
+            "label": "緑&マゼンタ"
+          },
+          {
+            "value": "yellow & blue",
+            "label": "黄&青"
+          },
+          {
+            "value": "disabled",
+            "label": "メガネなし(表示色で1色表示)"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "vb_color_mode",
+        "label": "表示色(メガネなしのとき)",
+        "choices": [
+          {
+            "value": "black & red",
+            "label": "黒&赤(実機)"
+          },
+          {
+            "value": "black & white",
+            "label": "黒&白"
+          },
+          {
+            "value": "black & green",
+            "label": "黒&緑"
+          },
+          {
+            "value": "black & blue",
+            "label": "黒&青"
+          },
+          {
+            "value": "black & cyan",
+            "label": "黒&シアン"
+          },
+          {
+            "value": "black & yellow",
+            "label": "黒&黄"
+          }
+        ],
+        "default": "black & white",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "vb_3dmode",
+        "label": "3D表示方式",
+        "choices": [
+          {
+            "value": "anaglyph",
+            "label": "アナグリフ"
+          }
+        ],
+        "default": "anaglyph",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Pokemon Mini (PokeMini)",
+    "consoleId": "pokemini",
+    "core_name": "pokemini_libretro.dll",
+    "installed": "no",
+    "options": []
+  },
+  {
+    "display_name": "Nintendo - Nintendo DS (melonDS)",
+    "consoleId": "nds",
+    "core_name": "melonds_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "melonds_touch_mode",
+        "label": "下画面の操作方式",
+        "choices": [
+          {
+            "value": "Touch",
+            "label": "タッチパネル(マウス位置をそのまま使う)"
+          }
+        ],
+        "default": "Touch",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "melonds_screen_layout",
+        "label": "画面レイアウト",
+        "choices": [
+          {
+            "value": "Top/Bottom",
+            "label": "上下"
+          },
+          {
+            "value": "Bottom/Top",
+            "label": "下上"
+          },
+          {
+            "value": "Left/Right",
+            "label": "左右"
+          },
+          {
+            "value": "Right/Left",
+            "label": "右左"
+          },
+          {
+            "value": "Top Only",
+            "label": "上画面のみ"
+          },
+          {
+            "value": "Bottom Only",
+            "label": "下画面のみ"
+          },
+          {
+            "value": "Hybrid Top",
+            "label": "ハイブリッド(上画面を大きく)"
+          },
+          {
+            "value": "Hybrid Bottom",
+            "label": "ハイブリッド(下画面を大きく)"
+          }
+        ],
+        "default": "Left/Right",
+        "value": null,
+        "hide": false,
+        "actions": [
+          "resyncGeometryOnFrameSizeChange"
+        ]
+      },
+      {
+        "key": "melonds_opengl_renderer",
+        "label": "HWレンダリング (OpenGL)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効(SWレンダリング)"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "melonds_opengl_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1x native (256x192)",
+            "label": "1x native (256x192)"
+          },
+          {
+            "value": "2x native (512x384)",
+            "label": "2x native (512x384)"
+          },
+          {
+            "value": "3x native (768x576)",
+            "label": "3x native (768x576)"
+          },
+          {
+            "value": "4x native (1024x768)",
+            "label": "4x native (1024x768)"
+          },
+          {
+            "value": "5x native (1280x960)",
+            "label": "5x native (1280x960)"
+          },
+          {
+            "value": "6x native (1536x1152)",
+            "label": "6x native (1536x1152)"
+          },
+          {
+            "value": "7x native (1792x1344)",
+            "label": "7x native (1792x1344)"
+          },
+          {
+            "value": "8x native (2048x1536)",
+            "label": "8x native (2048x1536)"
+          }
+        ],
+        "default": "1x native (256x192)",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "melonds_opengl_filtering",
+        "label": "拡大時の補間",
+        "choices": [
+          {
+            "value": "nearest",
+            "label": "ドット(くっきり)"
+          },
+          {
+            "value": "linear",
+            "label": "なめらか"
+          }
+        ],
+        "default": "nearest",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "melonds_opengl_better_polygons",
+        "label": "ポリゴン精度向上",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "melonds_language",
+        "label": "本体の言語",
+        "choices": [
+          {
+            "value": "English",
+            "label": "English"
+          },
+          {
+            "value": "Japanese",
+            "label": "日本語"
+          },
+          {
+            "value": "French",
+            "label": "Français"
+          },
+          {
+            "value": "German",
+            "label": "Deutsch"
+          },
+          {
+            "value": "Italian",
+            "label": "Italiano"
+          },
+          {
+            "value": "Spanish",
+            "label": "Español"
+          }
+        ],
+        "default": "Japanese",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - GameCube (Dolphin)",
+    "consoleId": "gc",
+    "core_name": "dolphin_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/Dolphin.zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "dolphin_cpu_core",
+        "label": "CPUコア",
+        "choices": [
+          {
+            "value": "1",
+            "label": "JIT64(高速)"
+          },
+          {
+            "value": "5",
+            "label": "キャッシュ付きインタープリタ"
+          },
+          {
+            "value": "0",
+            "label": "インタープリタ(低速・切り分け用)"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_fastmem",
+        "label": "Fastmem",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効(クラッシュ切り分け用)"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_efb_scale",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1",
+            "label": "x1(ネイティブ)"
+          },
+          {
+            "value": "2",
+            "label": "x2"
+          },
+          {
+            "value": "3",
+            "label": "x3"
+          },
+          {
+            "value": "4",
+            "label": "x4"
+          },
+          {
+            "value": "5",
+            "label": "x5"
+          },
+          {
+            "value": "6",
+            "label": "x6"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_anti_aliasing",
+        "label": "アンチエイリアス",
+        "choices": [
+          {
+            "value": "0",
+            "label": "なし"
+          },
+          {
+            "value": "1",
+            "label": "MSAA 2x"
+          },
+          {
+            "value": "2",
+            "label": "MSAA 4x"
+          },
+          {
+            "value": "3",
+            "label": "MSAA 8x"
+          },
+          {
+            "value": "4",
+            "label": "SSAA 2x"
+          },
+          {
+            "value": "5",
+            "label": "SSAA 4x"
+          },
+          {
+            "value": "6",
+            "label": "SSAA 8x"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_max_anisotropy",
+        "label": "異方性フィルタリング",
+        "choices": [
+          {
+            "value": "0",
+            "label": "x1(なし)"
+          },
+          {
+            "value": "1",
+            "label": "x2"
+          },
+          {
+            "value": "2",
+            "label": "x4"
+          },
+          {
+            "value": "3",
+            "label": "x8"
+          },
+          {
+            "value": "4",
+            "label": "x16"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_shader_compilation_mode",
+        "label": "シェーダーコンパイル方式",
+        "choices": [
+          {
+            "value": "0",
+            "label": "同期(カクつく可能性あり)"
+          },
+          {
+            "value": "1",
+            "label": "同期(ウーバーシェーダー)"
+          },
+          {
+            "value": "2",
+            "label": "非同期(ウーバーシェーダー・推奨)"
+          },
+          {
+            "value": "3",
+            "label": "非同期(コンパイル中は描画スキップ)"
+          }
+        ],
+        "default": "2",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_wait_for_shaders",
+        "label": "シェーダー待ち(起動時にコンパイル完了を待つ)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_widescreen",
+        "label": "ワイドスクリーン(16:9)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_widescreen_hack",
+        "label": "ワイドスクリーンハック",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_osd_enabled",
+        "label": "画面上の通知表示",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "表示"
+          },
+          {
+            "value": "disabled",
+            "label": "非表示"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_language",
+        "label": "本体の言語",
+        "choices": [
+          {
+            "value": "0",
+            "label": "日本語"
+          },
+          {
+            "value": "1",
+            "label": "英語"
+          },
+          {
+            "value": "2",
+            "label": "ドイツ語"
+          },
+          {
+            "value": "3",
+            "label": "フランス語"
+          },
+          {
+            "value": "4",
+            "label": "スペイン語"
+          },
+          {
+            "value": "5",
+            "label": "イタリア語"
+          },
+          {
+            "value": "6",
+            "label": "オランダ語"
+          },
+          {
+            "value": "7",
+            "label": "中国語(簡体)"
+          },
+          {
+            "value": "8",
+            "label": "中国語(繁体)"
+          },
+          {
+            "value": "9",
+            "label": "韓国語"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Wii (Dolphin)",
+    "consoleId": "wii",
+    "core_name": "dolphin_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/Dolphin.zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_wii_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "wiimote",
+            "label": "Wiiリモコン"
+          },
+          {
+            "value": "nunchuk",
+            "label": "Wiiリモコン+ヌンチャク"
+          },
+          {
+            "value": "classic",
+            "label": "クラシックコントローラ"
+          }
+        ],
+        "default": "wiimote",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "retronexus_wii_motionplus",
+        "label": "MotionPlus",
+        "choices": [
+          {
+            "value": "on",
+            "label": "あり"
+          },
+          {
+            "value": "off",
+            "label": "なし"
+          }
+        ],
+        "default": "on",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_hotkey_sideways_toggle",
+        "label": "横持ち切替ボタン(コア)",
+        "choices": [
+          {
+            "value": "Disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "Disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_cpu_core",
+        "label": "CPUコア",
+        "choices": [
+          {
+            "value": "1",
+            "label": "JIT64(高速)"
+          },
+          {
+            "value": "5",
+            "label": "キャッシュ付きインタープリタ"
+          },
+          {
+            "value": "0",
+            "label": "インタープリタ(低速・切り分け用)"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_fastmem",
+        "label": "Fastmem",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効(クラッシュ切り分け用)"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_efb_scale",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1",
+            "label": "x1(ネイティブ)"
+          },
+          {
+            "value": "2",
+            "label": "x2"
+          },
+          {
+            "value": "3",
+            "label": "x3"
+          },
+          {
+            "value": "4",
+            "label": "x4"
+          },
+          {
+            "value": "5",
+            "label": "x5"
+          },
+          {
+            "value": "6",
+            "label": "x6"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_anti_aliasing",
+        "label": "アンチエイリアス",
+        "choices": [
+          {
+            "value": "0",
+            "label": "なし"
+          },
+          {
+            "value": "1",
+            "label": "MSAA 2x"
+          },
+          {
+            "value": "2",
+            "label": "MSAA 4x"
+          },
+          {
+            "value": "3",
+            "label": "MSAA 8x"
+          },
+          {
+            "value": "4",
+            "label": "SSAA 2x"
+          },
+          {
+            "value": "5",
+            "label": "SSAA 4x"
+          },
+          {
+            "value": "6",
+            "label": "SSAA 8x"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_max_anisotropy",
+        "label": "異方性フィルタリング",
+        "choices": [
+          {
+            "value": "0",
+            "label": "x1(なし)"
+          },
+          {
+            "value": "1",
+            "label": "x2"
+          },
+          {
+            "value": "2",
+            "label": "x4"
+          },
+          {
+            "value": "3",
+            "label": "x8"
+          },
+          {
+            "value": "4",
+            "label": "x16"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_shader_compilation_mode",
+        "label": "シェーダーコンパイル方式",
+        "choices": [
+          {
+            "value": "0",
+            "label": "同期(カクつく可能性あり)"
+          },
+          {
+            "value": "1",
+            "label": "同期(ウーバーシェーダー)"
+          },
+          {
+            "value": "2",
+            "label": "非同期(ウーバーシェーダー・推奨)"
+          },
+          {
+            "value": "3",
+            "label": "非同期(コンパイル中は描画スキップ)"
+          }
+        ],
+        "default": "2",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_wait_for_shaders",
+        "label": "シェーダー待ち(起動時にコンパイル完了を待つ)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_widescreen",
+        "label": "ワイドスクリーン(16:9)",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_widescreen_hack",
+        "label": "ワイドスクリーンハック",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "無効"
+          },
+          {
+            "value": "enabled",
+            "label": "有効"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_osd_enabled",
+        "label": "画面上の通知表示",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "表示"
+          },
+          {
+            "value": "disabled",
+            "label": "非表示"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "dolphin_language",
+        "label": "本体の言語",
+        "choices": [
+          {
+            "value": "0",
+            "label": "日本語"
+          },
+          {
+            "value": "1",
+            "label": "英語"
+          },
+          {
+            "value": "2",
+            "label": "ドイツ語"
+          },
+          {
+            "value": "3",
+            "label": "フランス語"
+          },
+          {
+            "value": "4",
+            "label": "スペイン語"
+          },
+          {
+            "value": "5",
+            "label": "イタリア語"
+          },
+          {
+            "value": "6",
+            "label": "オランダ語"
+          },
+          {
+            "value": "7",
+            "label": "中国語(簡体)"
+          },
+          {
+            "value": "8",
+            "label": "中国語(繁体)"
+          },
+          {
+            "value": "9",
+            "label": "韓国語"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "retronexus_wii_pointer",
+        "label": "IRポインタの操作方法",
+        "choices": [
+          {
+            "value": "stick",
+            "label": "右スティック"
+          },
+          {
+            "value": "mouse",
+            "label": "マウス"
+          },
+          {
+            "value": "imu",
+            "label": "ジャイロ(コントローラを動かす)"
+          }
+        ],
+        "default": "stick",
+        "value": null,
+        "hide": false,
+        "restartRequired": true
+      },
+      {
+        "key": "dolphin_ir_modifier",
+        "label": "IRポインタ操作ボタン(押している間だけ操作)",
+        "choices": [
+          {
+            "value": "None",
+            "label": "なし(常時)"
+          },
+          {
+            "value": "L3",
+            "label": "L3(左スティック押込)"
+          },
+          {
+            "value": "R3",
+            "label": "R3(右スティック押込)"
+          },
+          {
+            "value": "L1",
+            "label": "L1"
+          },
+          {
+            "value": "R1",
+            "label": "R1"
+          },
+          {
+            "value": "L2",
+            "label": "L2"
+          },
+          {
+            "value": "R2",
+            "label": "R2"
+          },
+          {
+            "value": "A",
+            "label": "A"
+          },
+          {
+            "value": "B",
+            "label": "B"
+          },
+          {
+            "value": "X",
+            "label": "X"
+          },
+          {
+            "value": "Y",
+            "label": "Y"
+          },
+          {
+            "value": "Start",
+            "label": "Start"
+          },
+          {
+            "value": "Select",
+            "label": "Select"
+          }
+        ],
+        "default": "None",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_ir_deadzone",
+        "label": "IRポインタのデッドゾーン",
+        "choices": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          },
+          {
+            "value": "25",
+            "label": "25"
+          },
+          {
+            "value": "30",
+            "label": "30"
+          }
+        ],
+        "default": "10",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_ir_yaw",
+        "label": "IRポインタの水平範囲",
+        "choices": [
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          },
+          {
+            "value": "25",
+            "label": "25"
+          },
+          {
+            "value": "30",
+            "label": "30"
+          },
+          {
+            "value": "35",
+            "label": "35"
+          },
+          {
+            "value": "40",
+            "label": "40"
+          },
+          {
+            "value": "50",
+            "label": "50"
+          },
+          {
+            "value": "60",
+            "label": "60"
+          }
+        ],
+        "default": "35",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_ir_pitch",
+        "label": "IRポインタの垂直範囲",
+        "choices": [
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          },
+          {
+            "value": "25",
+            "label": "25"
+          },
+          {
+            "value": "30",
+            "label": "30"
+          },
+          {
+            "value": "35",
+            "label": "35"
+          },
+          {
+            "value": "40",
+            "label": "40"
+          },
+          {
+            "value": "50",
+            "label": "50"
+          },
+          {
+            "value": "60",
+            "label": "60"
+          }
+        ],
+        "default": "35",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_swing_modifier",
+        "label": "振り操作ボタン(押している間スティックで振る)",
+        "choices": [
+          {
+            "value": "Disabled",
+            "label": "無効"
+          },
+          {
+            "value": "None",
+            "label": "なし(常時)"
+          },
+          {
+            "value": "L3",
+            "label": "L3(左スティック押込)"
+          },
+          {
+            "value": "R3",
+            "label": "R3(右スティック押込)"
+          },
+          {
+            "value": "L1",
+            "label": "L1"
+          },
+          {
+            "value": "R1",
+            "label": "R1"
+          },
+          {
+            "value": "L2",
+            "label": "L2"
+          },
+          {
+            "value": "R2",
+            "label": "R2"
+          },
+          {
+            "value": "A",
+            "label": "A"
+          },
+          {
+            "value": "B",
+            "label": "B"
+          },
+          {
+            "value": "X",
+            "label": "X"
+          },
+          {
+            "value": "Y",
+            "label": "Y"
+          },
+          {
+            "value": "Start",
+            "label": "Start"
+          },
+          {
+            "value": "Select",
+            "label": "Select"
+          }
+        ],
+        "default": "Disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_swing_angle",
+        "label": "振りの角度",
+        "choices": [
+          {
+            "value": "30",
+            "label": "30"
+          },
+          {
+            "value": "45",
+            "label": "45"
+          },
+          {
+            "value": "60",
+            "label": "60"
+          },
+          {
+            "value": "90",
+            "label": "90"
+          },
+          {
+            "value": "120",
+            "label": "120"
+          },
+          {
+            "value": "150",
+            "label": "150"
+          },
+          {
+            "value": "180",
+            "label": "180"
+          }
+        ],
+        "default": "90",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_sensor_bar_position",
+        "label": "センサーバーの位置",
+        "choices": [
+          {
+            "value": "0",
+            "label": "テレビの下"
+          },
+          {
+            "value": "1",
+            "label": "テレビの上"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_enable_rumble",
+        "label": "振動",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "dolphin_disc_based_games_boot_to_wii_menu",
+        "label": "ディスクのゲームをWiiメニュー経由で起動",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Nintendo - Nintendo 3DS (Citra)",
+    "consoleId": "3ds",
+    "core_name": "citra_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "citra_resolution_factor",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1x (Native)",
+            "label": "1x (ネイティブ)"
+          },
+          {
+            "value": "2x",
+            "label": "2x"
+          },
+          {
+            "value": "3x",
+            "label": "3x"
+          },
+          {
+            "value": "4x",
+            "label": "4x"
+          },
+          {
+            "value": "5x",
+            "label": "5x"
+          },
+          {
+            "value": "6x",
+            "label": "6x"
+          },
+          {
+            "value": "7x",
+            "label": "7x"
+          },
+          {
+            "value": "8x",
+            "label": "8x"
+          },
+          {
+            "value": "9x",
+            "label": "9x"
+          },
+          {
+            "value": "10x",
+            "label": "10x"
+          }
+        ],
+        "default": "1x (Native)",
+        "value": null
+      },
+      {
+        "key": "citra_layout_option",
+        "label": "画面レイアウト",
+        "choices": [
+          {
+            "value": "Default Top-Bottom Screen",
+            "label": "上下(標準)"
+          },
+          {
+            "value": "Single Screen Only",
+            "label": "1画面のみ"
+          },
+          {
+            "value": "Large Screen, Small Screen",
+            "label": "大画面+小画面"
+          },
+          {
+            "value": "Side by Side",
+            "label": "左右に並べる"
+          }
+        ],
+        "default": "Default Top-Bottom Screen",
+        "value": null
+      },
+      {
+        "key": "citra_language",
+        "label": "ゲーム内の言語",
+        "choices": [
+          {
+            "value": "Japanese",
+            "label": "日本語"
+          },
+          {
+            "value": "English",
+            "label": "English"
+          },
+          {
+            "value": "French",
+            "label": "Français"
+          },
+          {
+            "value": "Spanish",
+            "label": "Español"
+          },
+          {
+            "value": "German",
+            "label": "Deutsch"
+          },
+          {
+            "value": "Italian",
+            "label": "Italiano"
+          },
+          {
+            "value": "Dutch",
+            "label": "Nederlands"
+          },
+          {
+            "value": "Portuguese",
+            "label": "Português"
+          },
+          {
+            "value": "Russian",
+            "label": "Русский"
+          },
+          {
+            "value": "Korean",
+            "label": "한국어"
+          },
+          {
+            "value": "Traditional Chinese",
+            "label": "繁體中文"
+          },
+          {
+            "value": "Simplified Chinese",
+            "label": "简体中文"
+          }
+        ],
+        "default": "Japanese",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "citra_texture_filter",
+        "label": "テクスチャ拡大フィルタ(内部解像度を上げたとき)",
+        "choices": [
+          {
+            "value": "none",
+            "label": "なし"
+          },
+          {
+            "value": "Anime4K Ultrafast",
+            "label": "Anime4K"
+          },
+          {
+            "value": "Bicubic",
+            "label": "Bicubic"
+          },
+          {
+            "value": "NearestNeighbor",
+            "label": "ニアレストネイバー"
+          },
+          {
+            "value": "ScaleForce",
+            "label": "ScaleForce"
+          },
+          {
+            "value": "xBRZ freescale",
+            "label": "xBRZ"
+          },
+          {
+            "value": "MMPX",
+            "label": "MMPX"
+          }
+        ],
+        "default": "none",
+        "value": null
+      },
+      {
+        "key": "citra_is_new_3ds",
+        "label": "本体の種類(New 3DS専用ソフト用)",
+        "choices": [
+          {
+            "value": "Old 3DS",
+            "label": "3DS"
+          },
+          {
+            "value": "New 3DS",
+            "label": "New 3DS"
+          }
+        ],
+        "default": "New 3DS",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "citra_swap_screen",
+        "label": "大画面にする画面",
+        "choices": [
+          {
+            "value": "Top",
+            "label": "上画面"
+          },
+          {
+            "value": "Bottom",
+            "label": "下画面"
+          }
+        ],
+        "default": "Top",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "citra_analog_function",
+        "label": "右スティックの役割",
+        "choices": [
+          {
+            "value": "C-Stick and Touchscreen Pointer",
+            "label": "Cスティックとタッチ(両方)"
+          },
+          {
+            "value": "Touchscreen Pointer",
+            "label": "タッチ操作"
+          },
+          {
+            "value": "C-Stick",
+            "label": "Cスティック操作(タッチはマウス)"
+          }
+        ],
+        "default": "C-Stick and Touchscreen Pointer",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "citra_render_touchscreen",
+        "label": "タッチ位置の表示",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "表示する"
+          },
+          {
+            "value": "disabled",
+            "label": "表示しない"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - SG-1000 (Genesis Plus GX)",
+    "consoleId": "sg1000",
+    "core_name": "genesis_plus_gx_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "genesis_plus_gx_no_sprite_limit",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Mark III (Genesis Plus GX)",
+    "consoleId": "mark3",
+    "core_name": "genesis_plus_gx_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "genesis_plus_gx_no_sprite_limit",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Mega-CD (Genesis Plus GX)",
+    "consoleId": "megacd",
+    "core_name": "genesis_plus_gx_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類",
+        "choices": [
+          {
+            "value": "pad3",
+            "label": "3ボタンパッド"
+          },
+          {
+            "value": "pad6",
+            "label": "6ボタンパッド"
+          }
+        ],
+        "default": "pad3",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "genesis_plus_gx_no_sprite_limit",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - 32X (PicoDrive)",
+    "consoleId": "32x",
+    "core_name": "picodrive_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "picodrive_input1",
+        "label": "コントローラ",
+        "choices": [
+          {
+            "value": "3 button pad",
+            "label": "3ボタンパッド"
+          },
+          {
+            "value": "6 button pad",
+            "label": "6ボタンパッド"
+          }
+        ],
+        "default": "3 button pad",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "picodrive_input2",
+        "label": "2Pコントローラ",
+        "choices": [
+          {
+            "value": "3 button pad",
+            "label": "3ボタンパッド"
+          },
+          {
+            "value": "6 button pad",
+            "label": "6ボタンパッド"
+          }
+        ],
+        "default": "6 button pad",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "picodrive_sprlim",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "しない"
+          },
+          {
+            "value": "enabled",
+            "label": "する"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Saturn (Kronos)",
+    "consoleId": "stn",
+    "core_name": "kronos_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "kronos_resolution_mode",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "original",
+            "label": "オリジナル"
+          },
+          {
+            "value": "2X",
+            "label": "2倍"
+          },
+          {
+            "value": "4X",
+            "label": "4倍"
+          },
+          {
+            "value": "8X",
+            "label": "8倍"
+          }
+        ],
+        "default": "original",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "kronos_addon_cartridge",
+        "label": "拡張カートリッジ",
+        "choices": [
+          {
+            "value": "512K_backup_ram",
+            "label": "512K_backup_ram"
+          },
+          {
+            "value": "none",
+            "label": "none"
+          },
+          {
+            "value": "1M_extended_ram",
+            "label": "1M_extended_ram"
+          },
+          {
+            "value": "4M_extended_ram",
+            "label": "4M_extended_ram"
+          },
+          {
+            "value": "16M_extended_ram",
+            "label": "16M_extended_ram"
+          },
+          {
+            "value": "1M_backup_ram",
+            "label": "1M_backup_ram"
+          },
+          {
+            "value": "2M_backup_ram",
+            "label": "2M_backup_ram"
+          },
+          {
+            "value": "4M_backup_ram",
+            "label": "4M_backup_ram"
+          }
+        ],
+        "default": "4M_extended_ram",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_force_downsampling",
+        "label": "ダウンサンプリングを強制",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_meshmode",
+        "label": "メッシュ表現の改善",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_bandingmode",
+        "label": "バンディング補正",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_video_filter_type",
+        "label": "インタレース除去",
+        "choices": [
+          {
+            "value": "0",
+            "label": "なし"
+          },
+          {
+            "value": "3",
+            "label": "除去"
+          },
+          {
+            "value": "5",
+            "label": "除去(ボブ方式)"
+          }
+        ],
+        "default": "3",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "kronos_wireframe_mode",
+        "label": "ワイヤーフレーム表示",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_skipframe",
+        "label": "フレームスキップ",
+        "choices": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_force_hle_bios",
+        "label": "HLE BIOSを強制",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_videoformattype",
+        "label": "映像方式",
+        "choices": [
+          {
+            "value": "auto",
+            "label": "auto"
+          },
+          {
+            "value": "NTSC",
+            "label": "NTSC"
+          },
+          {
+            "value": "PAL",
+            "label": "PAL"
+          }
+        ],
+        "default": "auto",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_usecache",
+        "label": "キャッシュを使う",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_use_beetle_saves",
+        "label": "Beetle Saturn形式のセーブを使う",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_multitap_port1",
+        "label": "マルチタップ(ポート1)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_multitap_port2",
+        "label": "マルチタップ(ポート2)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_service_enabled",
+        "label": "サービスボタン(ST-V)",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "disabled"
+          },
+          {
+            "value": "enabled",
+            "label": "enabled"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_stv_favorite_region",
+        "label": "ST-Vの地域",
+        "choices": [
+          {
+            "value": "JP",
+            "label": "JP"
+          },
+          {
+            "value": "US",
+            "label": "US"
+          },
+          {
+            "value": "EU",
+            "label": "EU"
+          },
+          {
+            "value": "TW",
+            "label": "TW"
+          }
+        ],
+        "default": "JP",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "kronos_language_id",
+        "label": "システム言語",
+        "choices": [
+          {
+            "value": "Japanese",
+            "label": "Japanese"
+          },
+          {
+            "value": "English",
+            "label": "English"
+          },
+          {
+            "value": "German",
+            "label": "German"
+          },
+          {
+            "value": "French",
+            "label": "French"
+          },
+          {
+            "value": "Spanish",
+            "label": "Spanish"
+          },
+          {
+            "value": "Italian",
+            "label": "Italian"
+          }
+        ],
+        "default": "Japanese",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Saturn (Beetle Saturn)",
+    "consoleId": "stn",
+    "core_name": "mednafen_saturn_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "beetle_saturn_autortc_lang",
+        "label": "システム言語",
+        "choices": [
+          {
+            "value": "english",
+            "label": "英語"
+          },
+          {
+            "value": "german",
+            "label": "ドイツ語"
+          },
+          {
+            "value": "french",
+            "label": "フランス語"
+          },
+          {
+            "value": "spanish",
+            "label": "スペイン語"
+          },
+          {
+            "value": "italian",
+            "label": "イタリア語"
+          },
+          {
+            "value": "japanese",
+            "label": "日本語"
+          }
+        ],
+        "default": "japanese",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "beetle_saturn_deinterlacer",
+        "label": "インタレース除去",
+        "choices": [
+          {
+            "value": "bob",
+            "label": "bob"
+          },
+          {
+            "value": "progressive",
+            "label": "progressive"
+          }
+        ],
+        "default": "progressive",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "NEC - PC Engine CD-ROM2 (Mednafen)",
+    "consoleId": "pcecd",
+    "core_name": "mednafen_pce_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "pce_default_joypad_type_p1",
+        "label": "コントローラの種類(2/6ボタン)",
+        "choices": [
+          {
+            "value": "2 Buttons",
+            "label": "2ボタン"
+          },
+          {
+            "value": "6 Buttons",
+            "label": "6ボタン"
+          }
+        ],
+        "default": "2 Buttons",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "pce_cdbios",
+        "label": "CD BIOS(システムカード)",
+        "choices": [
+          {
+            "value": "System Card 3",
+            "label": "System Card 3"
+          },
+          {
+            "value": "Games Express",
+            "label": "Games Express"
+          },
+          {
+            "value": "System Card 1",
+            "label": "System Card 1"
+          },
+          {
+            "value": "System Card 2",
+            "label": "System Card 2"
+          },
+          {
+            "value": "System Card 2 US",
+            "label": "System Card 2 US"
+          },
+          {
+            "value": "System Card 3 US",
+            "label": "System Card 3 US"
+          }
+        ],
+        "default": "System Card 3",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "pce_arcadecard",
+        "label": "アーケードカード",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "pce_cdspeed",
+        "label": "CD読み込み速度",
+        "choices": [
+          {
+            "value": "1",
+            "label": "x1"
+          },
+          {
+            "value": "2",
+            "label": "x2"
+          },
+          {
+            "value": "4",
+            "label": "x4"
+          },
+          {
+            "value": "8",
+            "label": "x8"
+          }
+        ],
+        "default": "8",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "NEC - PC Engine SuperGrafx (Beetle SuperGrafx)",
+    "consoleId": "sgx",
+    "core_name": "mednafen_supergrafx_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "sgx_default_joypad_type_p1",
+        "label": "コントローラの種類(2/6ボタン)",
+        "choices": [
+          {
+            "value": "2 Buttons",
+            "label": "2ボタン"
+          },
+          {
+            "value": "6 Buttons",
+            "label": "6ボタン"
+          }
+        ],
+        "default": "2 Buttons",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "NEC - PC-FX (Beetle PC-FX)",
+    "consoleId": "pcfx",
+    "core_name": "mednafen_pcfx_libretro.dll",
+    "installed": "no",
+    "options": []
+  },
+  {
+    "display_name": "Sony - PlayStation 2 (LRPS2)",
+    "consoleId": "ps2",
+    "core_name": "pcsx2_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/LRPS2.zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "pcsx2_renderer",
+        "label": "レンダラー",
+        "choices": [
+          {
+            "value": "OpenGL",
+            "label": "OpenGL"
+          },
+          {
+            "value": "Software (SW)",
+            "label": "ソフトウェア"
+          }
+        ],
+        "default": "OpenGL",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "pcsx2_upscale_multiplier",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "1x (Native)",
+            "label": "1x ネイティブ"
+          },
+          {
+            "value": "2x",
+            "label": "2x"
+          },
+          {
+            "value": "4x",
+            "label": "4x"
+          },
+          {
+            "value": "8x",
+            "label": "8x"
+          }
+        ],
+        "default": "1x (Native)",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "pcsx2_widescreen_hint",
+        "label": "ワイド画面",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "enabled (16:9)",
+            "label": "16:9"
+          },
+          {
+            "value": "enabled (16:10)",
+            "label": "16:10"
+          },
+          {
+            "value": "enabled (21:9)",
+            "label": "21:9"
+          },
+          {
+            "value": "enabled (32:9)",
+            "label": "32:9"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "pcsx2_anisotropic_filtering",
+        "label": "異方性フィルタリング",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "なし"
+          },
+          {
+            "value": "2x",
+            "label": "2倍"
+          },
+          {
+            "value": "4x",
+            "label": "4倍"
+          },
+          {
+            "value": "8x",
+            "label": "8倍"
+          },
+          {
+            "value": "16x",
+            "label": "16倍"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "pcsx2_texture_filtering",
+        "label": "テクスチャフィルタ",
+        "choices": [
+          {
+            "value": "Bilinear (PS2)",
+            "label": "標準(PS2)"
+          },
+          {
+            "value": "Nearest",
+            "label": "ニアレスト(くっきり)"
+          },
+          {
+            "value": "Bilinear (Forced)",
+            "label": "バイリニア(強制)"
+          }
+        ],
+        "default": "Bilinear (PS2)",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "pcsx2_enable_rumble1",
+        "label": "振動",
+        "choices": [
+          {
+            "value": "100%",
+            "label": "100%"
+          },
+          {
+            "value": "50%",
+            "label": "50%"
+          },
+          {
+            "value": "disabled",
+            "label": "なし"
+          }
+        ],
+        "default": "100%",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "SNK - Neo Geo CD (NeoCD)",
+    "consoleId": "ngcd",
+    "core_name": "neocd_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "neocd_region",
+        "label": "リージョン",
+        "choices": [
+          {
+            "value": "Japan",
+            "label": "日本"
+          },
+          {
+            "value": "USA",
+            "label": "アメリカ"
+          },
+          {
+            "value": "Europe",
+            "label": "ヨーロッパ"
+          }
+        ],
+        "default": "Japan",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "SNK - Neo Geo Pocket (Beetle NeoPop)",
+    "consoleId": "ngp",
+    "core_name": "mednafen_ngp_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "ngp_language",
+        "label": "システム言語",
+        "choices": [
+          {
+            "value": "english",
+            "label": "英語"
+          },
+          {
+            "value": "japanese",
+            "label": "日本語"
+          }
+        ],
+        "default": "japanese",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "SNK - Neo Geo Pocket Color (Beetle NeoPop)",
+    "consoleId": "ngpc",
+    "core_name": "mednafen_ngp_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "ngp_language",
+        "label": "システム言語",
+        "choices": [
+          {
+            "value": "english",
+            "label": "英語"
+          },
+          {
+            "value": "japanese",
+            "label": "日本語"
+          }
+        ],
+        "default": "japanese",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Bandai - WonderSwan (Beetle Cygne)",
+    "consoleId": "ws",
+    "core_name": "mednafen_wswan_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "wswan_language",
+        "label": "システム言語",
+        "choices": [
+          {
+            "value": "english",
+            "label": "英語"
+          },
+          {
+            "value": "japanese",
+            "label": "日本語"
+          }
+        ],
+        "default": "japanese",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Bandai - WonderSwan Color (Beetle Cygne)",
+    "consoleId": "wsc",
+    "core_name": "mednafen_wswan_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "wswan_language",
+        "label": "システム言語",
+        "choices": [
+          {
+            "value": "english",
+            "label": "英語"
+          },
+          {
+            "value": "japanese",
+            "label": "日本語"
+          }
+        ],
+        "default": "japanese",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sega - Model 3 (Supermodel)",
+    "consoleId": "model3",
+    "core_name": "supermodel_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "supermodel_resolution",
+        "label": "内部解像度",
+        "choices": [
+          {
+            "value": "half",
+            "label": "0.5x"
+          },
+          {
+            "value": "native",
+            "label": "1x (ネイティブ)"
+          },
+          {
+            "value": "2x",
+            "label": "2x"
+          },
+          {
+            "value": "3x",
+            "label": "3x"
+          },
+          {
+            "value": "4x",
+            "label": "4x"
+          }
+        ],
+        "default": "native",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "supermodel_supersampling",
+        "label": "スーパーサンプリング",
+        "choices": [
+          {
+            "value": "1",
+            "label": "1x"
+          },
+          {
+            "value": "2",
+            "label": "2x"
+          },
+          {
+            "value": "3",
+            "label": "3x"
+          },
+          {
+            "value": "4",
+            "label": "4x"
+          },
+          {
+            "value": "5",
+            "label": "5x"
+          },
+          {
+            "value": "6",
+            "label": "6x"
+          },
+          {
+            "value": "7",
+            "label": "7x"
+          },
+          {
+            "value": "8",
+            "label": "8x"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_wide_screen",
+        "label": "ワイド画面",
+        "choices": [
+          {
+            "value": "disabled",
+            "label": "オフ"
+          },
+          {
+            "value": "enabled",
+            "label": "ワイド"
+          },
+          {
+            "value": "wide_background",
+            "label": "ワイド(背景も拡張)"
+          }
+        ],
+        "default": "disabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_crt_colors",
+        "label": "CRT色補正",
+        "choices": [
+          {
+            "value": "0",
+            "label": "オフ"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_frameskip",
+        "label": "フレームスキップ",
+        "choices": [
+          {
+            "value": "0",
+            "label": "なし"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          }
+        ],
+        "default": "0",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_ppc_frequency",
+        "label": "PowerPC周波数(MHz)",
+        "choices": [
+          {
+            "value": "auto",
+            "label": "自動"
+          },
+          {
+            "value": "25",
+            "label": "25"
+          },
+          {
+            "value": "33",
+            "label": "33"
+          },
+          {
+            "value": "50",
+            "label": "50"
+          },
+          {
+            "value": "66",
+            "label": "66"
+          },
+          {
+            "value": "70",
+            "label": "70"
+          },
+          {
+            "value": "100",
+            "label": "100"
+          },
+          {
+            "value": "133",
+            "label": "133"
+          },
+          {
+            "value": "166",
+            "label": "166"
+          },
+          {
+            "value": "200",
+            "label": "200"
+          }
+        ],
+        "default": "auto",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_emulation_threading",
+        "label": "スレッド処理",
+        "choices": [
+          {
+            "value": "single",
+            "label": "シングル"
+          },
+          {
+            "value": "multi",
+            "label": "マルチ"
+          },
+          {
+            "value": "multi_gpu",
+            "label": "マルチ(GPU含む)"
+          }
+        ],
+        "default": "multi_gpu",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_av_timing",
+        "label": "映像タイミング",
+        "choices": [
+          {
+            "value": "60hz",
+            "label": "60Hz固定"
+          },
+          {
+            "value": "native",
+            "label": "実機どおり"
+          }
+        ],
+        "default": "60hz",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_sound_enable",
+        "label": "サウンド",
+        "choices": [
+          {
+            "value": "enabled",
+            "label": "有効"
+          },
+          {
+            "value": "disabled",
+            "label": "無効"
+          }
+        ],
+        "default": "enabled",
+        "value": null,
+        "hide": true
+      },
+      {
+        "key": "supermodel_crosshairs",
+        "label": "照準の表示",
+        "choices": [
+          {
+            "value": "0",
+            "label": "表示しない"
+          },
+          {
+            "value": "1",
+            "label": "1Pのみ表示"
+          },
+          {
+            "value": "2",
+            "label": "2Pのみ表示"
+          },
+          {
+            "value": "3",
+            "label": "1P・2P表示"
+          }
+        ],
+        "default": "1",
+        "value": null,
+        "hide": true
+      }
+    ]
+  },
+  {
+    "display_name": "Sharp - X68000 (PX68k)",
+    "consoleId": "x68000",
+    "core_name": "px68k_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "px68k_joytype1",
+        "label": "コントローラ",
+        "choices": [
+          {
+            "value": "Default (2 Buttons)",
+            "label": "2ボタン(標準)"
+          },
+          {
+            "value": "CPSF-SFC (8 Buttons)",
+            "label": "8ボタン(CPSF-SFC)"
+          }
+        ],
+        "default": "Default (2 Buttons)",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "px68k_cpuspeed",
+        "label": "CPU速度",
+        "choices": [
+          {
+            "value": "10Mhz",
+            "label": "10MHz(実機相当)"
+          },
+          {
+            "value": "16Mhz",
+            "label": "16MHz"
+          },
+          {
+            "value": "25Mhz",
+            "label": "25MHz"
+          },
+          {
+            "value": "33Mhz (OC)",
+            "label": "33MHz(オーバークロック)"
+          },
+          {
+            "value": "66Mhz (OC)",
+            "label": "66MHz(オーバークロック)"
+          },
+          {
+            "value": "100Mhz (OC)",
+            "label": "100MHz(オーバークロック)"
+          }
+        ],
+        "default": "10Mhz",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Microsoft - MSX (blueMSX)",
+    "consoleId": "msx",
+    "core_name": "bluemsx_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/blueMSX.zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "bluemsx_msxtype",
+        "label": "機種(マシン)",
+        "choices": [
+          {
+            "value": "Auto",
+            "label": "自動"
+          },
+          {
+            "value": "MSX",
+            "label": "MSX"
+          },
+          {
+            "value": "MSX2",
+            "label": "MSX2"
+          },
+          {
+            "value": "MSX2+",
+            "label": "MSX2+"
+          },
+          {
+            "value": "MSXturboR",
+            "label": "MSXturboR"
+          }
+        ],
+        "default": "MSX",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "bluemsx_vdp_synctype",
+        "label": "画面の更新周波数",
+        "choices": [
+          {
+            "value": "Auto",
+            "label": "自動"
+          },
+          {
+            "value": "50Hz",
+            "label": "50Hz"
+          },
+          {
+            "value": "60Hz",
+            "label": "60Hz"
+          }
+        ],
+        "default": "Auto",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "bluemsx_nospritelimits",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "OFF",
+            "label": "しない"
+          },
+          {
+            "value": "ON",
+            "label": "する"
+          }
+        ],
+        "default": "OFF",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Microsoft - MSX2 (blueMSX)",
+    "consoleId": "msx2",
+    "core_name": "bluemsx_libretro.dll",
+    "system_url": "https://buildbot.libretro.com/assets/system/blueMSX.zip",
+    "installed": "no",
+    "options": [
+      {
+        "key": "bluemsx_msxtype",
+        "label": "機種(マシン)",
+        "choices": [
+          {
+            "value": "Auto",
+            "label": "自動"
+          },
+          {
+            "value": "MSX",
+            "label": "MSX"
+          },
+          {
+            "value": "MSX2",
+            "label": "MSX2"
+          },
+          {
+            "value": "MSX2+",
+            "label": "MSX2+"
+          },
+          {
+            "value": "MSXturboR",
+            "label": "MSXturboR"
+          }
+        ],
+        "default": "Auto",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "bluemsx_vdp_synctype",
+        "label": "画面の更新周波数",
+        "choices": [
+          {
+            "value": "Auto",
+            "label": "自動"
+          },
+          {
+            "value": "50Hz",
+            "label": "50Hz"
+          },
+          {
+            "value": "60Hz",
+            "label": "60Hz"
+          }
+        ],
+        "default": "Auto",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "bluemsx_nospritelimits",
+        "label": "スプライト制限の解除(ちらつき軽減)",
+        "choices": [
+          {
+            "value": "OFF",
+            "label": "しない"
+          },
+          {
+            "value": "ON",
+            "label": "する"
+          }
+        ],
+        "default": "OFF",
+        "value": null,
+        "hide": false
+      }
+    ]
+  },
+  {
+    "display_name": "Fujitsu - FM Towns (Geartowns)",
+    "consoleId": "fmtowns",
+    "core_name": "geartowns_libretro.dll",
+    "installed": "no",
+    "options": [
+      {
+        "key": "retronexus_controller",
+        "label": "コントローラの種類(1P)",
+        "choices": [
+          {
+            "value": "pad",
+            "label": "標準パッド"
+          },
+          {
+            "value": "marty",
+            "label": "マーティのパッド(R1=ZOOM)"
+          },
+          {
+            "value": "pad6",
+            "label": "6ボタンパッド"
+          }
+        ],
+        "default": "marty",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_model",
+        "label": "機種",
+        "choices": [
+          {
+            "value": "auto",
+            "label": "自動"
+          },
+          {
+            "value": "model1_2",
+            "label": "初代・II"
+          },
+          {
+            "value": "1f_2f",
+            "label": "1F・2F"
+          },
+          {
+            "value": "10f_20f",
+            "label": "10F・20F"
+          },
+          {
+            "value": "cx",
+            "label": "CX"
+          },
+          {
+            "value": "ux",
+            "label": "UX"
+          },
+          {
+            "value": "ug",
+            "label": "UG"
+          },
+          {
+            "value": "hg",
+            "label": "HG"
+          },
+          {
+            "value": "marty",
+            "label": "マーティ"
+          }
+        ],
+        "default": "auto",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_cpu_clock",
+        "label": "CPU速度(再起動で反映)",
+        "choices": [
+          {
+            "value": "auto",
+            "label": "自動"
+          },
+          {
+            "value": "16",
+            "label": "16MHz"
+          },
+          {
+            "value": "20",
+            "label": "20MHz"
+          },
+          {
+            "value": "25",
+            "label": "25MHz"
+          },
+          {
+            "value": "33",
+            "label": "33MHz"
+          },
+          {
+            "value": "40",
+            "label": "40MHz"
+          },
+          {
+            "value": "50",
+            "label": "50MHz"
+          },
+          {
+            "value": "66",
+            "label": "66MHz"
+          },
+          {
+            "value": "100",
+            "label": "100MHz"
+          }
+        ],
+        "default": "auto",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_mouse_sensitivity",
+        "label": "マウスの感度",
+        "choices": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "11",
+            "label": "11"
+          },
+          {
+            "value": "12",
+            "label": "12"
+          },
+          {
+            "value": "13",
+            "label": "13"
+          },
+          {
+            "value": "14",
+            "label": "14"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          }
+        ],
+        "default": "5",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_analog_mouse",
+        "label": "スティックでマウス操作",
+        "choices": [
+          {
+            "value": "Disabled",
+            "label": "しない"
+          },
+          {
+            "value": "Left stick",
+            "label": "左スティック"
+          },
+          {
+            "value": "Right stick",
+            "label": "右スティック"
+          }
+        ],
+        "default": "Disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_analog_mouse_speed",
+        "label": "スティックマウスの速度",
+        "choices": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          }
+        ],
+        "default": "5",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_floppy_drive",
+        "label": "ディスク入れ替えのフロッピードライブ",
+        "choices": [
+          {
+            "value": "Floppy 1",
+            "label": "ドライブ0"
+          },
+          {
+            "value": "Floppy 2",
+            "label": "ドライブ1"
+          }
+        ],
+        "default": "Floppy 1",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_save_disk",
+        "label": "セーブ用ディスク(再起動で反映)",
+        "choices": [
+          {
+            "value": "Disabled",
+            "label": "しない"
+          },
+          {
+            "value": "Enabled",
+            "label": "する"
+          }
+        ],
+        "default": "Disabled",
+        "value": null,
+        "hide": false
+      },
+      {
+        "key": "geartowns_cdrom_speed",
+        "label": "CDの速度",
+        "choices": [
+          {
+            "value": "1x",
+            "label": "1x"
+          },
+          {
+            "value": "2x",
+            "label": "2x"
+          },
+          {
+            "value": "4x",
+            "label": "4x"
+          },
+          {
+            "value": "8x",
+            "label": "8x"
+          }
+        ],
+        "default": "8x",
+        "value": null,
+        "hide": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,84 @@
+<!--
+    Brushes.xaml: Colors.xamlで定義した色を、実際にXAMLのForeground/Background等へ
+    指定できるBrush(SolidColorBrush/LinearGradientBrush)にしたもの。
+    ページ側は基本的にColors.xamlの<Color>を直接参照せず、必ずこちらのBrushを使う。
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============ 基本配色 ============ -->
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
+    <SolidColorBrush x:Key="SettingsPageBackgroundBrush" Color="{StaticResource SettingsPageBackgroundColor}" />
+    <SolidColorBrush x:Key="SettingsContentBackgroundBrush" Color="{StaticResource SettingsContentBackgroundColor}" />
+    <SolidColorBrush x:Key="AppSurfaceBrush" Color="{StaticResource AppSurfaceColor}" />
+    <SolidColorBrush x:Key="AppAccentBrush" Color="{StaticResource AppAccentColor}" />
+    <SolidColorBrush x:Key="AppTextPrimaryBrush" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="AppTextSecondaryBrush" Color="{StaticResource AppTextSecondaryColor}" />
+    <SolidColorBrush x:Key="SelectionHighlightBrush" Color="{StaticResource AppAccentColor}" />
+    <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
+
+    <SolidColorBrush x:Key="SwitchSelectedBlueBrush" Color="{StaticResource SwitchSelectedBlueColor}" />
+
+    <!-- ============ パネル/カード ============ -->
+    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="{StaticResource PanelBackgroundColor}" />
+
+    <!-- ============ ヒントバー ============ -->
+    <SolidColorBrush x:Key="HintBadgeBackgroundBrush" Color="{StaticResource HintBadgeBackgroundColor}" />
+    <SolidColorBrush x:Key="HintBadgeBorderBrush" Color="{StaticResource HintBadgeBorderColor}" />
+    <SolidColorBrush x:Key="SoftShadowBrush" Color="{StaticResource SoftShadowColor}" />
+
+    <!-- ヒントバー本体の背景グラデーション(白→ごく薄いグレーへ)。
+         ConsoleSelectPage/GameSelectPage/GamePlayPageで個別に書かれていたのと同じ配色を
+         1つのBrushにまとめたもの。Background="{StaticResource HintBarBackgroundBrush}"と
+         書くだけで済むようにする。 -->
+    <LinearGradientBrush x:Key="HintBarBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource HintBarGradientStartColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource HintBarGradientMidColor}" Offset="0.6" />
+        <GradientStop Color="{StaticResource HintBarGradientEndColor}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- ============ オーバーレイ ============ -->
+    <SolidColorBrush x:Key="OverlayScrimBrush" Color="{StaticResource OverlayScrimColor}" />
+    <SolidColorBrush x:Key="StrongOverlayScrimBrush" Color="{StaticResource StrongOverlayScrimColor}" />
+
+    <!-- ============ カードのキャプション・タブ ============ -->
+    <SolidColorBrush x:Key="CardCaptionTextBrush" Color="{StaticResource CardCaptionTextColor}" />
+    <SolidColorBrush x:Key="TabShadowBrush" Color="{StaticResource TabShadowColor}" />
+
+    <!-- コンソール/コレクションカード下部の暗転グラデーション(透明→StrongOverlayScrimColor)。
+         キャプション文字を写真の上でも読みやすくするための下敷き。 -->
+    <LinearGradientBrush x:Key="CardCaptionScrimBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="Transparent" Offset="0.3" />
+        <GradientStop Color="{StaticResource StrongOverlayScrimColor}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- 選択中タブ(「コンソール」「コレクション」)の濃色カプセル背景。 -->
+    <LinearGradientBrush x:Key="TabActiveGradientBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource HintBadgeBorderColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource TabActiveGradientEndColor}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- ============ その他、単発で使うBrush ============ -->
+    <SolidColorBrush x:Key="PhotoFrameBackgroundBrush" Color="{StaticResource PhotoFrameBackgroundColor}" />
+    <SolidColorBrush x:Key="TranslucentSurfaceBrush" Color="{StaticResource TranslucentSurfaceColor}" />
+
+    <!-- ============ GamePlayPage専用 ============ -->
+    <SolidColorBrush x:Key="MediaPlaceholderBackgroundBrush" Color="{StaticResource MediaPlaceholderBackgroundColor}" />
+    <SolidColorBrush x:Key="FilmstripThumbnailBackgroundBrush" Color="{StaticResource FilmstripThumbnailBackgroundColor}" />
+    <SolidColorBrush x:Key="VeryStrongOverlayScrimBrush" Color="{StaticResource VeryStrongOverlayScrimColor}" />
+    <SolidColorBrush x:Key="MenuScrimBrush" Color="{StaticResource MenuScrimColor}" />
+    <SolidColorBrush x:Key="TranslucentPanelBackgroundBrush" Color="{StaticResource TranslucentPanelBackgroundColor}" />
+    <SolidColorBrush x:Key="PanelBorderTranslucentBrush" Color="{StaticResource PanelBorderTranslucentColor}" />
+
+    <!-- ============ コントローラー図 ============ -->
+    <SolidColorBrush x:Key="DiagramBodyBrush" Color="{StaticResource DiagramBodyColor}" />
+    <SolidColorBrush x:Key="DiagramDPadBrush" Color="{StaticResource DiagramDPadColor}" />
+    <SolidColorBrush x:Key="DiagramStickBrush" Color="{StaticResource DiagramStickColor}" />
+    <SolidColorBrush x:Key="DiagramShoulderBrush" Color="{StaticResource DiagramShoulderColor}" />
+    <SolidColorBrush x:Key="DiagramPillBrush" Color="{StaticResource DiagramPillColor}" />
+    <SolidColorBrush x:Key="DiagramButtonYBrush" Color="{StaticResource DiagramButtonYColor}" />
+    <SolidColorBrush x:Key="DiagramButtonXBrush" Color="{StaticResource DiagramButtonXColor}" />
+    <SolidColorBrush x:Key="DiagramButtonBBrush" Color="{StaticResource DiagramButtonBColor}" />
+    <SolidColorBrush x:Key="DiagramButtonABrush" Color="{StaticResource DiagramButtonAColor}" />
+</ResourceDictionary>

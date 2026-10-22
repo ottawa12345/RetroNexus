@@ -1,0 +1,158 @@
+﻿<UserControl
+    x:Class="EmulatorLauncher.Controls.GameEditOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fs="using:EmulatorLauncher.Controls"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        「ゲーム情報の編集」の全画面(ゲーム詳細画面の「メニュー」ボタンから開く)。登録されているゲームの情報を書き換える。
+        コレクションの編集と同じ構成: 上に項目名と区切り線、左に「ラベル + 青い値」の行、
+        右にパッケージ画像のプレビューと「保存する」ボタン(変更が無い間はグレー)、下に操作ガイド。
+        ・文字の行(タイトル/日本語タイトル/よみ/発売元/発売年/プレイ人数/ジャンル/概要): Aで文字入力の画面を開く
+        ・パッケージ画像: Aで画像ファイル(png/jpg/bmp)を選ぶ
+        ・十字キー右で「保存する」へ、左または上で一覧へ戻る。Bで戻る(変更があるときは確認を出す)。
+
+            <controls:GameEditOverlay x:Name="..." Visibility="Collapsed" />
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource AppBackgroundBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- 項目名+下の区切り線 -->
+                <Grid Grid.Row="0" Margin="160,0,160,0">
+                    <TextBlock x:Name="TitleText" Text="ゲーム情報の編集" FontSize="40" FontWeight="SemiBold"
+                               Foreground="{StaticResource AppTextPrimaryBrush}"
+                               VerticalAlignment="Bottom" Margin="0,0,0,20" />
+                    <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="160,24,160,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="520" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 左: 設定項目の一覧(ラベル + 青い値) -->
+                    <ScrollViewer x:Name="RowsScrollViewer" Grid.Column="0"
+                                  VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{x:Bind Rows}" Tapped="RowsItemsControl_Tapped">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="controls:EditFormRow">
+                                    <Grid MinHeight="92">
+                                        <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                                Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                        <Grid Margin="28,0,28,1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{x:Bind Label, Mode=OneWay}" FontSize="30"
+                                                       Foreground="{x:Bind LabelBrush}" VerticalAlignment="Center" />
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16"
+                                                        HorizontalAlignment="Right" VerticalAlignment="Center" Margin="32,0,0,0">
+                                                <Image Source="{x:Bind IconSource, Mode=OneWay}" Width="60" Height="60" Stretch="Uniform"
+                                                       Visibility="{x:Bind IconVisibility, Mode=OneWay}" />
+                                                <TextBlock Text="{x:Bind DisplayValue, Mode=OneWay}" FontSize="30"
+                                                           Foreground="{x:Bind ValueBrush, Mode=OneWay}"
+                                                           TextAlignment="Right" VerticalAlignment="Center"
+                                                           MaxWidth="560" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFC8C8C8" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- 右: アイコンのプレビュー + 選択中の項目の説明 + 保存ボタン(保存できない間はグレー) -->
+                    <Grid Grid.Column="1" Margin="48,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Width="240" Height="300" HorizontalAlignment="Left" Margin="4,0,0,8"
+                                CornerRadius="{StaticResource CardCornerRadius}" Background="{StaticResource PanelBackgroundBrush}">
+                            <Grid>
+                                <TextBlock x:Name="PreviewPlaceholderText" Text="画像なし" FontSize="26"
+                                           Foreground="{StaticResource AppTextSecondaryBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Image x:Name="PreviewImage" Stretch="Uniform" Margin="8" Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+
+                        <TextBlock x:Name="HelpText" Grid.Row="1" FontSize="24" TextWrapping="Wrap" Margin="4,16,4,0"
+                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+
+                        <TextBlock x:Name="ErrorText" Grid.Row="2" FontSize="24" Foreground="OrangeRed" TextWrapping="Wrap"
+                                   Margin="4,0,4,16" Visibility="Collapsed" />
+
+                        <Border Grid.Row="3" Height="96" CornerRadius="0" BorderThickness="4" Tapped="SaveButton_Tapped"
+                                Background="{x:Bind SaveState.Background, Mode=OneWay}"
+                                BorderBrush="{x:Bind SaveState.IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}">
+                            <TextBlock Text="保存する" FontSize="30" FontWeight="SemiBold"
+                                       Foreground="{x:Bind SaveState.Foreground, Mode=OneWay}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="A" Label="決定" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+
+                <!-- 文字入力画面(文字の行を開いたときだけ表示)。Enter/Aで確定、Esc/Bで取消。 -->
+                <Grid x:Name="TextEditLayer" Grid.RowSpan="3" Visibility="Collapsed"
+                      Background="{StaticResource AppBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="160,0,160,0">
+                        <TextBlock x:Name="TextEditLabel" Text="タイトル" FontSize="40" FontWeight="SemiBold"
+                                   Foreground="{StaticResource AppTextPrimaryBrush}"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,20" />
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                    </Grid>
+                    <StackPanel Grid.Row="1" Margin="160,48,160,0" Spacing="24">
+                        <TextBox x:Name="TextEditBox" FontSize="32" Padding="20,14" MaxLength="40"
+                                 PlaceholderText="入力してください" KeyDown="TextEditBox_KeyDown" AcceptsReturn="False" TextWrapping="NoWrap" />
+                        <TextBlock x:Name="TextEditHelp" FontSize="24" TextWrapping="Wrap"
+                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        <TextBlock x:Name="TextEditError" FontSize="24" TextWrapping="Wrap" Foreground="OrangeRed" Visibility="Collapsed" />
+                    </StackPanel>
+                    <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                        <controls:HintBar.Hints>
+                            <controls:HintDefinition Key="B" Label="もどる(Esc)" />
+                            <controls:HintDefinition Key="A" Label="決定(Enter / 複数行はCtrl+Enter)" />
+                        </controls:HintBar.Hints>
+                    </controls:HintBar>
+                </Grid>
+
+                <!-- 入れ子の画面(画像ファイルの選択 / 確認ダイアログ) -->
+                <controls:FolderPickerOverlay x:Name="PathChooser" Grid.RowSpan="3" Visibility="Collapsed" />
+                <controls:ConfirmDialogOverlay x:Name="ConfirmOverlay" Grid.RowSpan="3" Visibility="Collapsed" />
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

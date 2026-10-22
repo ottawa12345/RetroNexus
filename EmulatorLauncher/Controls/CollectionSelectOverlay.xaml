@@ -1,0 +1,85 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.CollectionSelectOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fs="using:EmulatorLauncher.Controls"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        画面全体を覆う「コレクション選択画面」。設定の「コレクションの編集」「コレクションの削除」で、
+        対象のコレクションを選ぶために使う。各行は、コレクションのアイコン+名前+ゲーム数。
+
+        使い方(呼び出し側、例: SettingsPage):
+            <controls:CollectionSelectOverlay x:Name="CollectionSelector" Visibility="Collapsed" />
+        コードビハインドから
+            RomCollectionInfo? picked = await CollectionSelector.ShowAsync("編集するコレクション", collections);
+        表示中のゲームパッド入力は、呼び出し側のOnGamepadButtonの先頭で
+            if (CollectionSelector.IsOpen) { CollectionSelector.HandleGamepadInput(button); return; }
+        のように渡す。十字キー上下で移動、Aで決定(戻り値はそのコレクション)、Bでキャンセル(戻り値null)。
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+        <conv:BoolToSwitchBlueTextConverter x:Key="SwitchBlueText" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource AppBackgroundBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="160,0,160,0">
+                    <TextBlock x:Name="TitleText" Text="コレクションを選択" FontSize="40" FontWeight="SemiBold"
+                               Foreground="{StaticResource AppTextPrimaryBrush}"
+                               VerticalAlignment="Bottom" Margin="0,0,0,20" />
+                    <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                </Grid>
+
+                <ScrollViewer x:Name="ListScrollViewer" Grid.Row="1" Margin="160,24,160,8"
+                              VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="ItemsHost" ItemsSource="{x:Bind Items}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="controls:CollectionSelectItem">
+                                <Grid MinHeight="112" Tapped="ItemRow_Tapped">
+                                    <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                            Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                            BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                    <Grid Margin="28,0,28,1" ColumnSpacing="24">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <!-- アイコン(無い/読み込めない時は、フォルダ風のグリフ) -->
+                                        <Grid Width="80" Height="80" VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8B7;" FontSize="44" Foreground="{StaticResource AppTextSecondaryBrush}"
+                                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <Image Source="{x:Bind Icon}" Stretch="Uniform" />
+                                        </Grid>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontSize="32" VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource SwitchBlueText}}" />
+                                        <TextBlock Grid.Column="2" Text="{x:Bind CountText}" FontSize="26" VerticalAlignment="Center"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                    </Grid>
+                                    <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFC8C8C8" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="A" Label="決定" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

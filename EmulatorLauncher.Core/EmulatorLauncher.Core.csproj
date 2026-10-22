@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      WinUI3(EmulatorLauncher.csproj)からもLibretroCoreCatalogService等の他ライブラリからも
+      参照される共通基盤。ここにMicrosoft.WindowsAppSDKやSDL等への参照を絶対に追加しないこと。
+      追加した瞬間、Core配下の全モデルがWinUI3にしか使えないものになってしまう。
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>EmulatorLauncher</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!--
+    ArchiveReader(zip/7z)が7zの読み取りに使用。純C#でネイティブDLL不要。
+  -->
+  <ItemGroup>
+    <PackageReference Include="SharpCompress" Version="0.50.0" />
+  </ItemGroup>
+
+  <!--
+    Models/LibretroCoreInfo.cs, RdbSourceInfo.cs 等が System.Text.Json でJSON定義ファイルを
+    読み込むために使用。System.Text.Jsonはランタイム同梱のためPackageReferenceは不要。
+  -->
+
+</Project>

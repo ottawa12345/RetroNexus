@@ -1,0 +1,96 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.SortOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls"
+    xmlns:models="using:EmulatorLauncher.Models">
+
+    <!--
+        ソートオーバーレイ(4枚目画像相当)の共通UserControl。
+        元々GameSelectPage.xamlに直接書かれていたSortOverlayを、見た目(配色・寸法)は
+        変えずにそのまま切り出したもの。GameSelectPage/CollectionGameSelectPageの両方で使う。
+
+            <controls:SortOverlay x:Name="SortOverlay" Grid.RowSpan="3" Visibility="Collapsed" />
+
+        このコントロールは「どのソート方法が選ばれたか」をSortRequestedイベントで通知するだけで、
+        実際の並べ替え(GridViewならMoveでアニメーション、StaggeredPanelなら差し替え)は
+        ページ側が行う。並び順の計算自体はServices/GameListHelper.Orderを使う。
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToRowHighlightConverter x:Key="SortRowBrush" />
+    </UserControl.Resources>
+
+    <!-- 暗幕(OverlayScrimBrush)はこのUserControlのルートに敷き、ウィンドウ全体を覆う。
+         使う側のページではこのコントロールをViewboxの外(ページ全体を覆う位置)に置くこと。
+         そうしないと暗幕がViewboxと一緒に縮小され、ウィンドウの縦横比が16:9でない時の
+         左右(上下)の余白部分がマスクされずに残ってしまう。
+         パネルなどの中身は、ページ本体と同じく1920x1080の固定キャンバスを自前のViewboxで
+         一様スケーリングするので、レイアウトはページ本体と完全に重なる。 -->
+    <Grid Background="{StaticResource OverlayScrimBrush}" Tapped="ScrimRoot_Tapped">
+        <Viewbox Stretch="Uniform">
+            <Grid x:Name="CanvasRoot" Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="32">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <!-- パネル幅: ヒントバー(B もどる / A 決定)をトップ画面と同じ大きさのまま
+                             パネル内に収めるため、以前の420から広げている。 -->
+                        <ColumnDefinition Width="560" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 左側(Column 0)は空けておき、暗幕越しに裏のグリッドを見せる。
+                         以前はここに装飾用の半透明パネル(TranslucentSurfaceBrush)を敷いていたが、
+                         暗幕をウィンドウ全体へ広げた結果、そのパネルがある1920x1080キャンバスの範囲だけ
+                         一段明るくなり、Viewboxの境界が見えてしまうため削除した(詳細画面と同じく
+                         暗幕1枚だけで均一にマスクする)。 -->
+
+                    <!-- ソート方法の一覧パネル。表示時は画面右からスライドインし、閉じる時は右へスライドアウトする
+                         (コードビハインドのShow/Close参照。操作ガイドもパネル内にあるので一緒にスライドする。
+                         暗幕はスライドせずフェードのみ)。 -->
+                    <Border x:Name="SortPanel" Grid.Column="1" Background="{StaticResource AppSurfaceBrush}" CornerRadius="4">
+                        <Grid Margin="32">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="タイトルの並び順を変更します" FontSize="30" FontWeight="SemiBold"
+                                       Foreground="{StaticResource AppTextPrimaryBrush}" Margin="0,0,0,24" />
+
+                            <ItemsControl Grid.Row="1" x:Name="SortItemsControl" ItemsSource="{x:Bind SortOptions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SortOption">
+                                        <Grid Padding="16,18" CornerRadius="8" Margin="0,0,0,4" Tapped="SortRow_Tapped"
+                                              Background="{x:Bind IsSelected, Converter={StaticResource SortRowBrush}, Mode=OneWay}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse Grid.Column="0" Width="26" Height="26" Margin="0,0,20,0"
+                                                     Stroke="{StaticResource AppTextSecondaryBrush}" StrokeThickness="2"
+                                                     Fill="{x:Bind IsSelected, Converter={StaticResource BoolToBrush}, Mode=OneWay}" />
+                                            <TextBlock Grid.Column="1" Text="{x:Bind Text}" FontSize="30"
+                                                       Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- 操作ガイド: Switchのソート画面と同じく、画面(1920x1080キャンバス)の右下隅へ
+                     暗い半透明の帯としてぴったり寄せて表示する(パネルの中には置かない。
+                     パネルのスライドインには追従せず、暗幕と一緒にフェードする)。 -->
+                <controls:HintBar IsOverlay="True" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="A" Label="決定" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

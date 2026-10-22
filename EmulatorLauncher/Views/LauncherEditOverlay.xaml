@@ -1,0 +1,147 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.LauncherEditOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fs="using:EmulatorLauncher.Controls"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        ランチャー(libretroコア/外部コマンド)の新規追加・編集・削除の全画面。
+        Switchの「手動で設定」画面と同じ構成: 上に項目名と区切り線、左に「ラベル + 青い値」の行、
+        右に説明と「保存する」ボタン(保存できない間はグレー)、下に操作ガイド(B もどる / A 決定)。
+        設定画面(SettingsPage)の「ランチャー管理」から開く。ゲームパッドだけで操作できる。
+
+        ・十字キー上下: 行の移動 / 右: 「保存する」へ移動 / 左(または上): 行の一覧へ戻る
+        ・A: 選択肢のある行(コンソール/コア/画面比率)は全画面の選択画面、起動方式・
+             「このコンソールで使う」は切り替え、文字の行は入力欄、実行ファイル/作業フォルダは
+             OSのダイアログ(ここだけはマウス/キーボード操作)、「保存する」で保存、削除は確認ダイアログ
+        ・X: 名前/引数/作業フォルダの値を消去 / B: 保存せずに閉じる
+
+            <controls:LauncherEditOverlay x:Name="LauncherEditor" Visibility="Collapsed" />
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource AppBackgroundBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- 項目名+下の区切り線 -->
+                <Grid Grid.Row="0" Margin="160,0,160,0">
+                    <TextBlock x:Name="TitleText" Text="ランチャーの追加" FontSize="40" FontWeight="SemiBold"
+                               Foreground="{StaticResource AppTextPrimaryBrush}"
+                               VerticalAlignment="Bottom" Margin="0,0,0,20" />
+                    <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="160,24,160,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="520" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 左: 設定項目の一覧(ラベル + 青い値) -->
+                    <ScrollViewer x:Name="RowsScrollViewer" Grid.Column="0"
+                                  VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{x:Bind Rows}" Tapped="RowsItemsControl_Tapped">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="controls:LauncherEditRow">
+                                    <Grid MinHeight="92">
+                                        <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                                Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                        <Grid Margin="28,0,28,1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{x:Bind Label, Mode=OneWay}" FontSize="30"
+                                                       Foreground="{x:Bind LabelBrush}" VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1" Text="{x:Bind DisplayValue, Mode=OneWay}" FontSize="30"
+                                                       Foreground="{x:Bind ValueBrush, Mode=OneWay}"
+                                                       HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center"
+                                                       Margin="32,0,0,0" TextTrimming="CharacterEllipsis" />
+                                        </Grid>
+                                        <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFC8C8C8" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- 右: 選択中の項目の説明 + 保存ボタン(保存できない間はグレー) -->
+                    <Grid Grid.Column="1" Margin="48,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="HelpText" Grid.Row="0" FontSize="24" TextWrapping="Wrap" Margin="4,16,4,0"
+                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+
+                        <TextBlock x:Name="ErrorText" Grid.Row="1" FontSize="24" Foreground="OrangeRed" TextWrapping="Wrap"
+                                   Margin="4,0,4,16" Visibility="Collapsed" />
+
+                        <Border Grid.Row="2" Height="96" CornerRadius="0" BorderThickness="4" Tapped="SaveButton_Tapped"
+                                Background="{x:Bind SaveState.Background, Mode=OneWay}"
+                                BorderBrush="{x:Bind SaveState.IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}">
+                            <TextBlock Text="保存する" FontSize="30" FontWeight="SemiBold"
+                                       Foreground="{x:Bind SaveState.Foreground, Mode=OneWay}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="A" Label="決定" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+
+                <!-- 文字入力画面(文字の行を開いたときだけ表示)。Enter/Aで確定、Esc/Bで取消。 -->
+                <Grid x:Name="TextEditLayer" Grid.RowSpan="3" Visibility="Collapsed"
+                      Background="{StaticResource AppBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="160,0,160,0">
+                        <TextBlock x:Name="TextEditLabel" FontSize="40" FontWeight="SemiBold"
+                                   Foreground="{StaticResource AppTextPrimaryBrush}"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,20" />
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                    </Grid>
+                    <StackPanel Grid.Row="1" Margin="160,48,160,0" Spacing="24">
+                        <TextBox x:Name="TextEditBox" FontSize="32" Padding="20,14"
+                                 KeyDown="TextEditBox_KeyDown" AcceptsReturn="False" />
+                        <TextBlock x:Name="TextEditNote" FontSize="24" TextWrapping="Wrap"
+                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+                    </StackPanel>
+                    <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                        <controls:HintBar.Hints>
+                            <controls:HintDefinition Key="B" Label="もどる(Esc)" />
+                            <controls:HintDefinition Key="A" Label="決定(Enter)" />
+                        </controls:HintBar.Hints>
+                    </controls:HintBar>
+                </Grid>
+
+                <!-- 選択画面(コンソール/コア/画面比率)と、削除の確認 -->
+                <controls:FullScreenChoiceOverlay x:Name="ChoiceOverlay" Grid.RowSpan="3" Visibility="Collapsed" />
+                <controls:ConfirmDialogOverlay x:Name="ConfirmOverlay" Grid.RowSpan="3" Visibility="Collapsed" />
+                <!-- 実行ファイル/作業フォルダの選択(ゲームパッドで操作できるファイル/フォルダ選択) -->
+                <controls:FolderPickerOverlay x:Name="PathChooser" Grid.RowSpan="3" Visibility="Collapsed" />
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

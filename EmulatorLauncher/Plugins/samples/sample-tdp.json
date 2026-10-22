@@ -1,0 +1,11 @@
+// サンプル: TDP の変更(ダミー)。実際には何も変更しません。選んだ値を、PC の一時フォルダに保存するだけです。
+// 実際に使うときは、status と action の "exe" と "args" を、お使いのツールのコマンドに置き換えてください。
+//   status : 今の値を読む。標準出力に {"success":true,"value":"15"} のような JSON を返す。
+//   action : 選んだ値を設定する。{value} に、選んだ項目の value("8" など)が入る。
+// ※ TDP の変更には、管理者権限が必要なツールが多くあります(PLUGINS.md の「管理者権限が必要なコマンドについて」を参照)。
+{
+  "schema": 1, "id": "sample-tdp", "name": "TDP", "display": "tile", "width": 1, "order": 107, "icon": "E9D9",
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","tdp","-Mode","get","-Default","15"], "timeoutSec": 5, "intervalSec": 5 },
+  "action": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","tdp","-Mode","set","-Value","{value}"], "timeoutSec": 5 },
+  "options": { "type": "choice", "items": [ { "value": "8", "label": "8W" }, { "value": "15", "label": "15W" }, { "value": "25", "label": "25W" } ] }
+}

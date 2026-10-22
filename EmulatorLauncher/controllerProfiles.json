@@ -1,0 +1,1875 @@
+﻿{
+  "_comment": "keyboardは「キーボード入力をコアへ渡す」設定を設定画面に出すコンソールの指定(載っていないコンソールには出さない)。defaultは変更していないときの既定(trueなら渡す)、portはコアが「ポートにキーボードを挿す」方式のときだけ書くポート番号(0始まり。省略するとポートは変えず、コアが問い合わせたキーにだけ答える)。ONの間は、キーボードをコントローラの代わりに使う処理を止め、F12を中断メニューにする。 コア+コンソール毎のコントローラ形態(接続形態)の定義。出典: libretro/dolphin Source/Core/DolphinLibretro/Input.cpp(デバイスID・入力記述)。deviceはretro_set_controller_port_deviceへ渡す値、mpDeviceはMotionPlus付きの値(設定のMotionPlusがあり=既定のときに使う)。buttonsはRetroPadのキー→その形態でのボタンの意味(無いキーはその形態で未使用)。aliasesは以前の保存値の読み替え。同じコンソールでもコアが違えばボタンの意味が違うので、設定はコアごとに別に保存する(スコープ=コンソール@コア/形態)。coreLabel/consoleLabelは設定画面の表示名。blockUnlistedがtrueの形態は、buttonsに書かれていないキーをコアへ渡さない(PCエンジン: L2が2/6ボタンの切替になるため)。optionValueは形態を選ぶコアオプションの値(省略時は形態ID)。PCエンジンの2/6ボタンの既定はコア起動時のみ反映され、ゲーム中は変えられない(コア起動前に形態を決める)。出典(PCE/PC-FX): libretro/beetle-pce-libretro、beetle-supergrafx-libretro、beetle-pcfx-libretro の libretro.cpp。プリセットを持たないコア(コンソール)は、何も加工しないプリセットany(パススルー)として扱う。hotkeysはその形態で使えるホットキーと既定の組み合わせ(ここに書かれていないホットキーは、その形態では機能として無く、設定画面にも出さない。Wiiのホームボタンは使わず、R3=中断メニュー、L3=早送り。コアの横持ち切替(L3)は無効にしてある)。",
+  "keyboard": [
+    { "console": "x68000", "default": true },
+    { "console": "fmtowns", "default": false },
+    { "console": "msx", "default": true },
+    { "console": "msx2", "default": true },
+    { "console": "dc", "default": false, "port": 1 },
+    { "console": "naomi", "default": false, "port": 1 },
+    { "console": "naomi2", "default": false, "port": 1 }
+  ],
+  "port1": [
+    {
+      "console": "fmtowns",
+      "default": "mouse",
+      "devices": [
+        { "id": "mouse", "label": "マウス", "device": 2 },
+        { "id": "gamepad", "label": "ゲームパッド(標準)", "device": 257 },
+        { "id": "marty", "label": "ゲームパッド(マーティ)", "device": 769 },
+        { "id": "pad6", "label": "ゲームパッド(6ボタン)", "device": 513 },
+        { "id": "none", "label": "なし", "device": 0 }
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "core": "dolphin_libretro.dll",
+      "coreLabel": "Dolphin",
+      "console": "wii",
+      "consoleLabel": "Wii",
+      "optionKey": "retronexus_wii_controller",
+      "default": "wiimote",
+      "forms": [
+        {
+          "id": "wiimote",
+          "label": "Wiiリモコン",
+          "device": 1,
+          "mpDevice": 1793,
+          "aliases": [
+            "gc"
+          ],
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "X": "1",
+            "Y": "2",
+            "R2": "リモコンを振る",
+            "Start": "+",
+            "Select": "−",
+            "RSUp": "右スティック↑",
+            "RSDown": "右スティック↓",
+            "RSLeft": "右スティック←",
+            "RSRight": "右スティック→"
+          },
+          "note": "左スティック=傾き。ポインター操作を「ジャイロ」にすると、コントローラ自体を動かして照準・振る・捻る(L1+R1の間は照準を中央へ戻す)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton",
+            "PointerRecenter": "LeftShoulder+RightShoulder"
+          }
+        },
+        {
+          "id": "nunchuk",
+          "label": "Wiiリモコン+ヌンチャク",
+          "device": 769,
+          "mpDevice": 2305,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "X": "C",
+            "Y": "Z",
+            "L": "−",
+            "R": "+",
+            "L2": "ヌンチャクを振る",
+            "R2": "リモコンを振る",
+            "Start": "1",
+            "Select": "2",
+            "RSUp": "右スティック↑",
+            "RSDown": "右スティック↓",
+            "RSLeft": "右スティック←",
+            "RSRight": "右スティック→"
+          },
+          "defaultButtons": {
+            "Y": "LeftShoulder",
+            "X": "RightShoulder",
+            "L": "X",
+            "R": "Y"
+          },
+          "note": "左スティック=ヌンチャクのスティック、右スティック=リモコンの傾き。標準の割り当て: L1=Z、R1=C、□=−、△=+、L2=ヌンチャクを振る、R2=リモコンを振る。ポインター操作を「ジャイロ」にすると、右スティックは使わず、コントローラ自体を動かして照準・振る・捻る(L1+R1の間は照準を中央へ戻す)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton",
+            "PointerRecenter": "LeftShoulder+RightShoulder"
+          }
+        },
+        {
+          "id": "classic",
+          "label": "クラシックコントローラ",
+          "device": 1281,
+          "mpDevice": 2817,
+          "aliases": [
+            "classicpro",
+            "sideways"
+          ],
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "X": "X",
+            "Y": "Y",
+            "L": "L",
+            "R": "R",
+            "L2": "ZL",
+            "R2": "ZR",
+            "Start": "+",
+            "Select": "−",
+            "RSUp": "右スティック↑",
+            "RSDown": "右スティック↓",
+            "RSLeft": "右スティック←",
+            "RSRight": "右スティック→"
+          },
+          "note": "左右スティック=クラシックコントローラのスティック。上の肩ボタン=L/R、トリガー=ZL/ZR。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "dolphin_libretro.dll",
+      "coreLabel": "Dolphin",
+      "console": "gc",
+      "consoleLabel": "GameCube",
+      "optionKey": "",
+      "default": "gc",
+      "forms": [
+        {
+          "id": "gc",
+          "label": "ゲームキューブコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "X": "X",
+            "Y": "Y",
+            "L2": "L",
+            "R2": "R",
+            "R": "Z",
+            "Start": "START",
+            "RSUp": "Cスティック↑",
+            "RSDown": "Cスティック↓",
+            "RSLeft": "Cスティック←",
+            "RSRight": "Cスティック→"
+          },
+          "note": "左スティック=コントロールスティック、右スティック=Cスティック。L/Rはトリガー(押し込みも反応)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "mednafen_pce_libretro.dll",
+      "coreLabel": "Mednafen PCE",
+      "console": "pce",
+      "consoleLabel": "PCエンジン",
+      "optionKey": "pce_default_joypad_type_p1",
+      "default": "pad2",
+      "forms": [
+        {
+          "id": "pad2",
+          "label": "PCエンジンパッド(2ボタン)",
+          "device": 1,
+          "optionValue": "2 Buttons",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "I",
+            "B": "II",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "PCエンジン標準の2ボタンパッド。連射の標準: □=II連射、△=I連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        },
+        {
+          "id": "pad6",
+          "label": "PCエンジンパッド(6ボタン)",
+          "device": 1,
+          "optionValue": "6 Buttons",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "I",
+            "B": "II",
+            "Y": "III",
+            "X": "IV",
+            "L": "V",
+            "R": "VI",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "アヴェニューパッド6。I/II=○/×、III/IV=□/△、V/VI=L1/R1(2ボタンのゲームでは使いません)。連射の標準なし。"
+        }
+      ]
+    },
+    {
+      "core": "mednafen_pce_libretro.dll",
+      "coreLabel": "Mednafen PCE",
+      "console": "pcecd",
+      "consoleLabel": "PCエンジンCD",
+      "optionKey": "pce_default_joypad_type_p1",
+      "default": "pad2",
+      "forms": [
+        {
+          "id": "pad2",
+          "label": "PCエンジンパッド(2ボタン)",
+          "device": 1,
+          "optionValue": "2 Buttons",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "I",
+            "B": "II",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "PCエンジン標準の2ボタンパッド。連射の標準: □=II連射、△=I連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        },
+        {
+          "id": "pad6",
+          "label": "PCエンジンパッド(6ボタン)",
+          "device": 1,
+          "optionValue": "6 Buttons",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "I",
+            "B": "II",
+            "Y": "III",
+            "X": "IV",
+            "L": "V",
+            "R": "VI",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "アヴェニューパッド6。I/II=○/×、III/IV=□/△、V/VI=L1/R1(2ボタンのゲームでは使いません)。連射の標準なし。"
+        }
+      ]
+    },
+    {
+      "core": "mednafen_supergrafx_libretro.dll",
+      "coreLabel": "Beetle SuperGrafx",
+      "console": "sgx",
+      "consoleLabel": "SuperGrafx",
+      "optionKey": "sgx_default_joypad_type_p1",
+      "default": "pad2",
+      "forms": [
+        {
+          "id": "pad2",
+          "label": "PCエンジンパッド(2ボタン)",
+          "device": 1,
+          "optionValue": "2 Buttons",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "I",
+            "B": "II",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "PCエンジン標準の2ボタンパッド。連射の標準: □=II連射、△=I連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        },
+        {
+          "id": "pad6",
+          "label": "PCエンジンパッド(6ボタン)",
+          "device": 1,
+          "optionValue": "6 Buttons",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "I",
+            "B": "II",
+            "Y": "III",
+            "X": "IV",
+            "L": "V",
+            "R": "VI",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "アヴェニューパッド6。I/II=○/×、III/IV=□/△、V/VI=L1/R1(2ボタンのゲームでは使いません)。連射の標準なし。"
+        }
+      ]
+    },
+    {
+      "core": "mednafen_pcfx_libretro.dll",
+      "coreLabel": "Beetle PC-FX",
+      "console": "pcfx",
+      "consoleLabel": "PC-FX",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "PC-FXパッド(6ボタン)",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "I",
+            "B": "II",
+            "X": "III",
+            "Y": "IV",
+            "L": "V",
+            "R": "VI",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "defaultButtons": {
+            "X": "X",
+            "Y": "Y"
+          },
+          "note": "I/II=○/×、III/IV=□/△、V/VI=L1/R1(PCエンジンの6ボタンと同じ並び)。L2/R2はコアのモード切替(MODE 1/2)なので、誤動作を防ぐため標準では割り当てていない。"
+        }
+      ]
+    },
+    {
+      "core": "geartowns_libretro.dll",
+      "coreLabel": "Geartowns",
+      "console": "fmtowns",
+      "consoleLabel": "FM TOWNS",
+      "optionKey": "",
+      "default": "marty",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "標準パッド(A/B/RUN/SELECT)",
+          "device": 257,
+          "buttons": {
+            "A": "A",
+            "B": "B",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "FM TOWNS標準のパッド(2ボタン)。L1/R1は使いません。"
+        },
+        {
+          "id": "marty",
+          "label": "マーティのパッド(ZOOM付き)",
+          "device": 769,
+          "buttons": {
+            "A": "A",
+            "B": "B",
+            "R": "ZOOM",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "標準パッドと同じ操作に、R1=ZOOM(マーティの拡大ボタン)が加わります。標準のゲームもそのまま遊べます。"
+        },
+        {
+          "id": "pad6",
+          "label": "6ボタンパッド",
+          "device": 513,
+          "buttons": {
+            "Y": "A",
+            "B": "B",
+            "A": "C",
+            "L": "X",
+            "X": "Y",
+            "R": "Z",
+            "Start": "RUN",
+            "Select": "SELECT"
+          },
+          "note": "A/B/C/X/Y/Zの6ボタン。1P側の装置は、この形態を選んだときだけ6ボタンになります。"
+        }
+      ]
+    },
+    {
+      "core": "mupen64plus_next_libretro.dll",
+      "coreLabel": "Mupen64Plus-Next",
+      "console": "n64",
+      "consoleLabel": "N64",
+      "optionKey": "",
+      "default": "std",
+      "forms": [
+        {
+          "id": "std",
+          "label": "Nintendo 64コントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "A",
+            "Y": "B",
+            "L": "L",
+            "R": "R",
+            "L2": "Z",
+            "Start": "START",
+            "RSUp": "Cボタン↑",
+            "RSDown": "Cボタン↓",
+            "RSLeft": "Cボタン←",
+            "RSRight": "Cボタン→"
+          },
+          "note": "右スティック=Cボタン(設定画面で、好きなボタンをCボタンに割り当てられる)。R2を押すとA/Bが効かなくなる(コアのCボタン切替)ため、R2は使わない設定。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "fceumm_libretro.dll",
+      "coreLabel": "FCEUmm",
+      "console": "fc",
+      "consoleLabel": "ファミリーコンピュータ",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ファミコンコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "ファミコン標準のコントローラ(2ボタン)。連射の標準: □=B連射、△=A連射。ディスクの面の切り替え等は、中断メニューの「ディスク」から行う。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "fceumm_libretro.dll",
+      "coreLabel": "FCEUmm",
+      "console": "fds",
+      "consoleLabel": "ファミコン ディスクシステム",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ファミコンコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "ファミコン標準のコントローラ(2ボタン)。連射の標準: □=B連射、△=A連射。ディスクの面の切り替え等は、中断メニューの「ディスク」から行う。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "snes9x_libretro.dll",
+      "coreLabel": "Snes9x",
+      "console": "sfc",
+      "consoleLabel": "スーパーファミコン",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "スーパーファミコンコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "Y": "Y",
+            "X": "X",
+            "L": "L",
+            "R": "R",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "スーパーファミコン標準のコントローラ。ボタンの位置は、実機と同じ並び(右=A、下=B、上=X、左=Y)。"
+        }
+      ]
+    },
+    {
+      "core": "gambatte_libretro.dll",
+      "coreLabel": "Gambatte",
+      "console": "gb",
+      "consoleLabel": "ゲームボーイ",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ゲームボーイのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "ボタンの位置は、実機と同じ並び(右=A、下=B)。連射の標準: □=B連射、△=A連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "gambatte_libretro.dll",
+      "coreLabel": "Gambatte",
+      "console": "gbc",
+      "consoleLabel": "ゲームボーイカラー",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ゲームボーイカラーのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "ボタンの位置は、実機と同じ並び(右=A、下=B)。連射の標準: □=B連射、△=A連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "vbam_libretro.dll",
+      "coreLabel": "VBA-M",
+      "console": "gba",
+      "consoleLabel": "ゲームボーイアドバンス",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ゲームボーイアドバンスのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "L": "L",
+            "R": "R",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "ボタンの位置は、実機と同じ並び(右=A、下=B)。連射の標準: □=B連射、△=A連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "mednafen_vb_libretro.dll",
+      "coreLabel": "Beetle VB",
+      "console": "vb",
+      "consoleLabel": "バーチャルボーイ",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "バーチャルボーイのコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "L": "L",
+            "R": "R",
+            "Start": "START",
+            "Select": "SELECT",
+            "RSUp": "右十字キー↑",
+            "RSDown": "右十字キー↓",
+            "RSLeft": "右十字キー←",
+            "RSRight": "右十字キー→"
+          },
+          "note": "左十字キー=十字キー(左スティックも可)、右十字キー=右スティック。ボタンの位置は、実機と同じ並び(右=A、下=B)。"
+        }
+      ]
+    },
+    {
+      "core": "pokemini_libretro.dll",
+      "coreLabel": "PokeMini",
+      "console": "pokemini",
+      "consoleLabel": "ポケモンミニ",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ポケモンミニのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "L": "ふる(Shake)",
+            "R": "C",
+            "Select": "パワー"
+          },
+          "note": "ポケモンミニの本体にあるボタン(A/B/C/パワー/ふる)。ふる=L1、C=R1、パワー=VIEWボタン。連射の標準: □=B連射、△=A連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "melonds_libretro.dll",
+      "coreLabel": "melonDS",
+      "console": "nds",
+      "consoleLabel": "ニンテンドーDS",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ニンテンドーDSのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "X": "X",
+            "Y": "Y",
+            "L": "L",
+            "R": "R",
+            "L2": "マイク(息を吹く)",
+            "L3": "蓋を閉じる",
+            "R3": "タッチ(右スティックで動かして押す)",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "defaultButtons": {
+            "L2": "None",
+            "L3": "None"
+          },
+          "note": "ボタンの位置は、実機と同じ並び(右=A、下=B、上=X、左=Y)。右スティックで動かしてR3=タッチ。ZL+ZR=中断メニュー、ZR=早送り(ほかのコンソールと同じ)。DSは巻き戻しできない。マイク(息を吹く)と蓋を閉じるは、誤動作を防ぐため標準では割り当てていない(使うゲームは、ゲーム別のコントローラ設定でボタンに割り当てる)。",
+          "hotkeys": {
+            "Menu": "LeftTrigger+RightTrigger",
+            "FastForward": "RightTrigger"
+          }
+        }
+      ]
+    },
+    {
+      "core": "citra_libretro.dll",
+      "coreLabel": "Citra",
+      "console": "3ds",
+      "consoleLabel": "ニンテンドー3DS",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ニンテンドー3DSのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "X": "X",
+            "Y": "Y",
+            "L": "L",
+            "R": "R",
+            "L2": "ZL",
+            "R2": "ZR",
+            "Start": "START",
+            "Select": "SELECT",
+            "R3": "タッチ(右スティックで動かして押す)",
+            "RSUp": "Cスティック↑",
+            "RSDown": "Cスティック↓",
+            "RSLeft": "Cスティック←",
+            "RSRight": "Cスティック→"
+          },
+          "note": "左スティック=スライドパッド、右スティック=Cスティック兼タッチ位置(動かして、押し込み=R3でタッチ。マウスでも操作できる)。ボタンの位置は、実機と同じ並び(右=A、下=B、上=X、左=Y)。ZL/ZRをゲームで使うため、メニューは左スティック押し込み(L3。長押しで早送り)。HOME/画面入れ替えは使わない。",
+          "hotkeys": {
+            "Menu": "LeftThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "genesis_plus_gx_libretro.dll",
+      "coreLabel": "Genesis Plus GX",
+      "console": "sg1000",
+      "consoleLabel": "SG-1000",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "SG-1000のボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Start": "ポーズ"
+          },
+          "note": "ボタン1=×、ボタン2=○。連射の標準: □=1連射、△=2連射。ポーズは本体のボタン。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "genesis_plus_gx_libretro.dll",
+      "coreLabel": "Genesis Plus GX",
+      "console": "mark3",
+      "consoleLabel": "マークIII",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "マークIIIのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Start": "ポーズ"
+          },
+          "note": "ボタン1=×、ボタン2=○。連射の標準: □=1連射、△=2連射。ポーズは本体のボタン。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "genesis_plus_gx_libretro.dll",
+      "coreLabel": "Genesis Plus GX",
+      "console": "gg",
+      "consoleLabel": "ゲームギア",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ゲームギアのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Start": "START"
+          },
+          "note": "ボタン1=×、ボタン2=○。連射の標準: □=1連射、△=2連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "genesis_plus_gx_libretro.dll",
+      "coreLabel": "Genesis Plus GX",
+      "console": "md",
+      "consoleLabel": "メガドライブ",
+      "optionKey": "retronexus_controller",
+      "default": "pad3",
+      "forms": [
+        {
+          "id": "pad3",
+          "label": "3ボタンパッド",
+          "device": 257,
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "Aボタン",
+            "B": "Bボタン",
+            "A": "Cボタン",
+            "Start": "START"
+          },
+          "note": "A/B/C=□/×/○(実機の3ボタンパッドと同じ並び)。"
+        },
+        {
+          "id": "pad6",
+          "label": "6ボタンパッド",
+          "device": 513,
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "Aボタン",
+            "B": "Bボタン",
+            "A": "Cボタン",
+            "X": "Yボタン",
+            "L": "Xボタン",
+            "R": "Zボタン",
+            "Start": "START",
+            "Select": "MODE"
+          },
+          "note": "A/B/C=□/×/○、X/Y/Z=L1/△/R1、MODE=Select(実機の6ボタンパッドと同じ並び)。"
+        }
+      ]
+    },
+    {
+      "core": "genesis_plus_gx_libretro.dll",
+      "coreLabel": "Genesis Plus GX",
+      "console": "megacd",
+      "consoleLabel": "メガCD",
+      "optionKey": "retronexus_controller",
+      "default": "pad3",
+      "forms": [
+        {
+          "id": "pad3",
+          "label": "3ボタンパッド",
+          "device": 257,
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "Aボタン",
+            "B": "Bボタン",
+            "A": "Cボタン",
+            "Start": "START"
+          },
+          "note": "A/B/C=□/×/○(実機の3ボタンパッドと同じ並び)。"
+        },
+        {
+          "id": "pad6",
+          "label": "6ボタンパッド",
+          "device": 513,
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "Aボタン",
+            "B": "Bボタン",
+            "A": "Cボタン",
+            "X": "Yボタン",
+            "L": "Xボタン",
+            "R": "Zボタン",
+            "Start": "START",
+            "Select": "MODE"
+          },
+          "note": "A/B/C=□/×/○、X/Y/Z=L1/△/R1、MODE=Select(実機の6ボタンパッドと同じ並び)。"
+        }
+      ]
+    },
+    {
+      "core": "picodrive_libretro.dll",
+      "coreLabel": "PicoDrive",
+      "console": "32x",
+      "consoleLabel": "スーパー32X",
+      "optionKey": "picodrive_input1",
+      "default": "pad3",
+      "forms": [
+        {
+          "id": "pad3",
+          "label": "3ボタンパッド",
+          "device": 1,
+          "optionValue": "3 button pad",
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "Aボタン",
+            "B": "Bボタン",
+            "A": "Cボタン",
+            "Start": "START"
+          },
+          "note": "A/B/C=□/×/○(実機の3ボタンパッドと同じ並び)。"
+        },
+        {
+          "id": "pad6",
+          "label": "6ボタンパッド",
+          "device": 1,
+          "optionValue": "6 button pad",
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "Aボタン",
+            "B": "Bボタン",
+            "A": "Cボタン",
+            "X": "Yボタン",
+            "L": "Xボタン",
+            "R": "Zボタン",
+            "Start": "START",
+            "Select": "MODE"
+          },
+          "note": "A/B/C=□/×/○、X/Y/Z=L1/△/R1、MODE=Select(実機の6ボタンパッドと同じ並び)。"
+        }
+      ]
+    },
+    {
+      "core": "mednafen_saturn_libretro.dll",
+      "coreLabel": "Beetle Saturn",
+      "console": "stn",
+      "consoleLabel": "セガサターン",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "セガサターンのコントロールパッド",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "Aボタン",
+            "A": "Bボタン",
+            "R": "Cボタン",
+            "Y": "Xボタン",
+            "X": "Yボタン",
+            "L": "Zボタン",
+            "L2": "Lボタン",
+            "R2": "Rボタン",
+            "Start": "START"
+          },
+          "defaultButtons": {
+            "B": "X",
+            "A": "A",
+            "R": "B",
+            "Y": "LeftShoulder",
+            "X": "Y",
+            "L": "RightShoulder"
+          },
+          "note": "下段のA/B/C=□/×/○、上段のX/Y/Z=L1/△/R1、Lボタン/Rボタン=L2/R2(実機のサターンパッドと同じ並び)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "kronos_libretro.dll",
+      "coreLabel": "Kronos",
+      "console": "stn",
+      "consoleLabel": "セガサターン",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "セガサターンのコントロールパッド",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "Aボタン",
+            "A": "Bボタン",
+            "R": "Cボタン",
+            "Y": "Xボタン",
+            "X": "Yボタン",
+            "L": "Zボタン",
+            "L2": "Lボタン",
+            "R2": "Rボタン",
+            "Start": "START"
+          },
+          "defaultButtons": {
+            "B": "X",
+            "A": "A",
+            "R": "B",
+            "Y": "LeftShoulder",
+            "X": "Y",
+            "L": "RightShoulder"
+          },
+          "note": "下段のA/B/C=□/×/○、上段のX/Y/Z=L1/△/R1、Lボタン/Rボタン=L2/R2(実機のサターンパッドと同じ並び)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "flycast_libretro.dll",
+      "coreLabel": "Flycast",
+      "console": "dc",
+      "consoleLabel": "ドリームキャスト",
+      "optionKey": "retronexus_controller",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ドリームキャストのコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "A",
+            "A": "B",
+            "Y": "X",
+            "X": "Y",
+            "L2": "Lトリガー",
+            "R2": "Rトリガー",
+            "Start": "START"
+          },
+          "note": "ボタンの位置は、実機と同じ並び(下=A、右=B、左=X、上=Y)。左スティック=アナログスティック。L2/R2=L/Rトリガー。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "lightgun",
+          "label": "ライトガン(スティックやマウス)",
+          "device": 4,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "撃つ",
+            "A": "リロード(画面の外を撃つ)",
+            "Y": "補助ボタン1",
+            "X": "補助ボタン2",
+            "L2": "リロード",
+            "R2": "撃つ",
+            "Start": "START"
+          },
+          "note": "スティック(左右どちらも)を倒した方向へ照準が動く(マウスやタッチで画面を指しても動かせる)。撃つ=✕/R2/マウス左、リロード=○/L2/マウス右(画面の外を撃つ動作)。十字キーはメニュー用。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "mednafen_psx_hw_libretro.dll",
+      "coreLabel": "Beetle PSX HW",
+      "console": "ps1",
+      "consoleLabel": "プレイステーション",
+      "optionKey": "retronexus_controller",
+      "default": "dualshock",
+      "forms": [
+        {
+          "id": "dualshock",
+          "label": "DualShock(アナログ)",
+          "device": 517,
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "○",
+            "B": "✕",
+            "X": "△",
+            "Y": "□",
+            "L": "L1",
+            "R": "R1",
+            "L2": "L2",
+            "R2": "R2",
+            "Start": "START",
+            "Select": "SELECT",
+            "L3": "L3",
+            "R3": "R3"
+          },
+          "note": "ボタンの位置は実機と同じ並び(○✕△□)。左スティック=左アナログ、右スティック=右アナログ、スティック押し込み=L3/R3。アナログ対応のゲームは自動でアナログになる(切り替えは、ゲーム側かコアの設定)。メニューは右スティック押し込みを使うので、R3はゲームで使えない(標準では、押すと中断メニューが開く)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "pad",
+          "label": "PlayStationコントローラ(デジタル)",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "○",
+            "B": "✕",
+            "X": "△",
+            "Y": "□",
+            "L": "L1",
+            "R": "R1",
+            "L2": "L2",
+            "R2": "R2",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "初代のデジタルパッド。アナログ非対応のゲームで、アナログ入力が邪魔になるときに。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "swanstation_libretro.dll",
+      "coreLabel": "SwanStation",
+      "console": "ps1",
+      "consoleLabel": "プレイステーション",
+      "optionKey": "retronexus_controller",
+      "default": "dualshock",
+      "forms": [
+        {
+          "id": "dualshock",
+          "label": "DualShock(アナログ)",
+          "device": 261,
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "○",
+            "B": "✕",
+            "X": "△",
+            "Y": "□",
+            "L": "L1",
+            "R": "R1",
+            "L2": "L2",
+            "R2": "R2",
+            "Start": "START",
+            "Select": "SELECT",
+            "L3": "L3",
+            "R3": "R3"
+          },
+          "note": "ボタンの位置は実機と同じ並び(○✕△□)。左スティック=左アナログ、右スティック=右アナログ、スティック押し込み=L3/R3。アナログ対応のゲームは自動でアナログになる(切り替えは、ゲーム側かコアの設定)。メニューは右スティック押し込みを使うので、R3はゲームで使えない(標準では、押すと中断メニューが開く)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "pad",
+          "label": "PlayStationコントローラ(デジタル)",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "○",
+            "B": "✕",
+            "X": "△",
+            "Y": "□",
+            "L": "L1",
+            "R": "R1",
+            "L2": "L2",
+            "R2": "R2",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "初代のデジタルパッド。アナログ非対応のゲームで、アナログ入力が邪魔になるときに。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "pcsx2_libretro.dll",
+      "coreLabel": "LRPS2 (PCSX2)",
+      "console": "ps2",
+      "consoleLabel": "プレイステーション2",
+      "optionKey": "",
+      "default": "dualshock2",
+      "forms": [
+        {
+          "id": "dualshock2",
+          "label": "DualShock 2",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "○",
+            "B": "✕",
+            "X": "△",
+            "Y": "□",
+            "L": "L1",
+            "R": "R1",
+            "L2": "L2",
+            "R2": "R2",
+            "L3": "L3",
+            "R3": "R3",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "ボタンの位置は実機と同じ並び(○✕△□)。左スティック=左アナログ、右スティック=右アナログ、スティック押し込み=L3/R3。メニューは右スティック押し込みを使うので、R3はゲームで使えない(標準では、押すと中断メニューが開く)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "ppsspp_libretro.dll",
+      "coreLabel": "PPSSPP",
+      "console": "psp",
+      "consoleLabel": "PSP",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "PSP",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "○",
+            "B": "✕",
+            "X": "△",
+            "Y": "□",
+            "L": "L",
+            "R": "R",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "ボタンの位置は実機と同じ並び(○✕△□)。左スティック=アナログスティック。PSPにはL2/R2/L3/R3が無いため、中断メニュー(L2+R2)・早送り(R2)は標準のまま使えます。右スティックはゲーム側が対応した場合のみ有効です。"
+        }
+      ]
+    },
+    {
+      "core": "mednafen_ngp_libretro.dll",
+      "coreLabel": "Beetle NeoPop",
+      "console": "ngp",
+      "consoleLabel": "ネオジオポケット",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ネオジオポケットのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "A",
+            "A": "B",
+            "Start": "OPTION"
+          },
+          "note": "ボタンの位置は実機と同じ並び(下=A、右=B)。OPTIONボタンはSTART。連射の標準: □=A連射、△=B連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "mednafen_ngp_libretro.dll",
+      "coreLabel": "Beetle NeoPop",
+      "console": "ngpc",
+      "consoleLabel": "ネオジオポケットカラー",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ネオジオポケットカラーのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "A",
+            "A": "B",
+            "Start": "OPTION"
+          },
+          "note": "ボタンの位置は実機と同じ並び(下=A、右=B)。OPTIONボタンはSTART。連射の標準: □=A連射、△=B連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "mednafen_wswan_libretro.dll",
+      "coreLabel": "Beetle Cygne",
+      "console": "ws",
+      "consoleLabel": "ワンダースワン",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ワンダースワンのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "L": "Y←",
+            "R": "Y→",
+            "L2": "Y↓",
+            "R2": "Y↑",
+            "Start": "START",
+            "Select": "画面回転"
+          },
+          "defaultButtons": {
+            "L": "RightStickLeft",
+            "R": "RightStickRight",
+            "L2": "RightStickDown",
+            "R2": "RightStickUp"
+          },
+          "note": "十字キー=X方向キー、右スティック=Y方向キー(実機の右側の4つのボタン)。縦持ちのゲームは、VIEWボタン(画面回転)で画面と十字キーの向きを切り替える。L2/R2をゲームで使うため、メニューは右スティック押し込み(R3)、早送りは左スティック押し込み(L3)。連射の標準: □=B連射、△=A連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          },
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "mednafen_wswan_libretro.dll",
+      "coreLabel": "Beetle Cygne",
+      "console": "wsc",
+      "consoleLabel": "ワンダースワンカラー",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ワンダースワンカラーのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "B",
+            "A": "A",
+            "L": "Y←",
+            "R": "Y→",
+            "L2": "Y↓",
+            "R2": "Y↑",
+            "Start": "START",
+            "Select": "画面回転"
+          },
+          "defaultButtons": {
+            "L": "RightStickLeft",
+            "R": "RightStickRight",
+            "L2": "RightStickDown",
+            "R2": "RightStickUp"
+          },
+          "note": "十字キー=X方向キー、右スティック=Y方向キー(実機の右側の4つのボタン)。縦持ちのゲームは、VIEWボタン(画面回転)で画面と十字キーの向きを切り替える。L2/R2をゲームで使うため、メニューは右スティック押し込み(R3)、早送りは左スティック押し込み(L3)。連射の標準: □=B連射、△=A連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          },
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "px68k_libretro.dll",
+      "coreLabel": "PX68k",
+      "console": "x68000",
+      "consoleLabel": "X68000",
+      "optionKey": "px68k_joytype1",
+      "default": "pad2",
+      "forms": [
+        {
+          "id": "pad2",
+          "label": "2ボタン(標準)",
+          "device": 1,
+          "optionValue": "Default (2 Buttons)",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "A",
+            "B": "B"
+          },
+          "note": "X68000標準のジョイスティック(2ボタン)。START/SELECTはX68000には無いので使いません。連射の標準: □=B連射、△=A連射。L2/R2はコア内蔵のメニュー/登録キーなのでコアへは渡さない(中断メニュー=L2+R2、早送り=R2は標準どおり使える)。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        },
+        {
+          "id": "pad8",
+          "label": "8ボタン(CPSF-SFC)",
+          "device": 1,
+          "optionValue": "CPSF-SFC (8 Buttons)",
+          "blockUnlisted": true,
+          "buttons": {
+            "A": "A",
+            "B": "B",
+            "X": "X",
+            "Y": "Y",
+            "L": "L",
+            "R": "R",
+            "Start": "START",
+            "Select": "SELECT"
+          },
+          "note": "スーパーファミコン配置の8ボタン(ストIIダッシュ等の対応ゲーム用)。L2/R2はコア内蔵のメニュー/登録キーなのでコアへは渡さない(中断メニュー=L2+R2、早送り=R2は標準どおり使える)。"
+        }
+      ]
+    },
+    {
+      "core": "bluemsx_libretro.dll",
+      "coreLabel": "blueMSX",
+      "console": "msx",
+      "consoleLabel": "MSX",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "MSXのジョイスティック",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2"
+          },
+          "note": "ボタン1=×、ボタン2=○(MSX標準のジョイスティック)。キーボードが必要なゲームは、「キーボード入力をコアへ」をオンにして遊びます。連射の標準: □=1連射、△=2連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "bluemsx_libretro.dll",
+      "coreLabel": "blueMSX",
+      "console": "msx2",
+      "consoleLabel": "MSX2",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "MSX2のジョイスティック",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2"
+          },
+          "note": "ボタン1=×、ボタン2=○(MSX標準のジョイスティック)。キーボードが必要なゲームは、「キーボード入力をコアへ」をオンにして遊びます。連射の標準: □=1連射、△=2連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "flycast_libretro.dll",
+      "coreLabel": "Flycast",
+      "console": "naomi",
+      "consoleLabel": "NAOMI",
+      "optionKey": "retronexus_controller",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "NAOMIのコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Y": "ボタン3",
+            "X": "ボタン4",
+            "L": "ボタン5",
+            "R": "ボタン6",
+            "L2": "Lトリガー",
+            "R2": "Rトリガー",
+            "Start": "START"
+          },
+          "note": "ボタンの位置はドリームキャストと同じ並び(下=1、右=2、左=3、上=4)。使うボタンはゲームごとに違う。コインはフリープレイ(標準でオン)なので不要、サービス/テストボタンは使わない。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "lightgun",
+          "label": "ライトガン(スティックやマウス)",
+          "device": 4,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "撃つ",
+            "A": "リロード(画面の外を撃つ)",
+            "Y": "補助ボタン1",
+            "X": "補助ボタン2",
+            "L2": "リロード",
+            "R2": "撃つ",
+            "Start": "START"
+          },
+          "note": "スティック(左右どちらも)を倒した方向へ照準が動く(マウスやタッチで画面を指しても動かせる)。撃つ=✕/R2/マウス左、リロード=○/L2/マウス右(画面の外を撃つ動作)。十字キーはメニュー用。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "flycast_libretro.dll",
+      "coreLabel": "Flycast",
+      "console": "naomi2",
+      "consoleLabel": "NAOMI 2",
+      "optionKey": "retronexus_controller",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "NAOMI 2のコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Y": "ボタン3",
+            "X": "ボタン4",
+            "L": "ボタン5",
+            "R": "ボタン6",
+            "L2": "Lトリガー",
+            "R2": "Rトリガー",
+            "Start": "START"
+          },
+          "note": "ボタンの位置はドリームキャストと同じ並び(下=1、右=2、左=3、上=4)。使うボタンはゲームごとに違う。コインはフリープレイ(標準でオン)なので不要、サービス/テストボタンは使わない。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "lightgun",
+          "label": "ライトガン(スティックやマウス)",
+          "device": 4,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "撃つ",
+            "A": "リロード(画面の外を撃つ)",
+            "Y": "補助ボタン1",
+            "X": "補助ボタン2",
+            "L2": "リロード",
+            "R2": "撃つ",
+            "Start": "START"
+          },
+          "note": "スティック(左右どちらも)を倒した方向へ照準が動く(マウスやタッチで画面を指しても動かせる)。撃つ=✕/R2/マウス左、リロード=○/L2/マウス右(画面の外を撃つ動作)。十字キーはメニュー用。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "flycast_libretro.dll",
+      "coreLabel": "Flycast",
+      "console": "atomiswave",
+      "consoleLabel": "アトミスウェイブ",
+      "optionKey": "retronexus_controller",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "アトミスウェイブのコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Y": "ボタン3",
+            "X": "ボタン4",
+            "L": "ボタン5",
+            "R": "ボタン6",
+            "L2": "Lトリガー",
+            "R2": "Rトリガー",
+            "Start": "START"
+          },
+          "note": "ボタンの位置はドリームキャストと同じ並び(下=1、右=2、左=3、上=4)。使うボタンはゲームごとに違う。コインはフリープレイ(標準でオン)なので不要、サービス/テストボタンは使わない。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "lightgun",
+          "label": "ライトガン(スティックやマウス)",
+          "device": 4,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "撃つ",
+            "A": "リロード(画面の外を撃つ)",
+            "Y": "補助ボタン1",
+            "X": "補助ボタン2",
+            "L2": "リロード",
+            "R2": "撃つ",
+            "Start": "START"
+          },
+          "note": "スティック(左右どちらも)を倒した方向へ照準が動く(マウスやタッチで画面を指しても動かせる)。撃つ=✕/R2/マウス左、リロード=○/L2/マウス右(画面の外を撃つ動作)。十字キーはメニュー用。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "supermodel_libretro.dll",
+      "coreLabel": "Supermodel",
+      "console": "model3",
+      "consoleLabel": "セガ MODEL 3",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "MODEL 3のコントローラ",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Y": "ボタン3",
+            "X": "ボタン4",
+            "L": "ボタン5",
+            "R": "ボタン6",
+            "L2": "L2(ペダル等)",
+            "R2": "R2(ペダル等)",
+            "Select": "コイン",
+            "Start": "START"
+          },
+          "note": "使うボタンはゲームごとに違う(コアが自動で切り替える)。ボタンの位置はドリームキャストと同じ並び(下=1、右=2、左=3、上=4)。コイン=SELECT。テスト/サービスボタンは使わない。L2/R2をペダル等に使うため、メニューは右スティック押し込み(R3)、早送りは左スティック押し込み(L3)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "neocd_libretro.dll",
+      "coreLabel": "NeoCD",
+      "console": "ngcd",
+      "consoleLabel": "ネオジオCD",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ネオジオCDのパッド",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "A",
+            "A": "B",
+            "Y": "C",
+            "X": "D",
+            "Select": "SELECT",
+            "Start": "START"
+          },
+          "note": "ボタンの位置は実機と同じ並び(A/B/C/D=✕/○/□/△)。連射の標準: □=A連射、△=B連射。",
+          "turbo": {
+            "B": "X",
+            "A": "Y"
+          }
+        }
+      ]
+    },
+    {
+      "core": "fbneo_libretro.dll",
+      "coreLabel": "FinalBurn Neo",
+      "console": "fbneo",
+      "consoleLabel": "アーケード(FBNeo)",
+      "optionKey": "retronexus_controller",
+      "default": "classic",
+      "forms": [
+        {
+          "id": "classic",
+          "label": "クラシック",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Y": "ボタン3",
+            "X": "ボタン4",
+            "L": "ボタン5",
+            "R": "ボタン6",
+            "Select": "コイン",
+            "Start": "START"
+          },
+          "note": "ボタン1〜6=✕/○/□/△/L1/R1。使うボタンはゲームごとに違う。コイン=SELECT、スタート=START。"
+        },
+        {
+          "id": "modern",
+          "label": "モダン(格闘ゲーム向け)",
+          "device": 517,
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "ボタン1(弱パンチ)",
+            "X": "ボタン2(中パンチ)",
+            "R": "ボタン3(強パンチ)",
+            "B": "ボタン4(弱キック)",
+            "A": "ボタン5(中キック)",
+            "R2": "ボタン6(強キック)",
+            "L": "パンチ3つ同時",
+            "L2": "キック3つ同時",
+            "Select": "コイン",
+            "Start": "START"
+          },
+          "note": "格闘ゲーム(カプコン6ボタン)の並び: パンチ=□/△/R1、キック=✕/○/R2。L1=パンチ3つ同時、L2=キック3つ同時。コイン=SELECT、スタート=START。R2をゲームで使うため、メニューは右スティック押し込み(R3)、早送りは左スティック押し込み(L3)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "lightgun",
+          "label": "ライトガン(スティックやマウス)",
+          "device": 4,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "撃つ",
+            "A": "リロード(画面の外を撃つ)",
+            "Y": "補助ボタン1",
+            "X": "補助ボタン2",
+            "L2": "リロード",
+            "R2": "撃つ",
+            "Select": "コイン",
+            "Start": "START"
+          },
+          "note": "スティック(左右どちらも)を倒した方向へ照準が動く(マウスやタッチで画面を指しても動かせる)。撃つ=✕/R2/マウス左、リロード=○/L2/マウス右(画面の外を撃つ動作)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    },
+    {
+      "core": "fbneo_libretro.dll",
+      "coreLabel": "FinalBurn Neo",
+      "console": "neogeo",
+      "consoleLabel": "ネオジオ",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "ネオジオのボタン",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "Aボタン",
+            "A": "Bボタン",
+            "Y": "Cボタン",
+            "X": "Dボタン",
+            "Select": "コイン",
+            "Start": "スタート"
+          },
+          "note": "A=✕、B=○、C=□、D=△。コイン=SELECT、スタート=START。ゲームにはROM(zip)のほかに、BIOS(neogeo.zip)が必要です。"
+        }
+      ]
+    },
+    {
+      "core": "mame2003_plus_libretro.dll",
+      "coreLabel": "MAME 2003-Plus",
+      "console": "mame2003",
+      "consoleLabel": "アーケード(MAME)",
+      "optionKey": "retronexus_controller",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "標準(ボタン1〜8)",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Y": "ボタン3",
+            "X": "ボタン4",
+            "L": "ボタン5",
+            "R": "ボタン6",
+            "L2": "ボタン7",
+            "R2": "ボタン8",
+            "Select": "コイン",
+            "Start": "START"
+          },
+          "note": "ボタン1〜8=✕/○/□/△/L1/R1/L2/R2。使うボタンはゲームごとに違う。コイン=SELECT、スタート=START。L2/R2を使うゲームでは、メニューは右スティック押し込み(R3)、早送りは左スティック押し込み(L3)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        },
+        {
+          "id": "six",
+          "label": "6ボタン(格闘ゲーム向け)",
+          "device": 769,
+          "blockUnlisted": true,
+          "buttons": {
+            "Y": "ボタン1",
+            "X": "ボタン2",
+            "L": "ボタン3",
+            "B": "ボタン4",
+            "A": "ボタン5",
+            "R": "ボタン6",
+            "Select": "コイン",
+            "Start": "START"
+          },
+          "note": "格闘ゲーム(カプコン6ボタン)の並び: 上段=□/△/L1、下段=✕/○/R1。コイン=SELECT、スタート=START。"
+        }
+      ]
+    },
+    {
+      "core": "mame_libretro.dll",
+      "coreLabel": "MAME",
+      "console": "mame",
+      "consoleLabel": "アーケード(MAME 現行)",
+      "optionKey": "",
+      "default": "pad",
+      "forms": [
+        {
+          "id": "pad",
+          "label": "標準(ボタン1〜8)",
+          "device": 1,
+          "blockUnlisted": true,
+          "buttons": {
+            "B": "ボタン1",
+            "A": "ボタン2",
+            "Y": "ボタン3",
+            "X": "ボタン4",
+            "L": "ボタン5",
+            "R": "ボタン6",
+            "L2": "ボタン7",
+            "R2": "ボタン8",
+            "Select": "コイン",
+            "Start": "START"
+          },
+          "note": "ボタン1〜8=✕/○/□/△/L1/R1/L2/R2。使うボタンはゲームごとに違う。コイン=SELECT、スタート=START。L2/R2を使うゲームでは、メニューは右スティック押し込み(R3)、早送りは左スティック押し込み(L3)。",
+          "hotkeys": {
+            "Menu": "RightThumbstickButton",
+            "Rewind": "RightThumbstickButton",
+            "FastForward": "LeftThumbstickButton"
+          }
+        }
+      ]
+    }
+  ]
+}

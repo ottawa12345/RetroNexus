@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      HTTPダウンロード(DownloadManager)専用。System.Net.Http等BCLのみに依存し、
+      Core/Storageを含む他のEmulatorLauncherプロジェクトへの参照も持たない
+      (依存が無い一番下位のライブラリ)。
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>EmulatorLauncher</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+</Project>

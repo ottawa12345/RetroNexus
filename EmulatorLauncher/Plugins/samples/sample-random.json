@@ -1,0 +1,5 @@
+﻿{
+  "schema": 1, "id": "sample-random", "name": "サンプル: ランダム", "display": "stat", "width": 1, "order": 101,
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Mode","random-stream"], "timeoutSec": 5, "stream": true },
+  "format": "{value}%", "bar": { "min": 0, "max": 100 }
+}

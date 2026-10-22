@@ -1,0 +1,16 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.SettingsGuideHeader"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- 設定パネル先頭のイラスト+短い説明。使い方: <controls:SettingsGuideHeader Image="folder" Text="..." /> (Assets/guide/<Image>.png) -->
+    <Grid Margin="0,12,0,4" ColumnSpacing="24" MinHeight="120">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Image x:Name="GuideImage" Width="260" Stretch="Uniform" />
+        <TextBlock x:Name="GuideText" Grid.Column="1" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"
+                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,429 @@
+[
+  {
+    "consoleId": "n64",
+    "rdb": "n64.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Nintendo%2064.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Nintendo_64/git/trees/c2f9cd21605e45b4d9dc59375c942c54d3afe7e7:Named_Boxarts",
+    "extensions": [ ".z64", ".v64", ".n64" ]
+  },
+  {
+    "consoleId": "fc",
+    "rdb": "fc.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Nintendo%20Entertainment%20System.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%20Entertainment%20System/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Nintendo_Entertainment_System/git/trees/4d21463bf5d553afc34d99183c9ad5833f773b93:Named_Boxarts",
+    "extensions": [ ".nes" ],
+    "boxArtOrientation": "landscape",
+    "boxArtRotation": 90
+  },
+  {
+    "consoleId": "sfc",
+    "rdb": "sfc.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Super%20Nintendo%20Entertainment%20System.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Super%20Nintendo%20Entertainment%20System/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Super_Nintendo_Entertainment_System/git/trees/master:Named_Boxarts",
+    "extensions": [ ".sfc", ".smc" ],
+    "boxArtOrientation": "portrait",
+    "boxArtRotation": -90
+  },
+  {
+    "consoleId": "gb",
+    "rdb": "gb.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Game%20Boy.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Game%20Boy/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Game_Boy/git/trees/master:Named_Boxarts",
+    "extensions": [ ".gb" ]
+  },
+  {
+    "consoleId": "gbc",
+    "rdb": "gbc.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Game%20Boy%20Color.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Game%20Boy%20Color/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Game_Boy_Color/git/trees/master:Named_Boxarts",
+    "extensions": [ ".gbc" ]
+  },
+  {
+    "consoleId": "gba",
+    "rdb": "gba.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Game%20Boy%20Advance.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Game%20Boy%20Advance/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Game_Boy_Advance/git/trees/master:Named_Boxarts",
+    "extensions": [ ".gba" ]
+  },
+  {
+    "consoleId": "nds",
+    "rdb": "nds.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Nintendo%20DS.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%20DS/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Nintendo_DS/git/trees/master:Named_Boxarts",
+    "extensions": [ ".nds" ]
+  },
+  {
+    "consoleId": "md",
+    "rdb": "md.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Mega%20Drive%20-%20Genesis.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Mega%20Drive%20-%20Genesis/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Mega_Drive_-_Genesis/git/trees/master:Named_Boxarts",
+    "extensions": [ ".md", ".gen", ".bin" ]
+  },
+  {
+    "consoleId": "ps1",
+    "rdb": "ps1.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sony%20-%20PlayStation.rdb",
+    "image": "https://thumbnails.libretro.com/Sony%20-%20PlayStation/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sony_-_PlayStation/git/trees/master:Named_Boxarts",
+    "extensions": [ ".cue", ".bin", ".iso", ".pbp", ".chd", ".m3u", "folder(.cue,.chd,.iso,.pbp)" ]
+  },
+  {
+    "consoleId": "pce",
+    "rdb": "pce.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/NEC%20-%20PC%20Engine%20-%20TurboGrafx%2016.rdb",
+    "image": "https://thumbnails.libretro.com/NEC%20-%20PC%20Engine%20-%20TurboGrafx%2016/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/NEC_-_PC_Engine_-_TurboGrafx_16/git/trees/master:Named_Boxarts",
+    "extensions": [ ".pce" ]
+  },
+  {
+    "consoleId": "fds",
+    "rdb": "fds.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Family%20Computer%20Disk%20System.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Family%20Computer%20Disk%20System/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Family_Computer_Disk_System/git/trees/master:Named_Boxarts",
+    "extensions": [ ".fds" ]
+  },
+  {
+    "consoleId": "vb",
+    "rdb": "vb.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Virtual%20Boy.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Virtual%20Boy/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Virtual_Boy/git/trees/master:Named_Boxarts",
+    "extensions": [ ".vb", ".vboy" ]
+  },
+  {
+    "consoleId": "pokemini",
+    "rdb": "pokemini.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Pokemon%20Mini.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Pokemon%20Mini/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Pokemon_Mini/git/trees/master:Named_Boxarts",
+    "extensions": [ ".min" ]
+  },
+  {
+    "consoleId": "gc",
+    "rdb": "gc.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20GameCube.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_GameCube/git/trees/master:Named_Boxarts",
+    "extensions": [ ".iso", ".gcm", ".rvz", ".ciso", ".gcz", "folder(.iso,.gcm,.rvz,.ciso,.gcz)" ]
+  },
+  {
+    "consoleId": "wii",
+    "rdb": "wii.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Wii.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Wii/git/trees/master:Named_Boxarts",
+    "extensions": [ ".iso", ".wbfs", ".rvz", ".wia", "folder(.iso,.wbfs,.rvz,.wia)" ]
+  },
+  {
+    "consoleId": "3ds",
+    "rdb": "3ds.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Nintendo%20-%20Nintendo%203DS.rdb",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%203DS/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Nintendo_3DS/git/trees/master:Named_Boxarts",
+    "extensions": [ ".3ds", ".cci", ".cxi" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "sg1000",
+    "rdb": "sg1000.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20SG-1000.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20SG-1000/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_SG-1000/git/trees/master:Named_Boxarts",
+    "extensions": [ ".sg" ]
+  },
+  {
+    "consoleId": "mark3",
+    "rdb": "mark3.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Master%20System%20-%20Mark%20III.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Master%20System%20-%20Mark%20III/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Master_System_-_Mark_III/git/trees/master:Named_Boxarts",
+    "extensions": [ ".sms" ]
+  },
+  {
+    "consoleId": "gg",
+    "rdb": "gg.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Game%20Gear.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Game%20Gear/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Game_Gear/git/trees/master:Named_Boxarts",
+    "extensions": [ ".gg" ]
+  },
+  {
+    "consoleId": "megacd",
+    "rdb": "megacd.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Mega-CD%20-%20Sega%20CD.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Mega-CD%20-%20Sega%20CD/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Mega-CD_-_Sega_CD/git/trees/master:Named_Boxarts",
+    "extensions": [ ".cue", ".chd", ".iso", "folder(.cue,.chd,.iso)" ]
+  },
+  {
+    "consoleId": "32x",
+    "rdb": "32x.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%2032X.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%2032X/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_32X/git/trees/master:Named_Boxarts",
+    "extensions": [ ".32x" ]
+  },
+  {
+    "consoleId": "stn",
+    "rdb": "stn.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Saturn.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Saturn/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Saturn/git/trees/master:Named_Boxarts",
+    "extensions": [ ".cue", ".chd", ".ccd", ".m3u", "folder(.cue,.chd,.ccd)" ]
+  },
+  {
+    "consoleId": "dc",
+    "rdb": "dc.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Dreamcast.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Dreamcast/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Dreamcast/git/trees/master:Named_Boxarts",
+    "extensions": [ ".gdi", ".cdi", ".chd", ".m3u", "folder(.gdi,.cdi,.chd)" ]
+  },
+  {
+    "consoleId": "naomi",
+    "rdb": "naomi.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Naomi.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Naomi/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Naomi/git/trees/master:Named_Boxarts",
+    "extensions": [ ".zip", ".7z", ".chd", "folder(.chd)" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "naomi2",
+    "rdb": "naomi2.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sega%20-%20Naomi%202.rdb",
+    "image": "https://thumbnails.libretro.com/Sega%20-%20Naomi%202/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sega_-_Naomi_2/git/trees/master:Named_Boxarts",
+    "extensions": [ ".zip", ".7z", ".chd", "folder(.chd)" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "atomiswave",
+    "rdb": "atomiswave.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Atomiswave.rdb",
+    "image": "https://thumbnails.libretro.com/Atomiswave/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Atomiswave/git/trees/master:Named_Boxarts",
+    "extensions": [ ".zip", ".7z" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "pcecd",
+    "rdb": "pcecd.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/NEC%20-%20PC%20Engine%20CD%20-%20TurboGrafx-CD.rdb",
+    "image": "https://thumbnails.libretro.com/NEC%20-%20PC%20Engine%20CD%20-%20TurboGrafx-CD/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/NEC_-_PC_Engine_CD_-_TurboGrafx-CD/git/trees/master:Named_Boxarts",
+    "extensions": [ ".cue", ".chd", ".ccd", ".m3u", "folder(.cue,.chd,.ccd)" ]
+  },
+  {
+    "consoleId": "sgx",
+    "rdb": "sgx.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/NEC%20-%20PC%20Engine%20SuperGrafx.rdb",
+    "image": "https://thumbnails.libretro.com/NEC%20-%20PC%20Engine%20SuperGrafx/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/NEC_-_PC_Engine_SuperGrafx/git/trees/master:Named_Boxarts",
+    "extensions": [ ".sgx" ]
+  },
+  {
+    "consoleId": "pcfx",
+    "rdb": "pcfx.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/NEC%20-%20PC-FX.rdb",
+    "image": "https://thumbnails.libretro.com/NEC%20-%20PC-FX/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/NEC_-_PC-FX/git/trees/master:Named_Boxarts",
+    "extensions": [ ".cue", ".chd", ".ccd", "folder(.cue,.chd,.ccd)" ]
+  },
+  {
+    "consoleId": "ps2",
+    "rdb": "ps2.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sony%20-%20PlayStation%202.rdb",
+    "image": "https://thumbnails.libretro.com/Sony%20-%20PlayStation%202/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sony_-_PlayStation_2/git/trees/master:Named_Boxarts",
+    "extensions": [ ".iso", ".chd", ".cso", ".cue", "folder(.cue,.chd,.iso,.cso)" ]
+  },
+  {
+    "consoleId": "psp",
+    "rdb": "psp.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sony%20-%20PlayStation%20Portable.rdb",
+    "image": "https://thumbnails.libretro.com/Sony%20-%20PlayStation%20Portable/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sony_-_PlayStation_Portable/git/trees/master:Named_Boxarts",
+    "extensions": [ ".iso", ".cso", ".pbp", ".chd", "folder(.iso,.cso,.chd,.pbp)" ]
+  },
+  {
+    "consoleId": "neogeo",
+    "rdb": "neogeo.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/FBNeo%20-%20Arcade%20Games.rdb",
+    "image": "https://thumbnails.libretro.com/FBNeo%20-%20Arcade%20Games/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/FBNeo_-_Arcade_Games/git/trees/master:Named_Boxarts",
+    "extensions": [
+      ".zip",
+      ".7z"
+    ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "ngcd",
+    "rdb": "ngcd.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/SNK%20-%20Neo%20Geo%20CD.rdb",
+    "image": "https://thumbnails.libretro.com/SNK%20-%20Neo%20Geo%20CD/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/SNK_-_Neo_Geo_CD/git/trees/master:Named_Boxarts",
+    "extensions": [ ".cue", ".chd", "folder(.cue,.chd)" ]
+  },
+  {
+    "consoleId": "ngp",
+    "rdb": "ngp.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/SNK%20-%20Neo%20Geo%20Pocket.rdb",
+    "image": "https://thumbnails.libretro.com/SNK%20-%20Neo%20Geo%20Pocket/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/SNK_-_Neo_Geo_Pocket/git/trees/master:Named_Boxarts",
+    "extensions": [ ".ngp" ]
+  },
+  {
+    "consoleId": "ngpc",
+    "rdb": "ngpc.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/SNK%20-%20Neo%20Geo%20Pocket%20Color.rdb",
+    "image": "https://thumbnails.libretro.com/SNK%20-%20Neo%20Geo%20Pocket%20Color/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/SNK_-_Neo_Geo_Pocket_Color/git/trees/master:Named_Boxarts",
+    "extensions": [ ".ngc", ".ngpc" ]
+  },
+  {
+    "consoleId": "ws",
+    "rdb": "ws.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Bandai%20-%20WonderSwan.rdb",
+    "image": "https://thumbnails.libretro.com/Bandai%20-%20WonderSwan/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Bandai_-_WonderSwan/git/trees/master:Named_Boxarts",
+    "extensions": [ ".ws" ]
+  },
+  {
+    "consoleId": "wsc",
+    "rdb": "wsc.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Bandai%20-%20WonderSwan%20Color.rdb",
+    "image": "https://thumbnails.libretro.com/Bandai%20-%20WonderSwan%20Color/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Bandai_-_WonderSwan_Color/git/trees/master:Named_Boxarts",
+    "extensions": [ ".wsc" ]
+  },
+  {
+    "consoleId": "xbox",
+    "dat": "https://raw.githubusercontent.com/libretro/libretro-database/master/dat/Microsoft%20-%20Xbox.dat",
+    "image": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Microsoft_-_Xbox/git/trees/master:Named_Boxarts",
+    "extensions": [
+      ".iso",
+      ".xiso"
+    ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "fbneo",
+    "rdb": "fbneo.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/FBNeo%20-%20Arcade%20Games.rdb",
+    "image": "https://thumbnails.libretro.com/FBNeo%20-%20Arcade%20Games/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/FBNeo_-_Arcade_Games/git/trees/master:Named_Boxarts",
+    "extensions": [ ".zip", ".7z" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "mame2003",
+    "rdb": "mame2003.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/MAME%202003-Plus.rdb",
+    "image": "https://thumbnails.libretro.com/MAME/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/MAME/git/trees/master:Named_Boxarts",
+    "extensions": [ ".zip", ".7z" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "mame",
+    "rdb": "mame.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/MAME.rdb",
+    "image": "https://thumbnails.libretro.com/MAME/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/MAME/git/trees/master:Named_Boxarts",
+    "extensions": [ ".zip", ".7z" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "fmtowns",
+    "rdb": "mame.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/MAME.rdb",
+    "image": "https://thumbnails.libretro.com/MAME/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/MAME/git/trees/master:Named_Boxarts",
+    "extensions": [ ".cue", ".chd", ".iso", ".m3u", ".d77", ".d88", ".hdm", ".xdf", ".img", "folder(.cue,.chd,.iso)" ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "model3",
+    "image": "https://raw.githubusercontent.com/BackPonBeauty/Sega-Model-3-UI-for-20240128-/master/",
+    "list": "https://api.github.com/repos/BackPonBeauty/Sega-Model-3-UI-for-20240128-/git/trees/master:Sega%20Model%203%20UI%20-%20To%20202402/Snaps",
+    "imageExt": ".jpg",
+    "bulk": true,
+    "extensions": [
+      ".zip"
+    ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "wiiu",
+    "dat": "https://raw.githubusercontent.com/libretro/libretro-database/master/dat/Nintendo%20-%20Wii%20U.dat",
+    "image": "https://thumbnails.libretro.com/Nintendo%20-%20Wii%20U/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Nintendo_-_Wii_U/git/trees/master:Named_Boxarts",
+    "extensions": [
+      ".wua"
+    ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "x68000",
+    "rdb": "x68000.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Sharp%20-%20X68000.rdb",
+    "image": "https://thumbnails.libretro.com/Sharp%20-%20X68000/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Sharp_-_X68000/git/trees/master:Named_Boxarts",
+    "extensions": [
+      ".dim",
+      ".img",
+      ".d88",
+      ".88d",
+      ".hdm",
+      ".dup",
+      ".2hd",
+      ".xdf",
+      ".hdf",
+      ".cmd",
+      ".m3u"
+    ],
+    "matchBy": "romName"
+  },
+  {
+    "consoleId": "msx",
+    "rdb": "msx.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Microsoft%20-%20MSX.rdb",
+    "image": "https://thumbnails.libretro.com/Microsoft%20-%20MSX/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Microsoft_-_MSX/git/trees/master:Named_Boxarts",
+    "extensions": [
+      ".rom",
+      ".mx1",
+      ".mx2",
+      ".dsk",
+      ".cas",
+      ".m3u"
+    ]
+  },
+  {
+    "consoleId": "msx2",
+    "rdb": "msx2.rdb",
+    "url": "https://raw.githubusercontent.com/libretro/libretro-database/master/rdb/Microsoft%20-%20MSX2.rdb",
+    "image": "https://thumbnails.libretro.com/Microsoft%20-%20MSX2/",
+    "list": "https://api.github.com/repos/libretro-thumbnails/Microsoft_-_MSX2/git/trees/master:Named_Boxarts",
+    "extensions": [
+      ".rom",
+      ".mx1",
+      ".mx2",
+      ".dsk",
+      ".cas",
+      ".m3u"
+    ]
+  }
+]

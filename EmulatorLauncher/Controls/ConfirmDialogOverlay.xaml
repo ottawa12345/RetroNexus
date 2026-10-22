@@ -1,0 +1,71 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.ConfirmDialogOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters">
+
+    <!--
+        確認ダイアログ(Switchの「〇〇してもよろしいでしょうか?」と同じ見た目)。
+        今後、実行前にユーザーへ確認を促す場面(インストール、削除など)の共通部品として使う。
+
+        見た目: 背景を暗くし、中央に「メッセージ + 下に2つのボタン(左=キャンセル / 右=実行)」。
+        フォーカスしているボタンは白背景+水色の枠。最初は誤操作を防ぐためキャンセル側にフォーカスが乗る。
+
+        使い方(呼び出し側、例: SettingsPage):
+            <controls:ConfirmDialogOverlay x:Name="ConfirmOverlay" Visibility="Collapsed" />
+        そしてコードビハインドから
+            bool ok = await ConfirmOverlay.ShowAsync("〇〇コアをインストールしてよろしいでしょうか?", "インストールする");
+            if (ok) { ... }
+        表示中のゲームパッド入力は、呼び出し側のOnGamepadButtonの先頭で
+            if (ConfirmOverlay.IsOpen) { ConfirmOverlay.HandleGamepadInput(button); return; }
+        のように渡す。十字キー左右でボタンを切り替え、Aで決定(実行ならtrue)、Bでキャンセル(false)。
+        マウスならボタンをクリックしてもその場で決定する。
+    -->
+    <UserControl.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource StrongOverlayScrimBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Border x:Name="DialogBody" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1100"
+                        Background="{StaticResource AppBackgroundBrush}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="MessageText" Grid.Row="0" Text="よろしいですか?" FontSize="34"
+                                   Foreground="{StaticResource AppTextPrimaryBrush}" TextWrapping="Wrap"
+                                   Margin="72,64,72,64" MinHeight="90" />
+
+                        <!-- ボタン行(左=キャンセル / 右=実行)。上に区切り線。 -->
+                        <Grid Grid.Row="1" Background="{StaticResource PanelBackgroundBrush}" Height="104">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Grid.ColumnSpan="2" Height="1" VerticalAlignment="Top" Fill="#FFC8C8C8" />
+
+                            <Grid x:Name="CancelButtonGrid" Grid.Column="0" Tapped="CancelButton_Tapped">
+                                <Border x:Name="CancelFrame" BorderThickness="4" Margin="0,1,0,0" Background="Transparent" />
+                                <TextBlock x:Name="CancelText" Text="キャンセル" FontSize="32"
+                                           Foreground="{StaticResource SwitchSelectedBlueBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid x:Name="ConfirmButtonGrid" Grid.Column="1" Tapped="ConfirmButton_Tapped">
+                                <Border x:Name="ConfirmFrame" BorderThickness="4" Margin="0,1,0,0" Background="Transparent" />
+                                <TextBlock x:Name="ConfirmText" Text="実行する" FontSize="32"
+                                           Foreground="{StaticResource SwitchSelectedBlueBrush}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

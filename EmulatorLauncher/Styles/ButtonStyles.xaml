@@ -1,0 +1,157 @@
+<!--
+    ButtonStyles.xaml: ボタンの見た目を共通化するStyle集。
+    新しいクラスは作らず、標準のButtonにStyleを当てるだけで使えるようにしてある
+    (Click等の既存のイベント配線はそのまま使える)。
+
+    RetroButtonStyle: 文字ボタン用。グラデーション背景のピル型
+                       (元々ConsoleSelectPageのヒントバーやシステムアイコンで
+                        使っていたのと同じ配色)。
+    IconButtonStyle:   アイコンのみのボタン用。円形。ConsoleSelectPageのシステムアイコン
+                       (コントローラー/設定/電源)が使っていた見た目を移設したもの。
+
+    どちらもVisualStateManagerのSetters構文(Storyboardを使わない簡易な書き方)で、
+    ポインターオーバー/プレス/無効時にRootBorderのOpacityを変える最小限の状態変化を
+    持たせている。ConsoleSelectPageのシステムアイコンが元々持っていたホバー時の
+    見た目変化を、このStyleへ置き換えても失わないようにするため。
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============ RetroButtonStyle: ピル型の文字ボタン ============ -->
+    <Style x:Key="RetroButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource HintBarBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AppSurfaceBrush}" />
+        <Setter Property="BorderThickness" Value="1,1,0,0" />
+        <Setter Property="CornerRadius" Value="{StaticResource ButtonCornerRadius}" />
+        <Setter Property="Padding" Value="28,14" />
+        <Setter Property="FontSize" Value="26" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootBorder.Opacity" Value="0.85" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootBorder.Opacity" Value="0.7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootBorder.Opacity" Value="0.4" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <!-- 疑似ドロップシャドウ(ヒントバーのバッジと同じ手法)。 -->
+                        <Border CornerRadius="{TemplateBinding CornerRadius}"
+                                Background="{StaticResource SoftShadowBrush}" Margin="0,3,0,-3" />
+                        <Border x:Name="RootBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                               ContentTemplate="{TemplateBinding ContentTemplate}"
+                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                               Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============ IconButtonStyle: 円形のアイコンのみボタン ============ -->
+    <Style x:Key="IconButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="130" />
+        <Setter Property="Height" Value="130" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderBrush" Value="LightGray" />
+        <Setter Property="BorderThickness" Value="3" />
+        <Setter Property="Background" Value="{StaticResource HintBarBackgroundBrush}" />
+        <Setter Property="CornerRadius" Value="90" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="RootBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootBorder.Opacity" Value="0.85" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootBorder.Opacity" Value="0.7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootBorder.Opacity" Value="0.4" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Switch設定画面風のフラットな行ボタン(編集オーバーレイの保存/キャンセル/削除用)。
+         フォーカス表現はコードビハインドのApplyRowFocusがBackground/BorderBrushを直接切り替える。 -->
+    <Style x:Key="SettingsRowButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="4" />
+        <Setter Property="Padding" Value="28,20" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="UseSystemFocusVisuals" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="RootBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

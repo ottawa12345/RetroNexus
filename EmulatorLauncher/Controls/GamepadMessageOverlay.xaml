@@ -1,0 +1,49 @@
+<UserControl
+    x:Class="EmulatorLauncher.Controls.GamepadMessageOverlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:EmulatorLauncher.Controls">
+
+    <!--
+        OKボタンだけの簡単な案内オーバーレイ(ContentDialogの代替)。
+
+        WinUIのContentDialogはA/B等のゲームパッド入力を直接受け取る手段が無く
+        (システムフォーカス前提のOK/キャンセルボタンをD-padで操作できない)、
+        CollectionEditOverlow/GameDetailOverlayと同じ「ページ全体を覆うUserControl+
+        HandleGamepadInput」方式に置き換えたもの。
+
+        使い方(呼び出し側、例: SettingsPage):
+            <controls:GamepadMessageOverlay x:Name="MessageOverlay" Visibility="Collapsed" />
+        そしてコードビハインドから
+            await MessageOverlay.ShowAsync("タイトル", "本文メッセージ");
+        表示中のゲームパッド入力は、呼び出し側のOnGamepadButtonの先頭で
+            if (MessageOverlay.IsOpen) { MessageOverlay.HandleGamepadInput(button); return; }
+        のように渡す。A/Bどちらでも閉じる(マウスなら「OK」ボタンのクリック)。
+    -->
+    <Grid Background="{StaticResource OverlayScrimBrush}">
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Width="900" Background="{StaticResource AppSurfaceBrush}"
+                        CornerRadius="{StaticResource PanelCornerRadius}" Padding="48">
+                    <StackPanel Spacing="28">
+                        <TextBlock x:Name="TitleText" Text="タイトル" FontSize="38" FontWeight="SemiBold"
+                                   Foreground="{StaticResource AppTextPrimaryBrush}" TextWrapping="Wrap" />
+                        <TextBlock x:Name="MessageText" Text="メッセージ" FontSize="26"
+                                   Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+
+                        <Button x:Name="OkButton" Content="OK" Click="OkButton_Click"
+                                Style="{StaticResource RetroButtonStyle}" FontSize="26"
+                                HorizontalAlignment="Right" MinWidth="200" />
+
+                        <controls:HintBar HorizontalAlignment="Right">
+                            <controls:HintBar.Hints>
+                                <controls:HintDefinition Key="A" Label="閉じる" />
+                            </controls:HintBar.Hints>
+                        </controls:HintBar>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

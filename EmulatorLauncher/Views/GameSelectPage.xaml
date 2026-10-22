@@ -1,0 +1,254 @@
+﻿<Page
+    x:Class="EmulatorLauncher.Views.GameSelectPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls"
+    xmlns:models="using:EmulatorLauncher.Models"
+    Background="Transparent">
+
+    <Page.Resources>
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <conv:BoolToThicknessConverter x:Key="BoolToThickness" />
+        <conv:HexToBrushConverter x:Key="HexToBrush" />
+        <conv:AspectRatioToCardSizeConverter x:Key="AspectRatioToCardSize" />
+        <conv:StringToVisibilityConverter x:Key="StringToVisibility" />
+        <conv:IconPathToImageSourceConverter x:Key="IconPathToImageSource" />
+    </Page.Resources>
+
+    <!-- このページは1920x1080の固定キャンバスを前提にデザインされているため、
+         実際のウィンドウサイズへはこのページ内のViewboxで一様スケーリングする。 -->
+    <!-- ルートGrid: Viewbox(ページ本体)の上に、詳細/ソートオーバーレイをページ全体を覆う形で重ねる。
+         オーバーレイをViewboxの内側に置くと、暗幕がViewboxと一緒に縮小されてウィンドウの余白
+         (レターボックス)部分がマスクされないため、あえて外に出している
+         (中身のレイアウトは各オーバーレイが自前のViewboxで1920x1080キャンバスへ合わせる)。 -->
+    <Grid>
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="72" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- ゲームグリッド。
+                 最大1000件程度になり得るため、ItemsControl+外側ScrollViewer(仮想化されない)ではなく
+                 GridView(ListViewBase)を使う。GridViewはItemsWrapGridパネルと組み合わさることで
+                 画面内に実際に表示される分のコンテナしか生成しないUI仮想化が効く(スクロールに応じて
+                 コンテナがリサイクルされる。詳細はGameGridView_ContainerContentChangingを参照)。
+                 スクロールもGridView自身が内部のScrollViewerで行うため、外側のScrollViewerは不要
+                 (むしろ外側にScrollViewerを置くと仮想化が効かなくなる主な原因になる)。
+
+                 また、選択中カードを「一瞬で」ではなく滑らかに拡大するアニメーションと、ソート時に
+                 カードが新しい位置へ滑るように移動するアニメーションは、どちらもXAMLの通常の
+                 データバインディングだけでは実現できないため、コードビハインド側
+                 (GameGridView_ContainerContentChanging / ReorderGamesWithAnimation)で行っている。
+                 このDataTemplate側では選択枠(BorderBrush/BorderThickness)の即時切り替えだけを扱う。 -->
+                <GridView x:Name="GameGridView"
+                      Grid.Row="0" Grid.RowSpan="3" Margin="0"
+                      Padding="24,96,24,84"
+                      ItemsSource="{x:Bind Games}"
+                      SelectionMode="None"
+                      IsItemClickEnabled="False"
+                      IsSwipeEnabled="False"
+                      UseSystemFocusVisuals="False"
+                      AllowFocusOnInteraction="False"
+                      PreviewKeyDown="GameGridView_PreviewKeyDown"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ContainerContentChanging="GameGridView_ContainerContentChanging">
+
+                    <!-- GridViewItem既定のポインターオーバー/選択時の背景・フォーカス枠は、
+                     このページ独自のカード選択ハイライト(BorderBrush/BorderThickness+拡大アニメーション)
+                     と二重に見えてしまうため、ConsoleSelectPage側のButton.Resourcesと同じ考え方で
+                     透明に上書きして消しておく。 -->
+                    <GridView.Resources>
+                        <SolidColorBrush x:Key="GridViewItemBackgroundPointerOver" Color="Transparent" />
+                        <SolidColorBrush x:Key="GridViewItemBackgroundPressed" Color="Transparent" />
+                        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="Transparent" />
+                        <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                        <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPressed" Color="Transparent" />
+                        <SolidColorBrush x:Key="GridViewItemFocusBorderBrush" Color="Transparent" />
+                    </GridView.Resources>
+
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="MinWidth" Value="0" />
+                            <Setter Property="MinHeight" Value="0" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="UseSystemFocusVisuals" Value="False" />
+                            <!-- マウスでカードを選んでもキーボードフォーカスを持たせない(持つと、GridView標準の矢印キー移動が
+                                 アニメーション無しのスクロールで割り込み、キーボードの上下移動が瞬間移動になる) -->
+                            <Setter Property="AllowFocusOnInteraction" Value="False" />
+                        </Style>
+                    </GridView.ItemContainerStyle>
+
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" ItemWidth="350" ItemHeight="350" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="models:RomFile">
+                            <!-- 注意: 拡大表示はここではなくコードビハインド側でこのBorderのVisualへ
+                             Composition APIで施す(RenderTransformのx:Bindだと値が一瞬で切り替わり、
+                             アニメーションにならないため)。 -->
+                            <Border Width="{x:Bind AspectRatio, Converter={StaticResource AspectRatioToCardSize}, ConverterParameter=Width, Mode=OneWay}"
+                                Height="{x:Bind AspectRatio, Converter={StaticResource AspectRatioToCardSize}, ConverterParameter=Height, Mode=OneWay}"
+                                Margin="8" CornerRadius="10" Tapped="GameCard_Tapped"
+                                BorderBrush="{x:Bind IsSelected, Converter={StaticResource BoolToBrush}, Mode=OneWay}"
+                                BorderThickness="{x:Bind IsSelected, Converter={StaticResource BoolToThickness}, Mode=OneWay}">
+
+                                <Grid>
+                                    <!-- フォールバック表示: アクセントカラー背景 + ゲーム名/発売年。
+                                     IconPathが空、または画像の読み込みに失敗した場合はこちらがそのまま見える
+                                     (コレクションカードでIconPathが無い時と同じ考え方)。 -->
+                                    <Border CornerRadius="8" Background="{x:Bind AccentColorHex, Converter={StaticResource HexToBrush}}" />
+
+                                    <Border CornerRadius="8" Background="{StaticResource CardCaptionScrimBrush}" />
+
+                                    <StackPanel VerticalAlignment="Bottom" Padding="24" Spacing="4">
+                                        <TextBlock Text="{x:Bind DisplayTitle, Mode=OneWay}" Foreground="White" FontSize="20"
+                                               FontWeight="SemiBold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{x:Bind ReleaseYear}" Foreground="{StaticResource CardCaptionTextBrush}" FontSize="24" />
+                                    </StackPanel>
+
+                                    <!-- IconPathが指定されていれば上に重ねて表示する。読み込みに成功すれば
+                                     フォールバック(背景色・グラデーション・タイトル文字)を完全に覆い隠す。
+                                     読み込みに失敗した場合はコードビハインド(GameIcon_ImageFailed)で
+                                     このImageだけCollapsedにし、フォールバックを見せる。 -->
+                                    <Image Source="{x:Bind IconPath, Converter={StaticResource IconPathToImageSource}, Mode=OneWay}"
+                                       Visibility="{x:Bind IconPath, Converter={StaticResource StringToVisibility}, Mode=OneWay}"
+                                       Stretch="Fill"
+                                       ImageFailed="GameIcon_ImageFailed" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+
+                <!-- 「発売された順」のときに左側へ出す年代ラベル(コードビハインドのUpdateYearGutterが描く)。 -->
+                <Canvas x:Name="YearGutterCanvas" Grid.Row="0" Grid.RowSpan="3" IsHitTestVisible="False" Visibility="Collapsed" />
+
+                <!-- ヘッダー: コンソール名 / 選択中ゲーム名 / 検索ボックス。
+                     ゲームグリッドを画面いっぱい(Grid.RowSpan=3)に広げたため、グリッドより後ろ
+                     (=手前に描画される位置)に置き、スクロールで潜り込むカードの上でも読めるよう
+                     背景色→透明のグラデーション帯を下に敷いている。 -->
+                <Border Grid.Row="0" Height="110" VerticalAlignment="Top" IsHitTestVisible="False">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop x:Name="HeaderFadeStop0" Color="#F0E8E8E8" Offset="0.0" />
+                            <GradientStop x:Name="HeaderFadeStop1" Color="#D0E8E8E8" Offset="0.6" />
+                            <GradientStop x:Name="HeaderFadeStop2" Color="#00E8E8E8" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+                <Grid Grid.Row="0" Margin="32,12,32,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image x:Name="ConsoleImage" Grid.Column="0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+               MaxHeight="60"
+               Stretch="Uniform" />
+
+                    <!-- 選択中ゲーム名。選択が変わるたびコードビハインド(AnimateGameNameSlideIn)で
+                         左から滑るように表示する(Composition APIのTranslationアニメーション。
+                         SortOverlayのパネルスライドインと同じ考え方)。 -->
+                    <Grid Grid.Column="1" Margin="28,0,24,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 選択中ゲームのパッケージ画像(小)。タイトルの前に表示する。 -->
+                        <Image x:Name="SelectedGameThumb" Grid.Column="0"
+                               Height="48" MaxWidth="96" Stretch="Uniform"
+                               VerticalAlignment="Center" Margin="0,0,16,0"
+                               Visibility="Collapsed" />
+
+                        <TextBlock x:Name="SelectedGameNameText" Grid.Column="1"
+               Foreground="{StaticResource AppTextPrimaryBrush}"
+               FontSize="30" FontWeight="SemiBold" MaxWidth="760"
+               VerticalAlignment="Center"
+               TextTrimming="CharacterEllipsis" />
+
+                        <!-- 発売年・プレイ人数。テレビ放送の「字」「再」マークのような、控えめな色の細い枠の四角。
+                             発売年が未定(0以下)のときは年を出さない。 -->
+                        <Border x:Name="SelectedGameYearBadge" Grid.Column="2" Visibility="Collapsed"
+                                BorderBrush="{StaticResource AppTextSecondaryBrush}" BorderThickness="1" CornerRadius="3"
+                                Padding="6,0" Margin="14,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="SelectedGameYearBadgeText" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="17" FontWeight="SemiBold" />
+                        </Border>
+                        <Border x:Name="SelectedGamePlayersBadge" Grid.Column="3" Visibility="Collapsed"
+                                BorderBrush="{StaticResource AppTextSecondaryBrush}" BorderThickness="1" CornerRadius="3"
+                                Padding="6,0" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="SelectedGamePlayersBadgeText" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="17" FontWeight="SemiBold" />
+                        </Border>
+                    </Grid>
+
+                    <!-- ゲーム検索ボックス。入力のたびコードビハインド(SearchTextBox_TextChanged)で
+                         タイトルの部分一致フィルタをかけ直す。 -->
+                    <!-- マウス/タッチ用のボタン(前の画面/コンソールに戻る/並び替え)。マウスやタッチを使ったときだけ表示される。 -->
+                    <controls:TouchNavButtons x:Name="TouchNav" Grid.Column="2" Margin="0,0,16,0" />
+
+                    <Border Grid.Column="3"
+                Width="420" Height="48"
+                CornerRadius="{StaticResource ButtonCornerRadius}"
+                BorderThickness="2" BorderBrush="LightGray"
+                Background="{StaticResource PanelBackgroundBrush}"
+                VerticalAlignment="Center">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Glyph="&#xE721;" FontSize="18"
+                          Margin="16,0,0,0" VerticalAlignment="Center"
+                          Foreground="{StaticResource AppTextSecondaryBrush}" />
+
+                            <TextBox x:Name="SearchTextBox" Grid.Column="1" Tag="MenuKeys"
+                         FontSize="22" Padding="12,10"
+                         Background="Transparent" BorderThickness="0"
+                         PlaceholderText="ゲームを検索"
+                         TextChanged="SearchTextBox_TextChanged" />
+                        </Grid>
+                    </Border>
+                </Grid>
+
+
+                <!-- 下部ヒントバー: Switchのゲーム選択画面のように、カバー一覧の右下隅へ暗い半透明の帯として
+                     重ねる(グリッドは画面いっぱいに広がっているので、最終行が隠れないよう
+                     GameGridView.Paddingの下側に帯の高さぶんの余白を確保してある)。 -->
+                <controls:HintBar x:Name="GameHintBar" Grid.Row="0" Grid.RowSpan="3" IsOverlay="True"
+                                  HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="B" Label="もどる" />
+                        <controls:HintDefinition Key="Y" Label="長押しでソート" />
+                        <controls:HintDefinition Key="X" Label="詳細" />
+                        <controls:HintDefinition Key="A" Label="決定" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+
+            </Grid>
+        </Viewbox>
+
+        <!-- 詳細オーバーレイ(Xボタン)/ソートオーバーレイ(Y長押し): Controls/の共通UserControl -->
+        <controls:GameDetailOverlay x:Name="DetailOverlay" Visibility="Collapsed" />
+        <controls:SortOverlay x:Name="SortOverlay" Visibility="Collapsed" />
+        <controls:SystemSettingsOverlay x:Name="SystemSettings" Visibility="Collapsed" />
+    </Grid>
+</Page>

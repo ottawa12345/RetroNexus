@@ -1,0 +1,6 @@
+{
+  "schema": 1, "id": "sample-button", "name": "サンプル: 押した回数", "display": "tile", "width": 1, "order": 105, "icon": "E768",
+  "status": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","button","-Mode","get","-Default","0"], "timeoutSec": 5 },
+  "action": { "exe": "powershell.exe", "args": ["-NoProfile","-ExecutionPolicy","Bypass","-File","{pluginDir}\\sample.ps1", "-Name","button","-Mode","click"], "timeoutSec": 5 },
+  "format": "{value} 回"
+}

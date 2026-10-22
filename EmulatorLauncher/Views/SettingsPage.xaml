@@ -1,0 +1,1186 @@
+﻿<Page
+    x:Class="EmulatorLauncher.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fs="using:EmulatorLauncher.Controls"
+    xmlns:conv="using:EmulatorLauncher.Converters"
+    xmlns:controls="using:EmulatorLauncher.Controls"
+    xmlns:models="using:EmulatorLauncher.Models"
+    Background="{StaticResource SettingsPageBackgroundBrush}">
+
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <conv:InstalledToBrushConverter x:Key="InstalledToBrush" />
+        <conv:BoolToBrushConverter x:Key="BoolToBrush" />
+        <!-- フォーカス中の行を「白い背景+水色の枠」にする(Switchの設定画面の選択行と同じ)ための白/透明。 -->
+        <conv:BoolToMenuHighlightConverter x:Key="RowWhiteHighlight" />
+        <!-- 左メニューの選択中カテゴリの文字色(Switchの青)。 -->
+        <conv:BoolToSwitchBlueTextConverter x:Key="SwitchBlueText" />
+        <!-- 右側の行の状態表示の文字色(true=青 / false=グレー。Switchの「ON」「OFF」相当)。 -->
+        <conv:BoolToStatusTextBrushConverter x:Key="StatusTextBrush" />
+        <!-- アプリ情報(アプリ設定パネルの下部)の項目名/値。どちらもグレーの表示専用テキスト。 -->
+        <Style x:Key="InfoLabelTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="26" />
+            <Setter Property="Foreground" Value="{StaticResource AppTextSecondaryBrush}" />
+            <Setter Property="Margin" Value="0,6" />
+        </Style>
+        <Style x:Key="InfoValueTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="26" />
+            <Setter Property="Foreground" Value="{StaticResource AppTextSecondaryBrush}" />
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="24,6,0,6" />
+        </Style>
+    </Page.Resources>
+
+    <!--
+        ゲームコントローラだけでの操作に対応するための再構築版(2026年)。
+
+        ConsoleSelectPageの「設定」アイコンから入るこの画面は、以前はマウス/タッチ操作を
+        主に想定していた(ComboBox、ContentDialogを使用)。ゲームパッドのD-padには
+        ComboBoxのドロップダウンやContentDialogのボタンを直接操作する手段が無いため、
+        ControllerSettingsPage(コントローラー設定画面。同じくゲームパッド専用に作り直し済み)
+        と同じ設計に合わせて全面的に作り直した:
+
+        - 画面を「操作領域」(FocusRegion、コードビハインド参照)に分け、左メニュー(Category)を
+          「浅い」階層、各パネルの中身を「深い」階層とみなした階層移動で切り替える:
+          十字キー右、またはAボタンで1段深く入り、十字キー左、またはBボタンで1段浅く戻る
+          (Categoryにいる間のBボタンは、この設定画面自体を抜けて前の画面へ戻る)。
+            A. Category    : 左メニュー(コア管理/コア毎の設定/ゲームフォルダ管理)
+            B. CoreList    : 「コア管理」パネルのコア一覧(Category→ここへ1段)
+            C. CoreOptionsCoreList / CoreOptionsList : 「コア毎の設定」パネルの
+               対象コア一覧(左。Category→ここへ1段)とオプション一覧(右。
+               CoreOptionsCoreList→ここへさらに1段。設定可能な項目が無いコアの間は
+               入れない)
+            D. FolderList  : 「ゲームフォルダ管理」パネルのフォルダ一覧(Category→ここへ1段。
+               先頭に「＋ 新規追加」カードがあるため、入った直後はまずそこにフォーカスする)
+          最も深い領域(CoreOptionsList)だけは十字キー左右が階層移動ではなく選択中オプションの
+          値の変更に使われるため、そこから浅い階層へ戻るのはBボタンのみになる。
+        - 十字キー上下でその領域内のListViewの選択(SelectedIndex)を動かす。今どの領域を
+          操作しているかは、各パネル/一覧全体を枠線で囲むのではなく、その領域のListViewだけが
+          選択中の行をWinUI既定の「選択中」ハイライト(水色の縁取り)で示す形にしてある
+          (パネル全体を囲むと分かりにくいというフィードバックを受けての設計。
+          SettingsPage.xaml.csのSetSelectionHighlightVisible参照。非アクティブな他4つの
+          ListViewは、同じ仕組みでSelected系ブラシを透明化し、選択行が見えないようにしてある)。
+        - 「コア毎の設定」のオプション行は、ComboBox(D-padで開閉できない)をやめて
+          Controls.CycleSelector(左右ボタンで値を送る)に統一した。十字キー左右でその値を
+          送る(ControllerSettingsPageのボタン割り当て一覧と同じ操作感)。
+        - 「ゲームフォルダ管理」の「＋ 新規追加」は、一覧の先頭に追加した専用カード
+          (RomFolderListItem.IsAddNewCard)として十字キーで辿り着けるようにした
+          (ConsoleSelectPageのコレクション「新規追加」カードと同じ考え方)。
+        - フォルダの削除確認は、ContentDialogではなく行内の2段階確認(1回目のA/クリックで
+          「本当に削除しますか?」表示、2回目で実削除。CollectionEditOverlow.ActivateDeleteRowと
+          同じ方式)に変更した。
+        - 新規追加フォルダに対応するコンソールを選ぶ画面、および簡単な案内メッセージは、
+          ContentDialogの代わりにGamepadListPickerOverlay/GamepadMessageOverlayを使う
+          (どちらもA/B/十字キーで操作できるゲームパッド対応オーバーレイ。Controls配下)。
+
+        なお、フォルダ選択自体(OSのFolderPicker)はユーザーからの明示的な指示により、
+        従来通りマウス操作前提のままにしてある(SettingsPage.xaml.csのAddFolderAsync参照)。
+
+        このページは1920x1080の固定キャンバスを前提にデザインされているため、
+        実際のウィンドウサイズへはこのページ内のViewboxで一様スケーリングする
+        (ConsoleSelectPage/GameSelectPageと同じ考え方)。
+    -->
+    <Grid>
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                <Grid.RowDefinitions>
+                    <!-- 行0: ヘッダー -->
+                    <RowDefinition Height="150" />
+                    <!-- 行1: メインコンテンツ(左メニュー + 右パネル) -->
+                    <RowDefinition Height="*" />
+                    <!-- 行2: フッター(操作ガイド) -->
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- ヘッダー: Switchの設定画面と同じく、歯車アイコン+「設定」+下の区切り線。
+                     「← 戻る」ボタンはマウス操作用に右端へ残している(ゲームパッドはBボタン)。 -->
+                <Grid Grid.Row="0" Margin="48,44,48,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon Grid.Column="0" Glyph="&#xE713;" FontSize="56"
+                              Foreground="{StaticResource AppTextPrimaryBrush}"
+                              VerticalAlignment="Center" Margin="12,0,20,0" />
+
+                    <TextBlock Grid.Column="1" Text="設定" Style="{StaticResource PageTitleTextStyle}"
+                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <Border Grid.ColumnSpan="3" Height="2" VerticalAlignment="Bottom"
+                            Background="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" Margin="0,0,0,-2" />
+                </Grid>
+
+                <!-- メインコンテンツ: 左側に設定カテゴリのメニュー、右側に選択中カテゴリの内容。
+                 今後、コア管理以外の設定項目(言語/テーマ等)を追加する際は、
+                 左のCategoriesにラベルを増やし、右側に対応するパネルをもう1枚追加したうえで、
+                 RegionsByCategory・CategoryListView_SelectionChangedにも追加すればよい構成。 -->
+                <Grid Grid.Row="1" Margin="48,8,48,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="440" />
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 右の内容領域の背景(メニューとの間の隙間も含む)。メニュー側よりわずかに暗い。 -->
+                    <Border Grid.Column="1" Grid.ColumnSpan="2" Background="{StaticResource SettingsContentBackgroundBrush}" />
+
+                    <!-- 左: 設定メニュー(領域A: Category)。以前はこのBorder自体を領域フォーカス色で
+                     囲んでいたが、パネル全体が囲まれると分かりにくいというフィードバックを受けて
+                     やめた。今は選択中の項目そのもの(WinUI既定の「選択中」ハイライト)だけが
+                     目立つようにしてある(下のCategoryListViewの選択ハイライトの表示/非表示は
+                     SettingsPage.xaml.csのSetSelectionHighlightVisibleが、今どの領域を
+                     操作しているかに応じて切り替える)。 -->
+                    <Border Grid.Column="0" Background="Transparent" Padding="0,8,16,0">
+                        <ListView x:Name="CategoryListView"
+                              ItemsSource="{x:Bind Categories}"
+                              SelectedIndex="0"
+                              SelectionMode="Single"
+                              SelectionChanged="CategoryListView_SelectionChanged"
+                              UseSystemFocusVisuals="False">
+                            <!-- Switchの設定画面の左メニューに合わせ、ListViewItem標準の選択/ホバー/押下
+                                 の見た目は全て消し、選択中(青い縦バー+青文字)と操作中(白背景+水色の枠)は
+                                 下のItemTemplateがSettingsCategoryItem.IsActive/IsFocusedで描く。 -->
+                            <ListView.Resources>
+                                <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                            </ListView.Resources>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:SettingsCategoryItem">
+                                    <Grid MinHeight="88">
+                                        <!-- 操作中(IsFocused)の行: 白背景+水色の枠(他の一覧の選択行と同じ
+                                             脈動する枠。RowWhiteHighlight/BoolToBrushは右パネルの行と共通) -->
+                                        <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                                Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                        <!-- 選択中(IsActive)の行: 左端の青い縦バー。右へフォーカスが移っても残る。 -->
+                                        <Rectangle Width="5" Height="58" Margin="14,0,0,1" HorizontalAlignment="Left"
+                                                   VerticalAlignment="Center" Fill="{StaticResource SwitchSelectedBlueBrush}"
+                                                   Visibility="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                                        <TextBlock Text="{x:Bind Label}" FontSize="30" FontWeight="Normal"
+                                                   Margin="40,0,12,1" VerticalAlignment="Center" TextWrapping="Wrap"
+                                                   Foreground="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource SwitchBlueText}}" />
+                                        <!-- グループの区切り線 -->
+                                        <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFC8C8C8" Margin="12,0,0,0"
+                                                   Visibility="{x:Bind HasSeparator, Converter={StaticResource BoolToVisibility}}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="CornerRadius" Value="0" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </Border>
+
+                    <!-- 左下: 前の画面に戻る(マウス/タッチ用。ゲームパッドは十字キーでここへ移り、Aで戻る。Bでも戻る)。
+                         操作中の枠(BackToPreviousFocusFrame)は、左メニューの選択枠と同じように、前の行から滑って来る。
+                         枠はボタンの後ろに敷く(塗りが文字を隠さないように)。 -->
+                    <Grid x:Name="BackToPreviousHost" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                          Margin="24,0,32,28">
+                        <Border x:Name="BackToPreviousFocusFrame" CornerRadius="0" BorderThickness="4"
+                                IsHitTestVisible="False" Visibility="Collapsed" />
+                        <Border x:Name="BackToPreviousButton" MinHeight="64" Padding="24,0" CornerRadius="0" BorderThickness="2"
+                                BorderBrush="LightGray" Background="Transparent" Tapped="BackToPreviousButton_Tapped">
+                            <StackPanel Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+                                <FontIcon Glyph="&#xE72B;" FontSize="28" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                <TextBlock Text="前の画面に戻る" FontSize="26" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 右: コア管理パネル(Switchの設定画面の右側と同じ「項目名+説明文」の2項目メニュー)。
+                     「コアモジュール追加/削除」→全画面のコア一覧(CoreInstallScreen)、
+                     「コアモジュール詳細設定」→全画面の詳細設定(CoreDetailScreen。旧「コア毎の設定」)。
+                     どちらの全画面も、下のページ直下(Viewboxの外)に重ねてある。 -->
+                    <Border x:Name="CoreManagementPanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsCoreManagementSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                        <StackPanel>
+                            <Rectangle Height="1" Fill="#FFCFCFCF" />
+                            <controls:SettingsGuideHeader Image="core" Text="ランチャーが使うエミュレータ本体(コア)を、追加したり削除したりします。" />
+                            <ListView x:Name="CoreMenuListView"
+                                  ItemsSource="{x:Bind CoreMenuEntries}"
+                                  SelectedIndex="0"
+                                  SelectionMode="Single"
+                                  SelectionChanged="CoreMenuListView_SelectionChanged"
+                                  ScrollViewer.VerticalScrollMode="Disabled"
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  UseSystemFocusVisuals="False">
+                              <ListView.Resources>
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                              </ListView.Resources>
+                              <ListView.ItemContainerStyle>
+                                  <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                      <Setter Property="Padding" Value="0" />
+                                      <Setter Property="Margin" Value="0" />
+                                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                  </Style>
+                              </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SettingsMenuEntryItem">
+                                        <Grid Tapped="CoreMenuEntry_Tapped">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <!-- 項目名の行だけが白背景+水色の枠で囲まれる(説明文は枠の外) -->
+                                            <Border Grid.Row="0" MinHeight="84" Margin="0,12,0,0" CornerRadius="0" BorderThickness="4" Tag="ShakeTarget"
+                                                    Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                    BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}">
+                                                <TextBlock Text="{x:Bind Title}" FontSize="30" Margin="24,0"
+                                                       Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                                            </Border>
+                                            <TextBlock Grid.Row="1" Text="{x:Bind Description}" FontSize="26" Margin="48,16,48,28"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+                                            <Rectangle Grid.Row="1" Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- 右: ゲームフォルダ管理パネル(「項目名+説明文」の2項目メニュー)。「ゲームフォルダの追加」はそのままフォルダ選択から登録へ進み、「ゲームフォルダの確認/削除」は全画面の一覧(FolderScreen)を開く。 -->
+                    <Border x:Name="GameFolderManagementPanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsGameFolderManagementSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                        <StackPanel>
+                            <Rectangle Height="1" Fill="#FFCFCFCF" />
+                            <controls:SettingsGuideHeader Image="folder" Text="ROMが入ったフォルダを登録すると、中のゲームがゲーム一覧に並びます。" />
+                            <ListView x:Name="FolderMenuListView"
+                                  ItemsSource="{x:Bind FolderMenuEntries}"
+                                  SelectedIndex="0"
+                                  SelectionMode="Single"
+                                  SelectionChanged="FolderMenuListView_SelectionChanged"
+                                  ScrollViewer.VerticalScrollMode="Disabled"
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  UseSystemFocusVisuals="False">
+                              <ListView.Resources>
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                              </ListView.Resources>
+                              <ListView.ItemContainerStyle>
+                                  <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                      <Setter Property="Padding" Value="0" />
+                                      <Setter Property="Margin" Value="0" />
+                                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                  </Style>
+                              </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SettingsMenuEntryItem">
+                                        <Grid Tapped="FolderMenuEntry_Tapped">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0" MinHeight="84" Margin="0,12,0,0" CornerRadius="0" BorderThickness="4" Tag="ShakeTarget"
+                                                    Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                    BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}">
+                                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" Margin="24,0"
+                                                       Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                                            </Border>
+                                            <TextBlock Grid.Row="1" Text="{x:Bind Description}" FontSize="26" Margin="48,16,48,28"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+                                            <Rectangle Grid.Row="1" Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- 右: ランチャー管理パネル(「項目名+説明文」の2項目メニュー)。「ランチャーの追加」は編集オーバーレイを新規追加で開き、「ランチャーの編集/削除」は全画面の一覧(LauncherScreen)を開く。削除は編集オーバーレイの中で行う(2段階確認)。 -->
+                    <Border x:Name="ConsoleManagementPanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsConsoleManagementSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                        <StackPanel>
+                            <Rectangle Height="1" Fill="#FFCFCFCF" />
+                            <controls:SettingsGuideHeader Image="console" Text="機種ごとにゲームをまとめたものです。コンソールには、ゲームを動かすランチャーが必要です。" />
+                            <ListView x:Name="ConsoleMenuListView"
+                                  ItemsSource="{x:Bind ConsoleMenuEntries}"
+                                  SelectedIndex="0"
+                                  SelectionMode="Single"
+                                  SelectionChanged="ConsoleMenuListView_SelectionChanged"
+                                  ScrollViewer.VerticalScrollMode="Disabled"
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  UseSystemFocusVisuals="False">
+                              <ListView.Resources>
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                              </ListView.Resources>
+                              <ListView.ItemContainerStyle>
+                                  <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                      <Setter Property="Padding" Value="0" />
+                                      <Setter Property="Margin" Value="0" />
+                                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                  </Style>
+                              </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SettingsMenuEntryItem">
+                                        <Grid Tapped="ConsoleMenuEntry_Tapped">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0" MinHeight="84" Margin="0,12,0,0" CornerRadius="0" BorderThickness="4" Tag="ShakeTarget"
+                                                    Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                    BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}">
+                                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" Margin="24,0"
+                                                       Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                                            </Border>
+                                            <TextBlock Grid.Row="1" Text="{x:Bind Description}" FontSize="26" Margin="48,16,48,28"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+                                            <Rectangle Grid.Row="1" Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Border x:Name="SystemSettingsPanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsSystemSettingsSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <ScrollViewer x:Name="SystemSettingsScrollViewer" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                        <StackPanel>
+                            <Rectangle Height="1" Fill="#FFCFCFCF" />
+                            <ListView x:Name="SystemMenuListView"
+                                  ItemsSource="{x:Bind SystemMenuEntries}"
+                                  SelectedIndex="0"
+                                  SelectionMode="Single"
+                                  SelectionChanged="SystemMenuListView_SelectionChanged"
+                                  ScrollViewer.VerticalScrollMode="Disabled"
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  UseSystemFocusVisuals="False">
+                              <ListView.Resources>
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                              </ListView.Resources>
+                              <ListView.ItemContainerStyle>
+                                  <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                      <Setter Property="Padding" Value="0" />
+                                      <Setter Property="Margin" Value="0" />
+                                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                  </Style>
+                              </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:AppSettingRowItem">
+                                            <Grid Tapped="SystemMenuEntry_Tapped" Opacity="{x:Bind RowOpacity, Mode=OneWay}">
+                                              <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                              </Grid.RowDefinitions>
+                                              <Grid MinHeight="96" Tag="ShakeTarget">
+                                                <Border CornerRadius="0" BorderThickness="4" Margin="0,0,0,1"
+                                                        Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                        BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                                <Grid Margin="28,0,28,1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{x:Bind Label}" FontSize="30"
+                                                           Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                           VerticalAlignment="Center" TextWrapping="Wrap" />
+                                                    <TextBlock Grid.Column="1" Text="{x:Bind ValueText, Mode=OneWay}" FontSize="30"
+                                                           Foreground="{StaticResource SwitchSelectedBlueBrush}"
+                                                           VerticalAlignment="Center" Margin="24,0,0,0" />
+                                                </Grid>
+                                                <!-- 説明文があるときは、区切り線は説明文の下に引く。 -->
+                                                <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF"
+                                                           Visibility="{x:Bind HasDescription, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
+                                              </Grid>
+
+                                              <!-- 説明文(「ゲームフォルダ管理」の項目と同じく、項目名の下にグレーで表示) -->
+                                              <Grid Grid.Row="1" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolToVisibility}}">
+                                                <TextBlock Text="{x:Bind Description}" FontSize="26" Margin="48,16,48,28"
+                                                           Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+                                                <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                              </Grid>
+                                            </Grid>
+                                        </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Border x:Name="CollectionManagementPanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsCollectionManagementSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                        <StackPanel>
+                            <Rectangle Height="1" Fill="#FFCFCFCF" />
+                            <controls:SettingsGuideHeader Image="collection" Text="好きなゲームをコンソールをまたいで集めて、自分用の一覧を作れます。" />
+                            <ListView x:Name="CollectionMenuListView"
+                                  ItemsSource="{x:Bind CollectionMenuEntries}"
+                                  SelectedIndex="0"
+                                  SelectionMode="Single"
+                                  SelectionChanged="CollectionMenuListView_SelectionChanged"
+                                  ScrollViewer.VerticalScrollMode="Disabled"
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  UseSystemFocusVisuals="False">
+                              <ListView.Resources>
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                              </ListView.Resources>
+                              <ListView.ItemContainerStyle>
+                                  <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                      <Setter Property="Padding" Value="0" />
+                                      <Setter Property="Margin" Value="0" />
+                                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                  </Style>
+                              </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SettingsMenuEntryItem">
+                                        <Grid Tapped="CollectionMenuEntry_Tapped">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0" MinHeight="84" Margin="0,12,0,0" CornerRadius="0" BorderThickness="4" Tag="ShakeTarget"
+                                                    Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                    BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}">
+                                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" Margin="24,0"
+                                                       Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                                            </Border>
+                                            <TextBlock Grid.Row="1" Text="{x:Bind Description}" FontSize="26" Margin="48,16,48,28"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+                                            <Rectangle Grid.Row="1" Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Border x:Name="LauncherManagementPanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsLauncherManagementSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                        <StackPanel>
+                            <Rectangle Height="1" Fill="#FFCFCFCF" />
+                            <controls:SettingsGuideHeader Image="launcher" Text="コンソールのゲームを動かす方法です。コア(エミュレータ本体)か外部アプリを選びます。" />
+                            <ListView x:Name="LauncherMenuListView"
+                                  ItemsSource="{x:Bind LauncherMenuEntries}"
+                                  SelectedIndex="0"
+                                  SelectionMode="Single"
+                                  SelectionChanged="LauncherMenuListView_SelectionChanged"
+                                  ScrollViewer.VerticalScrollMode="Disabled"
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  UseSystemFocusVisuals="False">
+                              <ListView.Resources>
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                  <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                              </ListView.Resources>
+                              <ListView.ItemContainerStyle>
+                                  <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                      <Setter Property="Padding" Value="0" />
+                                      <Setter Property="Margin" Value="0" />
+                                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                  </Style>
+                              </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SettingsMenuEntryItem">
+                                        <Grid Tapped="LauncherMenuEntry_Tapped">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0" MinHeight="84" Margin="0,12,0,0" CornerRadius="0" BorderThickness="4" Tag="ShakeTarget"
+                                                    Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                    BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}">
+                                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" Margin="24,0"
+                                                       Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                                            </Border>
+                                            <TextBlock Grid.Row="1" Text="{x:Bind Description}" FontSize="26" Margin="48,16,48,28"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+                                            <Rectangle Grid.Row="1" Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- 右: アプリ設定パネル(Switchの設定画面の右側と同じ作り)。
+                     上から「地域」「操作ボタンの入れ替え」(どちらも左に項目名、右に現在値の青文字。
+                     十字キー上下で選び、Aで決定: 地域は全画面の選択画面(ChoiceOverlay)を開き、
+                     操作ボタンの入れ替えは「標準」「入れ替え」を交互に切り替える)、
+                     その下に旧「アプリ情報」の内容(アプリ名/バージョン等。表示のみ)を並べる。
+                     見出し(SectionHeader)は置かない。 -->
+                    <Border x:Name="AppSettingsPanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsAppSettingsSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <ScrollViewer x:Name="AppSettingsScrollViewer" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                            <StackPanel>
+                                <Rectangle Height="1" Fill="#FFCFCFCF" />
+                                <ListView x:Name="AppSettingsListView"
+                                      ItemsSource="{x:Bind AppSettingRows}"
+                                      SelectedIndex="0"
+                                      SelectionMode="Single"
+                                      SelectionChanged="AppSettingsListView_SelectionChanged"
+                                      ScrollViewer.VerticalScrollMode="Disabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                      UseSystemFocusVisuals="False">
+                                    <ListView.Resources>
+                                        <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                        <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                        <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                    </ListView.Resources>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="Margin" Value="0" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:AppSettingRowItem">
+                                            <Grid Tapped="AppSettingRow_Tapped" Opacity="{x:Bind RowOpacity, Mode=OneWay}">
+                                              <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                              </Grid.RowDefinitions>
+                                              <Grid MinHeight="96" Tag="ShakeTarget">
+                                                <Border CornerRadius="0" BorderThickness="4" Margin="0,0,0,1"
+                                                        Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                        BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                                <Grid Margin="28,0,28,1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{x:Bind Label}" FontSize="30"
+                                                           Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                           VerticalAlignment="Center" TextWrapping="Wrap" />
+                                                    <TextBlock Grid.Column="1" Text="{x:Bind ValueText, Mode=OneWay}" FontSize="30"
+                                                           Foreground="{StaticResource SwitchSelectedBlueBrush}"
+                                                           VerticalAlignment="Center" Margin="24,0,0,0" />
+                                                </Grid>
+                                                <!-- 説明文があるときは、区切り線は説明文の下に引く。 -->
+                                                <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF"
+                                                           Visibility="{x:Bind HasDescription, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
+                                              </Grid>
+
+                                              <!-- 説明文(「ゲームフォルダ管理」の項目と同じく、項目名の下にグレーで表示) -->
+                                              <Grid Grid.Row="1" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolToVisibility}}">
+                                                <TextBlock Text="{x:Bind Description}" FontSize="26" Margin="48,16,48,28"
+                                                           Foreground="{StaticResource AppTextSecondaryBrush}" TextWrapping="Wrap" />
+                                                <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                              </Grid>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+
+                                <!-- アプリ情報(旧「アプリ情報」メニューの内容。表示のみ) -->
+                                <TextBlock Text="アプリ情報" FontSize="30" Margin="28,28,0,12"
+                                       Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                <Grid Margin="76,4,28,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" MinWidth="240" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="アプリ名" Style="{StaticResource InfoLabelTextStyle}" />
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind AppNameText}" Style="{StaticResource InfoValueTextStyle}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="バージョン" Style="{StaticResource InfoLabelTextStyle}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind AppVersionText}" Style="{StaticResource InfoValueTextStyle}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="著作権" Style="{StaticResource InfoLabelTextStyle}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind AppCopyrightText}" Style="{StaticResource InfoValueTextStyle}" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text=".NET ランタイム" Style="{StaticResource InfoLabelTextStyle}" />
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind RuntimeText}" Style="{StaticResource InfoValueTextStyle}" />
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="OS" Style="{StaticResource InfoLabelTextStyle}" />
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{x:Bind OsText}" Style="{StaticResource InfoValueTextStyle}" />
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- 右: ライセンスパネル。アプリ本体のMITライセンス表記と、使用しているCHDSharp
+                         (MIT+作者名の帰属表示+同梱コーデックの各ライセンス)の表記を表示する。
+                         内容はServices/LicenseTexts.cs。十字キー右/Aでこの領域(LicenseText)へ入り、
+                         上下でスクロールする(操作中は水色の枠で囲む)。 -->
+                    <Border x:Name="LicensePanel" Grid.Column="2" Background="Transparent" Padding="32,8,8,8"
+                        Visibility="{x:Bind IsLicenseSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <controls:SectionHeader Grid.Row="0" Margin="0,0,0,24" Title="ライセンス" />
+
+                            <Border x:Name="LicenseRegionBorder" Grid.Row="1" BorderThickness="4" BorderBrush="Transparent"
+                                    Background="{StaticResource AppSurfaceBrush}">
+                                <ScrollViewer x:Name="LicenseScrollViewer" VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled">
+                                    <TextBlock Text="{x:Bind LicenseFullText}" FontSize="22" TextWrapping="Wrap"
+                                               FontFamily="Segoe UI Variable, Segoe UI, Yu Gothic UI"
+                                               Foreground="{StaticResource AppTextPrimaryBrush}" Padding="28,24" />
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- フッター: 操作ガイド。Switchの設定画面の最下段と同じく、上端に区切り線・左端に
+                 コントローラーアイコン・右端に「濃色の丸+ラベル」。十字キー上下は一覧の選択、
+                 左右はパネルへの出入り(「コア毎の設定」のオプション一覧だけは値の変更)、
+                 Aは決定、Bは1段戻る(左メニューにいる間はトップ画面へ戻る)。 -->
+                <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                    <controls:HintBar.Hints>
+                        <controls:HintDefinition Key="DPad" Label="移動" />
+                        <controls:HintDefinition Key="B" Label="戻る" />
+                        <controls:HintDefinition Key="A" Label="決定/パネルへ" />
+                    </controls:HintBar.Hints>
+                </controls:HintBar>
+            </Grid>
+        </Viewbox>
+
+        <!-- コア管理の全画面(1): コアモジュール追加/削除。コアの一覧(名前+コンソール名)と、右端に
+             状態(インストール済み=青 / 未インストール=グレー)。選んでAで確認ダイアログ(ConfirmOverlay)を
+             出し、「インストールする/アンインストールする」でインストール/アンインストールを実行する。
+             表示するかどうかは、今の操作領域がCoreListかどうかで決まる(SettingsPage.SetFocusRegion)。 -->
+        <Grid x:Name="CoreInstallScreen" Background="{StaticResource AppBackgroundBrush}"
+              Visibility="{x:Bind IsCoreInstallScreenVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+            <Viewbox Stretch="Uniform">
+                <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="160,0,160,0">
+                        <controls:SectionHeader x:Name="CoreManagementHeader" Title="コアモジュール追加/削除"
+                                                VerticalAlignment="Bottom" Margin="0,0,0,18" />
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                    </Grid>
+
+                    <ListView x:Name="CoreListView" Grid.Row="1" Margin="160,24,160,8"
+                          ItemsSource="{x:Bind Cores}"
+                          SelectionMode="Single"
+                          SelectionChanged="CoreListView_SelectionChanged"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          UseSystemFocusVisuals="False">
+                        <ListView.Resources>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                        </ListView.Resources>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:LibretroCoreListItem">
+                                <Grid MinHeight="104" Tapped="CoreRow_Tapped">
+                                    <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                            Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                            BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                    <Grid Margin="28,10,28,11">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind DisplayName}" FontSize="30"
+                                                   Foreground="{StaticResource AppTextPrimaryBrush}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{x:Bind ConsoleDisplayName}" FontSize="22"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                        </StackPanel>
+                                        <!-- 右端の状態表示: インストール済み=青 / 未インストール=グレー -->
+                                        <TextBlock Grid.Column="1" Text="{x:Bind StatusText, Mode=OneWay}" FontSize="28"
+                                               Foreground="{x:Bind Installed, Mode=OneWay, Converter={StaticResource StatusTextBrush}}"
+                                               VerticalAlignment="Center" Margin="24,0,0,0" />
+                                    </Grid>
+                                    <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                        <controls:HintBar.Hints>
+                            <controls:HintDefinition Key="DPad" Label="移動" />
+                            <controls:HintDefinition Key="B" Label="もどる" />
+                            <controls:HintDefinition Key="A" Label="決定" />
+                        </controls:HintBar.Hints>
+                    </controls:HintBar>
+                </Grid>
+            </Viewbox>
+        </Grid>
+
+        <!-- コア管理の全画面(2): コアモジュール詳細設定(旧「コア毎の設定」)。左にインストール済みの
+             コアだけの一覧(領域CoreOptionsCoreList)、右に選んだコアのオプション一覧(領域CoreOptionsList。
+             項目名+現在値の青文字)。表示するかどうかは、今の操作領域がこの2つのどちらかかどうかで決まる。
+             cores/libretro.jsonの"options"が未設定のコアは「設定可能な項目がありません」の案内を出す。 -->
+        <Grid x:Name="CoreDetailScreen" Background="{StaticResource AppBackgroundBrush}"
+              Visibility="{x:Bind IsCoreDetailScreenVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+            <Viewbox Stretch="Uniform">
+                <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="160,0,160,0">
+                        <TextBlock Text="コアモジュール詳細設定" Style="{StaticResource SectionTitleTextStyle}"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,18" />
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="160,24,160,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="720" />
+                            <ColumnDefinition Width="48" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 左: インストール済みのコアだけの一覧(領域CoreOptionsCoreList)。
+                             選択中のコアは、右へフォーカスが移っても青い縦バー+青文字で残る。 -->
+                        <ListView x:Name="CoreOptionsCoreListView" Grid.Column="0"
+                              ItemsSource="{x:Bind InstalledCores}"
+                              SelectionMode="Single"
+                              SelectionChanged="CoreOptionsCoreListView_SelectionChanged"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              UseSystemFocusVisuals="False">
+                            <ListView.Resources>
+                                <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                            </ListView.Resources>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                    <Setter Property="Padding" Value="0" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:LibretroCoreListItem">
+                                    <Grid MinHeight="104" Tapped="CoreOptionsCoreRow_Tapped">
+                                        <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                                Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                        <Rectangle Width="5" Margin="14,18,0,19" HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                                                   Fill="{StaticResource SwitchSelectedBlueBrush}"
+                                                   Visibility="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                                        <StackPanel Margin="40,10,16,11" Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind DisplayName}" FontSize="28" TextWrapping="Wrap"
+                                                   Foreground="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource SwitchBlueText}}" />
+                                            <TextBlock Text="{x:Bind ConsoleDisplayName}" FontSize="22"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                        </StackPanel>
+                                        <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <!-- 右: 選択中コアのオプション一覧(領域CoreOptionsList)、または案内メッセージ。 -->
+                        <Grid Grid.Column="2">
+                            <TextBlock x:Name="NoOptionsPanel"
+                                   Text="このコアにはまだ設定可能な項目がありません。&#x0a;(cores/libretro.jsonに項目が追加されると、ここに表示されます)"
+                                   Style="{StaticResource EmptyStateTextStyle}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+
+                            <ListView x:Name="CoreOptionsListView"
+                                  ItemsSource="{x:Bind SelectedCoreOptions}"
+                                  SelectionMode="Single"
+                                  SelectionChanged="CoreOptionsListView_SelectionChanged"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  UseSystemFocusVisuals="False" Visibility="Collapsed">
+                                  <ListView.Resources>
+                                      <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                                      <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                                  </ListView.Resources>
+                                  <ListView.ItemContainerStyle>
+                                      <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                          <Setter Property="Padding" Value="0" />
+                                          <Setter Property="Margin" Value="0" />
+                                          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                      </Style>
+                                  </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:LibretroCoreOptionListItem">
+                                        <Grid MinHeight="96" Tapped="CoreOptionRow_Tapped">
+                                            <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                                    Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                                    BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                            <Grid Margin="28,0,28,1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{x:Bind Label}" FontSize="28"
+                                                       Foreground="{StaticResource AppTextPrimaryBrush}"
+                                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind SelectedLabel, Mode=OneWay}" FontSize="28"
+                                                       Foreground="{StaticResource SwitchSelectedBlueBrush}"
+                                                       VerticalAlignment="Center" TextAlignment="Right" TextWrapping="Wrap"
+                                                       MaxWidth="320" Margin="24,0,0,0" />
+                                            </Grid>
+                                            <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Grid>
+
+                    <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                        <controls:HintBar.Hints>
+                            <controls:HintDefinition Key="DPad" Label="移動/値の変更" />
+                            <controls:HintDefinition Key="B" Label="もどる" />
+                            <controls:HintDefinition Key="A" Label="決定" />
+                        </controls:HintBar.Hints>
+                    </controls:HintBar>
+                </Grid>
+            </Viewbox>
+        </Grid>
+
+        <!-- ゲームフォルダ管理の全画面: ゲームフォルダの確認/削除。登録済みフォルダ(パス+コンソール名)の一覧。選んでAで確認ダイアログを出し、「削除する」で登録を解除する(フォルダ内のファイルは削除されない)。操作領域がFolderListのときだけ表示される。 -->
+        <Grid x:Name="FolderScreen" Background="{StaticResource AppBackgroundBrush}"
+              Visibility="{x:Bind IsFolderScreenVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+            <Viewbox Stretch="Uniform">
+                <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="160,0,160,0">
+                        <controls:SectionHeader x:Name="GameFolderManagementHeader" Title="ゲームフォルダの確認/削除"
+                                                VerticalAlignment="Bottom" Margin="0,0,0,18" />
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                    </Grid>
+
+                    <ListView x:Name="FolderListView" Grid.Row="1" Margin="160,24,160,8"
+                          ItemsSource="{x:Bind Folders}"
+                          SelectionMode="Single"
+                          SelectionChanged="FolderListView_SelectionChanged"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          UseSystemFocusVisuals="False">
+                        <ListView.Resources>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                        </ListView.Resources>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:RomFolderListItem">
+                                <Grid MinHeight="104" Tapped="FolderRow_Tapped">
+                                    <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                            Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                            BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                    <Grid Margin="28,10,28,11">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind DisplayPath}" FontSize="28"
+                                                   Foreground="{StaticResource AppTextPrimaryBrush}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{x:Bind ConsoleDisplayName}" FontSize="22"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind StatusText, Mode=OneWay}" FontSize="28"
+                                               Foreground="{StaticResource AppTextSecondaryBrush}"
+                                               VerticalAlignment="Center" Margin="24,0,0,0" />
+                                    </Grid>
+                                    <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                        <controls:HintBar.Hints>
+                            <controls:HintDefinition Key="DPad" Label="移動" />
+                            <controls:HintDefinition Key="B" Label="もどる" />
+                            <controls:HintDefinition Key="A" Label="決定" />
+                        </controls:HintBar.Hints>
+                    </controls:HintBar>
+                </Grid>
+            </Viewbox>
+        </Grid>
+
+        <!-- ランチャー管理の全画面: ランチャーの編集/削除。Launchers.jsonのランチャー一覧(名前・コンソール名・起動方式)と、右端に使用中/未使用。選んでAで編集オーバーレイ(削除もそこで行う)を開く。操作領域がLauncherListのときだけ表示される。 -->
+        <Grid x:Name="LauncherScreen" Background="{StaticResource AppBackgroundBrush}"
+              Visibility="{x:Bind IsLauncherScreenVisible, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+            <Viewbox Stretch="Uniform">
+                <Grid Width="{StaticResource CanvasWidth}" Height="{StaticResource CanvasHeight}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="160,0,160,0">
+                        <controls:SectionHeader x:Name="LauncherManagementHeader" Title="ランチャーの編集/削除"
+                                                VerticalAlignment="Bottom" Margin="0,0,0,18" />
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="{StaticResource AppTextPrimaryBrush}" Opacity="0.75" />
+                    </Grid>
+
+                    <ListView x:Name="LauncherListView" Grid.Row="1" Margin="160,24,160,8"
+                          ItemsSource="{x:Bind Launchers}"
+                          SelectionMode="Single"
+                          SelectionChanged="LauncherListView_SelectionChanged"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          UseSystemFocusVisuals="False">
+                        <ListView.Resources>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundPressed" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedUnfocused" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemFocusBorderBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemFocusSecondaryBorderBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPointerOverBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorPressedBrush" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemSelectionIndicatorDisabledBrush" Color="Transparent" />
+                        </ListView.Resources>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                      <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                                      <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:LauncherListItem">
+                                <Grid MinHeight="104" Tapped="LauncherRow_Tapped">
+                                    <Border Margin="0,0,0,1" CornerRadius="0" BorderThickness="4"
+                                            Background="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource RowWhiteHighlight}}"
+                                            BorderBrush="{x:Bind IsFocused, Mode=OneWay, Converter={StaticResource BoolToBrush}}" fs:FocusSlide.IsFocused="{x:Bind IsFocused, Mode=OneWay}" />
+                                    <Grid Margin="28,10,28,11">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind DisplayName}" FontSize="30"
+                                                   Foreground="{StaticResource AppTextPrimaryBrush}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{x:Bind ConsoleDisplayName}" FontSize="22"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                            <TextBlock Text="{x:Bind DetailText}" FontSize="20"
+                                                   Foreground="{StaticResource AppTextSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                        <!-- 右端の状態表示: 使用中=青 / 未使用=グレー -->
+                                        <TextBlock Grid.Column="1" Text="{x:Bind InUseText}" FontSize="28"
+                                               Foreground="{x:Bind IsInUse, Converter={StaticResource StatusTextBrush}}"
+                                               VerticalAlignment="Center" Margin="24,0,0,0" />
+                                    </Grid>
+                                    <Rectangle Height="1" VerticalAlignment="Bottom" Fill="#FFCFCFCF" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <controls:HintBar Grid.Row="2" Margin="48,0,48,28" HorizontalAlignment="Stretch" ShowFooterFrame="True">
+                        <controls:HintBar.Hints>
+                            <controls:HintDefinition Key="DPad" Label="移動" />
+                            <controls:HintDefinition Key="B" Label="もどる" />
+                            <controls:HintDefinition Key="A" Label="決定" />
+                        </controls:HintBar.Hints>
+                    </controls:HintBar>
+                </Grid>
+            </Viewbox>
+        </Grid>
+
+        <!-- 対応コンソールの選択、および簡単な案内メッセージ(いずれもContentDialogの代替)。 -->
+        <controls:GamepadListPickerOverlay x:Name="ListPickerOverlay" Visibility="Collapsed" />
+        <!-- ゲームフォルダ追加用の、ゲームパッドで操作できるフォルダ選択。 -->
+        <controls:FolderPickerOverlay x:Name="FolderChooser" Visibility="Collapsed" />
+
+        <!-- 「地域」など、複数の選択肢から1つを選ぶ全画面の選択画面(共通部品)。 -->
+        <controls:FullScreenChoiceOverlay x:Name="ChoiceOverlay" Visibility="Collapsed" />
+
+        <!-- 「コンソール並び替え」「コレクション並び替え」の全画面の入れ替え画面。 -->
+        <controls:ReorderOverlay x:Name="ReorderScreen" Visibility="Collapsed" />
+        <controls:SystemItemsOrderOverlay x:Name="SystemOrderScreen" Visibility="Collapsed" />
+
+        <!-- 「コンソール編集」: アイコンと起動方法の編集画面(コンソール選択画面と共通の部品)。 -->
+        <controls:ConsoleEditOverlay x:Name="ConsoleEditor" Visibility="Collapsed" />
+
+        <!-- 「システム項目の編集」: システム画面に表示する項目を、複数選ぶ全画面の選択画面。 -->
+        <controls:MultiChoiceOverlay x:Name="SystemItemsPicker" Visibility="Collapsed" />
+
+        <!-- インストール/アンインストールなど、実行前の確認ダイアログ(共通部品)。 -->
+        <controls:ConfirmDialogOverlay x:Name="ConfirmOverlay" Visibility="Collapsed" />
+        <controls:GamepadMessageOverlay x:Name="MessageOverlay" Visibility="Collapsed" />
+
+        <!-- ランチャーの新規追加/編集/削除。 -->
+        <controls:LauncherEditOverlay x:Name="LauncherEditor" Visibility="Collapsed" />
+        <controls:CollectionEditOverlay x:Name="CollectionEditor" Visibility="Collapsed" />
+        <controls:CollectionSelectOverlay x:Name="CollectionSelector" Visibility="Collapsed" />
+    </Grid>
+</Page>
